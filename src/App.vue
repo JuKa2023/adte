@@ -1,14 +1,12 @@
 <script setup lang="ts">
+import {useRouter} from "vue-router";
 import AppButton from './components/Button.vue'
+import FormInput from './components/FormInput.vue';
 </script>
 
 <template>
-  <h1>You did it!</h1>
-  <p class="color-highlight">
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
-  <AppButton>Mehr laden</AppButton>
+  <FormInput label="Email" type="email" placeholder="Enter your email" required />
+  <router-view></router-view>
 </template>
 
 <style scoped></style>
