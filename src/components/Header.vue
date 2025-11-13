@@ -1,15 +1,39 @@
 <template>
   <header class="sticky top-0 z-40 backdrop-blur">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-      <nav class="flex items-center gap-6">
-        <RouterLink to="/" class="text-xl font-semibold text-[var(--color-highlight)]">
-          Postkarte erstellen
+      <nav class="flex flex-col gap-4">
+        <RouterLink to="/"
+          class="group flex items-center gap-2 text-[var(--color-highlight)]"
+        >
+          <span class="text-xl transition-transform duration-200 group-hover:scale-110" >
+            ›
+          </span>
+
+          <!-- Text -->
+          <span
+            class="text-xl font-medium transition-transform duration-200 group-hover:scale-105"
+          >
+            Postkarte erstellen
+          </span>
         </RouterLink>
 
-        <RouterLink to="/" class="text-sm font-medium text-[var(--color-highlight)]">
-          Home
-        </RouterLink>
+        <!-- Anmelden -->
+        <RouterLink
+          to="/login"
+          class="group flex items-center gap-2 text-[var(--color-highlight)]"
+        >
+          <span
+            class="text-xl transition-transform duration-200 group-hover:scale-110"
+          >
+            ›
+          </span>
 
+          <span
+            class="text-xl font-medium transition-transform duration-200 group-hover:scale-105"
+          >
+            Anmelden
+          </span>
+        </RouterLink>
       </nav>
 
       <button

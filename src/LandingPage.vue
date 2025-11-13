@@ -66,7 +66,7 @@ const allPostcards = ref<Postcard[]>([
   { id: 'sample-2', title: 'Palm Trees', imageUrl: postcardExample2 },
   { id: 'sample-3', title: 'Sunny Shores', imageUrl: postcardExample1 },
 ])
-const visibleCount = ref(2)
+const visibleCount = ref(9)
 
 const postcards = computed(() => allPostcards.value.slice(0, visibleCount.value))
 const hasMore = computed(() => allPostcards.value.length > visibleCount.value)

@@ -22,3 +22,7 @@ h2,
 p {
   color: var(--color-font);
 }
+
+body {
+  background-color: var(--color-bg);
+}

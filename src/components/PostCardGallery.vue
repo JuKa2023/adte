@@ -3,24 +3,16 @@
     <div v-if="isLoading" class="status">Loading postcards…</div>
     <div v-else-if="error" class="status error" aria-live="polite">{{ error }}</div>
 
-    <ul :aria-label="ariaLabel" class="gallery">
-        <li
-            v-for="card in items"
-            :key="card.id"
-            class="card"
-            @click="() => emit('select', card)"
-            @keydown.enter="() => emit('select', card)"
-            role="button"
-            tabindex="0"
-        >
-            <img
-            :src="card.imageUrl"
-            :alt="'Postcard image'"
-            loading="lazy"
-            decoding="async"
-            class="image"
-            />
-        </li>
+    <ul :aria-label="ariaLabel" class="gallery items-start">
+      <li v-for="card in items" :key="card.id" class="card" role="button" tabindex="0">
+        <img
+          :src="card.imageUrl"
+          :alt="'Postcard image'"
+          loading="lazy"
+          decoding="async"
+          class="image"
+        />
+      </li>
     </ul>
 
     <p v-if="!isLoading && !error && items.length === 0" class="empty">
@@ -29,9 +21,9 @@
 
     <div v-if="hasMore" class="cta">
       <slot name="cta" :disabled="isLoading" :onClick="() => emit('loadMore')">
-        <Button :disabled="isLoading" @click="emit('loadMore')">
+        <MehrButton :disabled="isLoading" @click="emit('loadMore')" >
           {{ moreLabel }}
-        </Button>
+        </MehrButton>
       </slot>
     </div>
   </div>
@@ -39,7 +31,7 @@
 
 <script setup lang="ts">
 import { withDefaults, defineProps, defineEmits } from 'vue'
-import Button from './Button.vue'
+import MehrButton from './Button.vue'
 
 export type Postcard = {
   id: string | number
@@ -91,30 +83,16 @@ const props = withDefaults(
   gap: 1rem;
   margin: 0;
   padding: 0;
-
-  /* ⬅ Important: cards keep their own height */
-  align-items: flex-start;
 }
 
 /* 1 per row on phones (default) */
 .card {
   flex: 0 1 100%;
-  border-radius: 0.2rem;
+  border-radius: 0.1rem;
   overflow: hidden;
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
-  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   outline: none;
   background: transparent;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-.card:focus {
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.55);
 }
 
 @media (min-width: 640px) {

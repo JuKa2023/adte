@@ -4,12 +4,14 @@ import FormInput from './components/FormInput.vue'
 import Header from './components/Header.vue'
 </script>
 
-<template class="bg-[--color-bg] min-h-screen">
-  <Header />
+<template>
+  <div>
+    <Header />
 
-  <div class="p-6">
-    <FormInput label="Email" type="email" placeholder="Enter your email" required />
-    <router-view></router-view>
+    <div class="p-6">
+      <FormInput label="Email" type="email" placeholder="Enter your email" required />
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
