@@ -12,7 +12,6 @@
         :error="error"
         :has-more="hasMore"
         :more-label="ctaLabel"
-        @select="onSelect"
         @load-more="onLoadMore"
       >
         <template #cta="{ disabled, onClick }">
@@ -97,11 +96,6 @@ async function fetchPostcards() {
   }
 }
 
-function onSelect(card: Postcard) {
-  // Handle card selection if needed
-  // e.g., navigate to details or open a modal
-  // console.log('Selected card:', card);
-}
 
 function onLoadMore() {
   visibleCount.value = Math.min(visibleCount.value + PAGE_SIZE, allPostcards.value.length)
