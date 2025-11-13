@@ -3,24 +3,24 @@
     <div v-if="isLoading" class="status">Loading postcards…</div>
     <div v-else-if="error" class="status error" aria-live="polite">{{ error }}</div>
 
-    <ul :aria-label="ariaLabel" class="grid">
-      <li
-        v-for="card in items"
-        :key="card.id"
-        class="card"
-        @click="() => emit('select', card)"
-        @keydown.enter="() => emit('select', card)"
-        role="button"
-        tabindex="0"
-      >
-        <img
-          :src="card.imageUrl"
-          :alt="'Postcard image'"
-          loading="lazy"
-          decoding="async"
-          class="image"
-        />
-      </li>
+    <ul :aria-label="ariaLabel" class="gallery">
+        <li
+            v-for="card in items"
+            :key="card.id"
+            class="card"
+            @click="() => emit('select', card)"
+            @keydown.enter="() => emit('select', card)"
+            role="button"
+            tabindex="0"
+        >
+            <img
+            :src="card.imageUrl"
+            :alt="'Postcard image'"
+            loading="lazy"
+            decoding="async"
+            class="image"
+            />
+        </li>
     </ul>
 
     <p v-if="!isLoading && !error && items.length === 0" class="empty">
@@ -83,29 +83,22 @@ const props = withDefaults(
   color: #ffd6d6;
 }
 
-.grid {
+/* FLEX instead of CSS grid */
+.gallery {
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin: 0;
   padding: 0;
+
+  /* ⬅ Important: cards keep their own height */
+  align-items: flex-start;
 }
 
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem;
-  }
-}
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.5rem;
-  }
-}
-
+/* 1 per row on phones (default) */
 .card {
+  flex: 0 1 100%;
   border-radius: 0.2rem;
   overflow: hidden;
   transition:
@@ -115,6 +108,7 @@ const props = withDefaults(
   outline: none;
   background: transparent;
 }
+
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
@@ -123,20 +117,38 @@ const props = withDefaults(
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.55);
 }
 
+@media (min-width: 640px) {
+  .gallery {
+    gap: 1.25rem;
+  }
+
+  /* 2 per row on tablet */
+  .card {
+    flex: 0 1 calc(50% - 0.625rem); /* 2 * (50% - 0.625rem) + 1.25rem gap = 100% */
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery {
+    gap: 1.5rem;
+  }
+
+  /* 3 per row on desktop */
+  .card {
+    flex: 0 1 calc(33.333% - 1rem); /* 3 * (33.333% - 1rem) + 2 * 1.5rem gap ≈ 100% */
+  }
+}
+
 .card-inner {
   display: block;
 }
 .image-wrap {
   margin: 0;
-  /* REMOVE the forced aspect ratio and clipping */
-  /* aspect-ratio: 16 / 10; */
-  /* overflow: hidden; */
 }
 .image {
   display: block;
   width: 100%;
   height: auto; /* keeps the native aspect ratio */
-  /* object-fit: cover; */ /* <-- remove to avoid cropping */
 }
 .title {
   margin: 0;
