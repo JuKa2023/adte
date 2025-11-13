@@ -3,11 +3,11 @@
     <div v-if="isLoading" class="status">Loading postcards…</div>
     <div v-else-if="error" class="status error" aria-live="polite">{{ error }}</div>
 
-    <ul :aria-label="ariaLabel" class="columns-1 sm:columns-2 lg:columns-3 gap-4">
+    <ul :aria-label="ariaLabel" class="grid">
       <li
         v-for="card in items"
         :key="card.id"
-        class="mb-4 break-inside-avoid rounded overflow-hidden bg-slate-900 outline-none cursor-pointer transition hover:-translate-y-0.5 hover:shadow-2xl focus:ring-2 focus:ring-indigo-400/60"
+        class="card"
         @click="() => emit('select', card)"
         @keydown.enter="() => emit('select', card)"
         role="button"
@@ -18,7 +18,7 @@
           :alt="'Postcard image'"
           loading="lazy"
           decoding="async"
-          class="block w-full h-auto"
+          class="image"
         />
       </li>
     </ul>
@@ -113,7 +113,7 @@ const props = withDefaults(
     box-shadow 0.15s ease;
   cursor: pointer;
   outline: none;
-  background: #0f1115; /* nice fallback while image loads */
+  background: transparent;
 }
 .card:hover {
   transform: translateY(-2px);
