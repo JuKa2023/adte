@@ -5,11 +5,9 @@ import Header from './components/Header.vue'
 </script>
 
 <template>
-  <div>
+  <div class="m-8">
     <Header />
-
-    <div class="p-6">
-      <FormInput label="Email" type="email" placeholder="Enter your email" required />
+    <div>
       <router-view></router-view>
     </div>
   </div>

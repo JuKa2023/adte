@@ -2,7 +2,7 @@
 <template>
   <div>
     <label v-if="label" :for="id" class="block">
-      <span v-if="label" class="mb-1 block text-sm font-medium text-[var(--color-font)]">
+      <span v-if="label" class="mb-1 block text-sm font-medium font-[var(--font-sans)] text-[var(--color-font)]">
         {{ label }} <span v-if="required" class="text-[var(--color-highlight)]">*</span>
       </span>
     </label>
@@ -15,7 +15,7 @@
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         :placeholder="placeholder"
-        class="w-full h-11 rounded-full bg-[var(--color-dropin-field)] border-[1.5px] border-[var(--color-highlight)] border-solid text-[var(--color-font)] placeholder:text-[var(--color-font)]/50 focus:border-[var(--color-highlight)] focus:ring-2 focus:ring-[var(--color-highlight)]/40 outline-none px-3 pr-10 transition-shadow"
+        class="w-full h-11 rounded-full bg-[var(--color-dropin-field)] border-[1.5px] border-[var(--color-highlight)] border-solid font-[var(--font-sans) text-[var(--color-font)] placeholder:text-[var(--color-font)]/50 focus:border-[var(--color-highlight)] focus:ring-2 focus:ring-[var(--color-highlight)]/40 outline-none px-3 pr-10 transition-shadow"
       />
 
       <button

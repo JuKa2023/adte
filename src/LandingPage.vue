@@ -2,7 +2,7 @@
   <section class="page" aria-labelledby="page-title">
     <header class="intro">
       <h1 id="page-title">Postcard Gallery</h1>
-      <p class="tagline">{{ introText }}</p>
+      <p class="tagline font-[--font-sans]">{{ introText }}</p>
     </header>
 
     <main class="content" role="main">
@@ -53,7 +53,7 @@ const props = withDefaults(
     apiUrl?: string
   }>(),
   {
-    introText: 'Wish you were here ✨',
+    introText: 'Gestalte deine digitale Postkarte ganz easy und sende sie sofort los. Ein paar Klicks und deine Grüsse sind da',
     ctaLabel: 'Do Something',
     apiUrl: '/api/postcards',
   },

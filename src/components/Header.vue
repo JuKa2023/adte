@@ -1,18 +1,11 @@
 <template>
-  <header class="sticky top-0 z-40 backdrop-blur">
+  <header class="sticky top-0 z-40 backdrop-blur ml-4 mr-4">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-      <nav class="flex flex-col gap-4">
-        <RouterLink to="/"
-          class="group flex items-center gap-2 text-[var(--color-highlight)]"
-        >
-          <span class="text-xl transition-transform duration-200 group-hover:scale-110" >
-            ›
-          </span>
-
-          <!-- Text -->
-          <span
-            class="text-xl font-medium transition-transform duration-200 group-hover:scale-105"
-          >
+      <nav class="flex flex-col space-y-4">
+        <!-- Postkarte erstellen -->
+        <RouterLink to="/create" class="group flex items-center space-x-2 text-[var(--color-highlight)]">
+          <span class="text-xl transition-transform duration-200 group-hover:scale-110"> › </span>
+          <span class="text-xl font-medium transition-transform duration-200 group-hover:scale-105">
             Postkarte erstellen
           </span>
         </RouterLink>
@@ -20,27 +13,16 @@
         <!-- Anmelden -->
         <RouterLink
           to="/login"
-          class="group flex items-center gap-2 text-[var(--color-highlight)]"
+          class="group flex items-center space-x-2 text-[var(--color-highlight)]"
         >
-          <span
-            class="text-xl transition-transform duration-200 group-hover:scale-110"
-          >
-            ›
-          </span>
-
-          <span
-            class="text-xl font-medium transition-transform duration-200 group-hover:scale-105"
-          >
+          <span class="text-xl transition-transform duration-200 group-hover:scale-110"> › </span>
+          <span class="text-xl font-medium transition-transform duration-200 group-hover:scale-105">
             Anmelden
           </span>
         </RouterLink>
       </nav>
 
-      <button
-        class="rounded-lg border border-[var(--color-highlight)] px-3 py-1.5 text-xs font-medium"
-        type="button"
-        @click="toggleTheme"
-      >
+      <button class="px-3 py-1.5 text-xs font-medium" type="button" @click="toggleTheme">
         <span v-if="isDark">🌙</span>
         <span v-else>☀️</span>
       </button>

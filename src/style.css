@@ -4,6 +4,9 @@
 @tailwind utilities;
 
 :root {
+  --font-sans: "Roboto", sans-serif;
+  --font-mono: "Inconsolata", monospace;
+
   --color-bg: #f0f1f5; /* Background */
   --color-font: #0a0e15; /* Font */
   --color-button-light: #eceef5; /* Button-light */

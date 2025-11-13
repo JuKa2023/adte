@@ -6,6 +6,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import GalleryPage from './GalleryPage.vue';
 import LandingPage from './LandingPage.vue';
 import RegisterPage from './RegisterPage.vue';
+import PostcardCreationPage from './PostcardEditorPage.vue'
 
 const router = createRouter(
   {
@@ -25,6 +26,11 @@ const router = createRouter(
         path: "/gallery",
         component: GalleryPage,
         name: "gallery",
+      },
+      {
+        path: "/create",
+        component: PostcardCreationPage,
+        name: "postcard creation page"
       },
     ],
   }
