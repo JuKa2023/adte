@@ -1,19 +1,24 @@
-@import "tailwindcss";
+/* 1) Tailwind layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Light Mode (default) */
 :root {
-  --color-bg: #f0f1f5;           /* Background */
-  --color-font: #0a0e15;         /* Font */
+  --color-bg: #f0f1f5; /* Background */
+  --color-font: #0a0e15; /* Font */
   --color-button-light: #eceef5; /* Button-light */
   --color-dropin-field: #e0e5ec; /* Drop-in-field */
-  --color-highlight: #a10d74;    /* Highlightcolor */
+  --color-highlight: #a10d74; /* Highlightcolor */
 }
-
-/* Dark Mode */
 .dark {
   --color-bg: #0a0e15;
   --color-font: #f0f1f5;
   --color-button-light: #202531;
   --color-dropin-field: #37404f;
   --color-highlight: #ffd7f3;
+}
+h1,
+h2,
+p {
+  color: var(--color-font);
 }
