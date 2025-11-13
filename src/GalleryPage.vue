@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, withDefaults, defineProps, defineEmits } from 'vue'
+import { onMounted, ref, computed, } from 'vue'
 import PostcardGallery, { type Postcard } from './components/PostCardGallery.vue'
 import Button from './components/Button.vue'
 

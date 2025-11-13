@@ -4,8 +4,8 @@
       <nav class="flex flex-col space-y-4">
         <!-- Postkarte erstellen -->
         <RouterLink to="/create" class="group flex items-center space-x-2 text-[var(--color-highlight)]">
-          <span class="text-xl transition-transform duration-200 group-hover:scale-110"> › </span>
-          <span class="text-xl font-medium transition-transform duration-200 group-hover:scale-105">
+          <span class="text-lg transition-transform duration-200 group-hover:scale-120"> › </span>
+          <span class="text-lg font-medium transition-transform duration-200 group-hover:scale-110">
             Postkarte erstellen
           </span>
         </RouterLink>
@@ -15,17 +15,17 @@
           to="/login"
           class="group flex items-center space-x-2 text-[var(--color-highlight)]"
         >
-          <span class="text-xl transition-transform duration-200 group-hover:scale-110"> › </span>
-          <span class="text-xl font-medium transition-transform duration-200 group-hover:scale-105">
+          <span class="text-lg transition-transform duration-200 group-hover:scale-120"> › </span>
+          <span class="text-lg font-medium transition-transform duration-200 group-hover:scale-110">
             Anmelden
           </span>
         </RouterLink>
       </nav>
 
-      <button class="px-3 py-1.5 text-xs font-medium" type="button" @click="toggleTheme">
+      <Button class="px-3 py-1.5 text-xs font-medium" type="button" @click="toggleTheme" variant="ghost">
         <span v-if="isDark">🌙</span>
         <span v-else>☀️</span>
-      </button>
+      </Button>
     </div>
   </header>
 </template>
@@ -33,6 +33,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
+import Button from './Button.vue'
 
 const isDark = ref(false)
 

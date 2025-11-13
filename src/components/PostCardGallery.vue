@@ -30,7 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import { withDefaults, defineProps, defineEmits } from 'vue'
 import MehrButton from './Button.vue'
 
 export type Postcard = {

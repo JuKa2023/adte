@@ -3,7 +3,7 @@
     :type="type"
     :disabled="disabled"
     :aria-label="iconOnly ? ariaLabel : undefined"
-    class="inline-flex items-center justify-center gap-2 rounded font-medium select-none px-4 h-10 text-sm transition-transform duration-200"
+    class="inline-flex items-center px-4 py-2 justify-center gap-2 text-base select-none transition-transform duration-200"
     :class="[
       disabled
         ? 'opacity-50 cursor-not-allowed'
@@ -16,7 +16,7 @@
       <slot name="icon" />
     </span>
 
-    <span v-if="!iconOnly" class="transition-transform duration-200">
+    <span v-if="!iconOnly" class="transition-transform duration-200 text-base">
       <slot />
     </span>
   </button>
@@ -25,12 +25,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-type BtnVariant = 'primary' | 'ghost'
+type BtnVariant = 'primary' | 'ghost' | 'primaryIconTop'
 
 const emit = defineEmits<{
   (e: 'click', ev: MouseEvent): void
 }>()
-
 
 const props = withDefaults(
   defineProps<{
@@ -52,15 +51,23 @@ const props = withDefaults(
 const variantClasses = computed(() => {
   switch (props.variant) {
     case 'ghost':
+      return ['bg-[var(--color-button-light)]', 'text-[var(--color-highlight)]']
+
+    case 'primaryIconTop':
       return [
-        'bg-[var(--color-button-light)]',
-        'text-[var(--color-highlight)]',
+        'text-[var(--color-font)]',
+        'text-sm',
+        'bg-transparent',
+        'border',
+        'border-[var(--color-highlight)]',
+
+        'flex-col',
+        'gap-1',
+        'py-3',
       ]
-    default:
-      return [
-        'bg-[var(--color-highlight)]',
-        'text-[var(--color-bg)]',
-      ]
+
+    default: // 'primary'
+      return ['bg-[var(--color-highlight)]', 'text-[var(--color-bg)]']
   }
 })
 </script>

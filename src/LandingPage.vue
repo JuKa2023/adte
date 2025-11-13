@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, withDefaults, defineProps, defineEmits } from 'vue'
+import { ref, computed, } from 'vue'
 import PostcardGallery, { type Postcard } from './components/PostCardGallery.vue'
 import Button from './components/Button.vue'
 import postcardExample1 from './assets/postcard_example_1.jpeg'
