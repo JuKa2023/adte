@@ -71,10 +71,6 @@ const visibleCount = ref(9)
 const postcards = computed(() => allPostcards.value.slice(0, visibleCount.value))
 const hasMore = computed(() => allPostcards.value.length > visibleCount.value)
 
-function onSelect(card: Postcard) {
-
-}
-
 function onLoadMore() {
   visibleCount.value = Math.min(visibleCount.value + 1, allPostcards.value.length)
 }
