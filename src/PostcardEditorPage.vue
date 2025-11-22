@@ -105,363 +105,459 @@
       <!-- Postcard Preview with Flip Animation -->
       <div class="perspective-1000 relative flex items-center gap-8">
         <div
-          :class="['relative transition-all duration-500 transform-style-3d shadow-2xl']"
+          :class="['relative transition-all duration-700 transform-style-3d']"
           :style="{
-            transform: isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            transform: isFront ? 'rotateY(0deg)' : 'rotateY(180deg)',
             aspectRatio: isVertical ? '2/3' : '3/2',
             width: isVertical ? 'min(500px, calc(100vw - 12rem))' : 'min(750px, calc(100vw - 12rem))',
             maxHeight: 'calc(100vh - 12rem)',
           }"
         >
+          <!-- Front Face -->
           <div
-            class="bg-[var(--color-dropin-field)] flex items-center justify-center relative mx-auto transition-all duration-300 w-full h-full bg-white"
-            style="backface-visibility: hidden"
+            class="card-face card-face-front absolute inset-0 bg-white shadow-2xl"
+            :style="{ 'backface-visibility': 'hidden', 'pointer-events': isFront ? 'auto' : 'none' }"
           >
-            <div class="text-center text-sm text-gray-500 w-full h-full relative">
-              <!-- Front Side -->
-              <template v-if="isFront">
-                <div
-                  class="flex items-center justify-center h-full w-full overflow-hidden relative bg-white"
-                  @drop.prevent="onDropFile"
-                  @dragover.prevent
-                  @click="triggerFileUpload"
+            <div
+              class="flex items-center justify-center h-full w-full overflow-hidden relative bg-white"
+              @drop.prevent="onDropFile"
+              @dragover.prevent
+              @click="triggerFileUpload"
+            >
+              <img
+                v-if="postcard.frontImage"
+                :src="postcard.frontImage"
+                class="w-full h-full object-cover absolute inset-0 pointer-events-none"
+                alt="Postcard Front"
+              />
+              <div
+                v-else
+                class="flex flex-col items-center gap-2 z-10 pointer-events-none"
+              >
+                <span class="material-icons text-6xl text-gray-300"
+                  >add_photo_alternate</span
                 >
-                  <img
-                    v-if="postcard.frontImage"
-                    :src="postcard.frontImage"
-                    class="w-full h-full object-cover absolute inset-0 pointer-events-none"
-                    alt="Postcard Front"
-                  />
-                  <div
-                    v-else
-                    class="flex flex-col items-center gap-2 z-10 pointer-events-none"
+                <p class="text-gray-400 font-light">Füge eine Mediadatei hinzu</p>
+              </div>
+
+              <!-- Draggable Elements Layer (Front) -->
+              <div class="absolute inset-0 z-20 overflow-hidden">
+                <div
+                  v-for="element in postcard.elements.filter((e) => e.side === 'front')"
+                  :key="element.id"
+                  class="absolute cursor-move select-none p-2 border-2"
+                  :class="
+                    activeElementId === element.id
+                      ? 'border-[var(--color-highlight)]'
+                      : 'border-transparent hover:border-gray-300'
+                  "
+                  :style="{
+                    left: `${element.x}px`,
+                    top: `${element.y}px`,
+                    fontFamily: element.fontFamily,
+                    fontSize: element.fontSize ? `${element.fontSize}px` : undefined,
+                    color: element.color,
+                    fontWeight: element.fontWeight,
+                    fontStyle: element.fontStyle,
+                    width: element.width ? `${element.width}px` : undefined,
+                    height: element.height ? `${element.height}px` : undefined,
+                  }"
+                  @mousedown.stop="startDrag($event, element)"
+                  @click.stop="selectElement(element.id)"
+                >
+                  <span
+                    v-if="element.type === 'text'"
+                    contenteditable
+                    @blur="updateText($event, element)"
+                    class="outline-none min-w-[20px] inline-block"
                   >
-                    <span class="material-icons text-6xl text-gray-300"
-                      >add_photo_alternate</span
-                    >
-                    <p class="text-gray-400 font-light">Füge eine Mediadatei hinzu</p>
-                  </div>
-
-                  <!-- Draggable Elements Layer -->
-                  <div class="absolute inset-0 z-20 overflow-hidden">
-                    <div
-                      v-for="element in postcard.elements.filter((e) => e.side === 'front')"
-                      :key="element.id"
-                      class="absolute cursor-move select-none p-2 border-2"
-                      :class="
-                        activeElementId === element.id
-                          ? 'border-[var(--color-highlight)]'
-                          : 'border-transparent hover:border-gray-300'
-                      "
-                      :style="{
-                        left: `${element.x}px`,
-                        top: `${element.y}px`,
-                        fontFamily: element.fontFamily,
-                        fontSize: element.fontSize ? `${element.fontSize}px` : undefined,
-                        color: element.color,
-                        fontWeight: element.fontWeight,
-                        fontStyle: element.fontStyle,
-                        width: element.width ? `${element.width}px` : undefined,
-                        height: element.height ? `${element.height}px` : undefined,
-                      }"
-                      @mousedown.stop="startDrag($event, element)"
-                      @click.stop="selectElement(element.id)"
-                    >
-                      <span
-                        v-if="element.type === 'text'"
-                        contenteditable
-                        @blur="updateText($event, element)"
-                        class="outline-none min-w-[20px] inline-block"
-                      >
-                        {{ element.content }}
-                      </span>
-                      <span
-                        v-else-if="element.type === 'sticker'"
-                        :style="{
-                          fontSize: element.fontSize ? `${element.fontSize}px` : '4rem',
-                        }"
-                      >
-                        {{ element.content }}
-                      </span>
-                      <img
-                        v-else-if="element.type === 'image'"
-                        :src="element.content"
-                        class="w-full h-full object-cover rounded-md pointer-events-none"
-                      />
-
-                      <!-- Delete button for active element -->
-                      <button
-                        v-if="activeElementId === element.id"
-                        class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm shadow-md"
-                        @click.stop="deleteElement(element.id)"
-                      >
-                        ✕
-                      </button>
-
-                      <!-- Resize Handle (for all types) -->
-                      <div
-                        v-if="activeElementId === element.id"
-                        class="absolute -bottom-2 -right-2 w-5 h-5 bg-white border border-gray-400 rounded-full cursor-se-resize z-40 shadow-sm"
-                        @mousedown.stop="startResize($event, element)"
-                      ></div>
-
-                      <!-- Floating Toolbar for Active Text Element -->
-                      <div
-                        v-if="
-                          activeElementId &&
-                          postcard.elements.find((e) => e.id === activeElementId)?.type ===
-                            'text' &&
-                          activeElementId === element.id
-                        "
-                        class="absolute z-30 bg-white shadow-lg rounded p-1 flex gap-1 items-center border border-gray-200"
-                        :style="{
-                          left: `${postcard.elements.find((e) => e.id === activeElementId)?.x || 0}px`,
-                          top: `${(postcard.elements.find((e) => e.id === activeElementId)?.y || 0) - 50}px`,
-                        }"
-                      >
-                        <button
-                          @click="onChangeFont"
-                          class="p-1 hover:bg-gray-100 rounded font-serif text-sm"
-                        >
-                          Aa
-                        </button>
-                        <button
-                          @click="toggleBold"
-                          class="p-1 hover:bg-gray-100 rounded font-bold text-sm"
-                        >
-                          B
-                        </button>
-                        <button
-                          @click="toggleItalic"
-                          class="p-1 hover:bg-gray-100 rounded italic text-sm"
-                        >
-                          I
-                        </button>
-                        
-                        <!-- Font Size Controls -->
-                        <div class="flex items-center gap-1 border-l pl-2">
-                          <button
-                            @click="decreaseFontSize"
-                            class="p-1 hover:bg-gray-100 rounded text-sm"
-                            title="Schriftgröße verkleinern"
-                          >
-                            <span class="material-icons" style="font-size: 14px">remove</span>
-                          </button>
-                          <input
-                            type="number"
-                            :value="postcard.elements.find((e) => e.id === activeElementId)?.fontSize || 24"
-                            @input="updateFontSize"
-                            min="8"
-                            max="200"
-                            class="w-10 text-center border border-gray-300 rounded px-0.5 py-0.5 text-xs"
-                          />
-                          <button
-                            @click="increaseFontSize"
-                            class="p-1 hover:bg-gray-100 rounded text-sm"
-                            title="Schriftgröße vergrößern"
-                          >
-                            <span class="material-icons" style="font-size: 14px">add</span>
-                          </button>
-                        </div>
-                        
-                        <input
-                          type="color"
-                          :value="
-                            postcard.elements.find((e) => e.id === activeElementId)?.color ||
-                            '#000000'
-                          "
-                          @input="updateColor"
-                          class="w-6 h-6 cursor-pointer border-none p-0 rounded overflow-hidden"
-                        />
-                        <button
-                          @click="deleteElement(activeElementId!)"
-                          class="text-red-500 hover:bg-red-50 rounded p-1"
-                        >
-                          <span class="material-icons" style="font-size: 16px">delete</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <input
-                    type="file"
-                    ref="fileInput"
-                    class="hidden"
-                    accept="image/*"
-                    @change="onFileSelected"
+                    {{ element.content }}
+                  </span>
+                  <span
+                    v-else-if="element.type === 'sticker'"
+                    :style="{
+                      fontSize: element.fontSize ? `${element.fontSize}px` : '4rem',
+                    }"
+                  >
+                    {{ element.content }}
+                  </span>
+                  <img
+                    v-else-if="element.type === 'image'"
+                    :src="element.content"
+                    class="w-full h-full object-cover rounded-md pointer-events-none"
                   />
-                  <input
-                    type="file"
-                    ref="extraFileInput"
-                    class="hidden"
-                    accept="image/*"
-                    @change="onExtraFileSelected"
-                  />
-                </div>
-              </template>
 
-              <!-- Back Side -->
-              <template v-else>
-                <!-- Draggable Elements Layer (Back) -->
-                <div class="absolute inset-0 z-20 overflow-hidden pointer-events-none">
-                  <div class="pointer-events-auto w-full h-full relative">
-                    <div
-                      v-for="element in postcard.elements.filter((e) => e.side === 'back')"
-                      :key="element.id"
-                      class="absolute cursor-move select-none p-2 border-2"
-                      :class="
-                        activeElementId === element.id
-                          ? 'border-[var(--color-highlight)]'
-                          : 'border-transparent hover:border-gray-300'
-                      "
-                      :style="{
-                        left: `${element.x}px`,
-                        top: `${element.y}px`,
-                        fontFamily: element.fontFamily,
-                        fontSize: element.fontSize ? `${element.fontSize}px` : undefined,
-                        color: element.color,
-                        fontWeight: element.fontWeight,
-                        fontStyle: element.fontStyle,
-                        width: element.width ? `${element.width}px` : undefined,
-                        height: element.height ? `${element.height}px` : undefined,
-                      }"
-                      @mousedown.stop="startDrag($event, element)"
-                      @click.stop="selectElement(element.id)"
+                  <!-- Delete button for active element -->
+                  <button
+                    v-if="activeElementId === element.id"
+                    class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm shadow-md"
+                    @click.stop="deleteElement(element.id)"
+                  >
+                    ✕
+                  </button>
+
+                  <!-- Resize Handle (for all types) -->
+                  <div
+                    v-if="activeElementId === element.id"
+                    class="absolute -bottom-2 -right-2 w-5 h-5 bg-white border border-gray-400 rounded-full cursor-se-resize z-40 shadow-sm"
+                    @mousedown.stop="startResize($event, element)"
+                  ></div>
+
+                  <!-- Floating Toolbar for Active Text Element -->
+                  <div
+                    v-if="
+                      activeElementId &&
+                      postcard.elements.find((e) => e.id === activeElementId)?.type ===
+                        'text' &&
+                      activeElementId === element.id
+                    "
+                    class="absolute z-30 bg-white shadow-lg rounded p-1 flex gap-1 items-center border border-gray-200"
+                    :style="{
+                      left: `${postcard.elements.find((e) => e.id === activeElementId)?.x || 0}px`,
+                      top: `${(postcard.elements.find((e) => e.id === activeElementId)?.y || 0) - 50}px`,
+                    }"
+                  >
+                    <button
+                      @click="onChangeFont"
+                      class="p-1 hover:bg-gray-100 rounded font-serif text-sm"
                     >
-                      <span
-                        v-if="element.type === 'text'"
-                        contenteditable
-                        @blur="updateText($event, element)"
-                        class="outline-none min-w-[20px] inline-block"
-                      >
-                        {{ element.content }}
-                      </span>
-                      <span
-                        v-else-if="element.type === 'sticker'"
-                        :style="{
-                          fontSize: element.fontSize ? `${element.fontSize}px` : '4rem',
-                        }"
-                      >
-                        {{ element.content }}
-                      </span>
-                      <img
-                        v-else-if="element.type === 'image'"
-                        :src="element.content"
-                        class="w-full h-full object-cover rounded-md pointer-events-none"
-                      />
-
+                      Aa
+                    </button>
+                    <button
+                      @click="toggleBold"
+                      class="p-1 hover:bg-gray-100 rounded font-bold text-sm"
+                    >
+                      B
+                    </button>
+                    <button
+                      @click="toggleItalic"
+                      class="p-1 hover:bg-gray-100 rounded italic text-sm"
+                    >
+                      I
+                    </button>
+                    
+                    <!-- Font Size Controls -->
+                    <div class="flex items-center gap-1 border-l pl-2">
                       <button
-                        v-if="activeElementId === element.id"
-                        class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm shadow-md"
-                        @click.stop="deleteElement(element.id)"
+                        @click="decreaseFontSize"
+                        class="p-1 hover:bg-gray-100 rounded text-sm"
+                        title="Schriftgröße verkleinern"
                       >
-                        ✕
+                        <span class="material-icons" style="font-size: 14px">remove</span>
                       </button>
-
-                      <!-- Resize Handle (for all types) -->
-                      <div
-                        v-if="activeElementId === element.id"
-                        class="absolute -bottom-2 -right-2 w-5 h-5 bg-white border border-gray-400 rounded-full cursor-se-resize z-40 shadow-sm"
-                        @mousedown.stop="startResize($event, element)"
-                      ></div>
-                      <!-- Floating Toolbar for Active Text Element (Back) -->
-                      <div
-                        v-if="
-                          activeElementId &&
-                          postcard.elements.find((e) => e.id === activeElementId)?.type ===
-                            'text' &&
-                          activeElementId === element.id
-                        "
-                        class="absolute z-30 bg-white shadow-lg rounded p-1 flex gap-1 items-center border border-gray-200"
-                        :style="{
-                          left: `${postcard.elements.find((e) => e.id === activeElementId)?.x || 0}px`,
-                          top: `${(postcard.elements.find((e) => e.id === activeElementId)?.y || 0) - 50}px`,
-                        }"
+                      <input
+                        type="number"
+                        :value="postcard.elements.find((e) => e.id === activeElementId)?.fontSize || 24"
+                        @input="updateFontSize"
+                        min="8"
+                        max="200"
+                        class="w-10 text-center border border-gray-300 rounded px-0.5 py-0.5 text-xs"
+                      />
+                      <button
+                        @click="increaseFontSize"
+                        class="p-1 hover:bg-gray-100 rounded text-sm"
+                        title="Schriftgröße vergrößern"
                       >
-                        <button
-                          @click="onChangeFont"
-                          class="p-1 hover:bg-gray-100 rounded font-serif text-sm"
-                        >
-                          Aa
-                        </button>
-                        <button
-                          @click="toggleBold"
-                          class="p-1 hover:bg-gray-100 rounded font-bold text-sm"
-                        >
-                          B
-                        </button>
-                        <button
-                          @click="toggleItalic"
-                          class="p-1 hover:bg-gray-100 rounded italic text-sm"
-                        >
-                          I
-                        </button>
-                        
-                        <!-- Font Size Controls -->
-                        <div class="flex items-center gap-1 border-l pl-2">
-                          <button
-                            @click="decreaseFontSize"
-                            class="p-1 hover:bg-gray-100 rounded text-sm"
-                            title="Schriftgröße verkleinern"
-                          >
-                            <span class="material-icons" style="font-size: 14px">remove</span>
-                          </button>
-                          <input
-                            type="number"
-                            :value="postcard.elements.find((e) => e.id === activeElementId)?.fontSize || 24"
-                            @input="updateFontSize"
-                            min="8"
-                            max="200"
-                            class="w-10 text-center border border-gray-300 rounded px-0.5 py-0.5 text-xs"
-                          />
-                          <button
-                            @click="increaseFontSize"
-                            class="p-1 hover:bg-gray-100 rounded text-sm"
-                            title="Schriftgröße vergrößern"
-                          >
-                            <span class="material-icons" style="font-size: 14px">add</span>
-                          </button>
-                        </div>
-                        
-                        <input
-                          type="color"
-                          :value="
-                            postcard.elements.find((e) => e.id === activeElementId)?.color ||
-                            '#000000'
-                          "
-                          @input="updateColor"
-                          class="w-6 h-6 cursor-pointer border-none p-0 rounded overflow-hidden"
-                        />
-                        <button
-                          @click="deleteElement(activeElementId!)"
-                          class="text-red-500 hover:bg-red-50 rounded p-1"
-                        >
-                          <span class="material-icons" style="font-size: 16px">delete</span>
-                        </button>
-                      </div>
+                        <span class="material-icons" style="font-size: 14px">add</span>
+                      </button>
                     </div>
+                    
+                    <input
+                      type="color"
+                      :value="
+                        postcard.elements.find((e) => e.id === activeElementId)?.color ||
+                        '#000000'
+                      "
+                      @input="updateColor"
+                      class="w-6 h-6 cursor-pointer border-none p-0 rounded overflow-hidden"
+                    />
+                    <button
+                      @click="deleteElement(activeElementId!)"
+                      class="text-red-500 hover:bg-red-50 rounded p-1"
+                    >
+                      <span class="material-icons" style="font-size: 16px">delete</span>
+                    </button>
                   </div>
                 </div>
+              </div>
 
-                <div
-                  class="absolute right-8 bottom-24 flex flex-col gap-3 items-end w-64 pointer-events-auto"
+              <input
+                type="file"
+                ref="fileInput"
+                class="hidden"
+                accept="image/*"
+                @change="onFileSelected"
+              />
+              <input
+                type="file"
+                ref="extraFileInput"
+                class="hidden"
+                accept="image/*"
+                @change="onExtraFileSelected"
+              />
+            </div>
+          </div>
+
+          <!-- Back Face -->
+          <div
+            class="card-face card-face-back absolute inset-0 bg-white shadow-2xl"
+            :style="{ 'backface-visibility': 'hidden', 'transform': 'rotateY(180deg)', 'pointer-events': isFront ? 'none' : 'auto' }"
+          >
+            <!-- Draggable Elements Layer (Back) -->
+            <div class="absolute inset-0 z-20 overflow-hidden pointer-events-none">
+              <div
+                v-for="element in postcard.elements.filter((e) => e.side === 'back')"
+                :key="element.id"
+                class="absolute cursor-move select-none p-2 border-2 pointer-events-auto"
+                :class="
+                  activeElementId === element.id
+                    ? 'border-[var(--color-highlight)]'
+                    : 'border-transparent hover:border-gray-300'
+                "
+                :style="{
+                  left: `${element.x}px`,
+                  top: `${element.y}px`,
+                  fontFamily: element.fontFamily,
+                  fontSize: element.fontSize ? `${element.fontSize}px` : undefined,
+                  color: element.color,
+                  fontWeight: element.fontWeight,
+                  fontStyle: element.fontStyle,
+                  width: element.width ? `${element.width}px` : undefined,
+                  height: element.height ? `${element.height}px` : undefined,
+                }"
+                @mousedown.stop="startDrag($event, element)"
+                @click.stop="selectElement(element.id)"
+              >
+                <span
+                  v-if="element.type === 'text'"
+                  contenteditable
+                  @blur="updateText($event, element)"
+                  class="outline-none min-w-[20px] inline-block"
                 >
+                  {{ element.content }}
+                </span>
+                <span
+                  v-else-if="element.type === 'sticker'"
+                  :style="{
+                    fontSize: element.fontSize ? `${element.fontSize}px` : '4rem',
+                  }"
+                >
+                  {{ element.content }}
+                </span>
+                <img
+                  v-else-if="element.type === 'image'"
+                  :src="element.content"
+                  class="w-full h-full object-cover rounded-md pointer-events-none"
+                />
+
+                <button
+                  v-if="activeElementId === element.id"
+                  class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm shadow-md"
+                  @click.stop="deleteElement(element.id)"
+                >
+                  ✕
+                </button>
+
+                <!-- Resize Handle (for all types) -->
+                <div
+                  v-if="activeElementId === element.id"
+                  class="absolute -bottom-2 -right-2 w-5 h-5 bg-white border border-gray-400 rounded-full cursor-se-resize z-40 shadow-sm"
+                  @mousedown.stop="startResize($event, element)"
+                ></div>
+                <!-- Floating Toolbar for Active Text Element (Back) -->
+                <div
+                  v-if="
+                    activeElementId &&
+                    postcard.elements.find((e) => e.id === activeElementId)?.type ===
+                      'text' &&
+                    activeElementId === element.id
+                  "
+                  class="absolute z-30 bg-white shadow-lg rounded p-1 flex gap-1 items-center border border-gray-200"
+                  :style="{
+                    left: `${postcard.elements.find((e) => e.id === activeElementId)?.x || 0}px`,
+                    top: `${(postcard.elements.find((e) => e.id === activeElementId)?.y || 0) - 50}px`,
+                  }"
+                >
+                  <button
+                    @click="onChangeFont"
+                    class="p-1 hover:bg-gray-100 rounded font-serif text-sm"
+                  >
+                    Aa
+                  </button>
+                  <button
+                    @click="toggleBold"
+                    class="p-1 hover:bg-gray-100 rounded font-bold text-sm"
+                  >
+                    B
+                  </button>
+                  <button
+                    @click="toggleItalic"
+                    class="p-1 hover:bg-gray-100 rounded italic text-sm"
+                  >
+                    I
+                  </button>
+                  
+                  <!-- Font Size Controls -->
+                  <div class="flex items-center gap-1 border-l pl-2">
+                    <button
+                      @click="decreaseFontSize"
+                      class="p-1 hover:bg-gray-100 rounded text-sm"
+                      title="Schriftgröße verkleinern"
+                    >
+                      <span class="material-icons" style="font-size: 14px">remove</span>
+                    </button>
+                    <input
+                      type="number"
+                      :value="postcard.elements.find((e) => e.id === activeElementId)?.fontSize || 24"
+                      @input="updateFontSize"
+                      min="8"
+                      max="200"
+                      class="w-10 text-center border border-gray-300 rounded px-0.5 py-0.5 text-xs"
+                    />
+                    <button
+                      @click="increaseFontSize"
+                      class="p-1 hover:bg-gray-100 rounded text-sm"
+                      title="Schriftgröße vergrößern"
+                    >
+                      <span class="material-icons" style="font-size: 14px">add</span>
+                    </button>
+                  </div>
+                  
                   <input
-                    v-for="(line, index) in 4"
-                    :key="index"
-                    v-model="postcard.addressLines[index]"
-                    class="w-full border-b border-gray-300 bg-transparent text-base px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
-                    :placeholder="index === 0 ? 'Name' : 'Adresse'"
+                    type="color"
+                    :value="
+                      postcard.elements.find((e) => e.id === activeElementId)?.color ||
+                      '#000000'
+                    "
+                    @input="updateColor"
+                    class="w-6 h-6 cursor-pointer border-none p-0 rounded overflow-hidden"
+                  />
+                  <button
+                    @click="deleteElement(activeElementId!)"
+                    class="text-red-500 hover:bg-red-50 rounded p-1"
+                  >
+                    <span class="material-icons" style="font-size: 16px">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vertical Layout: Message top, fields bottom -->
+            <template v-if="isVertical">
+              <!-- Message Area (Full Width) -->
+              <div
+                class="absolute left-8 right-8 top-8 bottom-32 pointer-events-auto flex flex-col"
+              >
+                <label class="text-xs text-gray-500 mb-2 font-medium">Deine Nachricht</label>
+                <textarea
+                  v-model="postcard.message"
+                  class="flex-1 border border-gray-300 bg-white/80 backdrop-blur-sm text-base px-3 py-2 rounded-md focus:outline-none focus:border-[var(--color-highlight)] focus:ring-1 focus:ring-[var(--color-highlight)] placeholder-gray-400 resize-none"
+                  placeholder="Schreibe deine Nachricht hier..."
+                ></textarea>
+              </div>
+
+              <!-- Sender & Recipient Info (Bottom) -->
+              <div
+                class="absolute left-8 right-8 bottom-20 pointer-events-auto flex gap-2"
+              >
+                <!-- Sender Handle -->
+                <div class="flex-[0.8] flex flex-col gap-1">
+                  <label class="text-xs text-gray-500 font-medium">Von</label>
+                  <input
+                    v-model="postcard.senderHandle"
+                    class="w-full border-b-2 border-gray-300 bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    placeholder="Dein Name"
                   />
                 </div>
 
-                <div class="absolute left-8 bottom-8 z-20 pointer-events-auto">
-                  <AudioRecorder
-                    v-model:audioUrl="postcard.audioUrl"
-                    @update:audioBlob="postcard.audioBlob = $event"
+                <!-- Sender Email -->
+                <div class="flex-[1.2] flex flex-col gap-1">
+                  <label class="text-xs text-gray-500 font-medium">Deine E-Mail</label>
+                  <input
+                    type="email"
+                    v-model="postcard.senderEmail"
+                    class="w-full border-b-2 border-gray-300 bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    placeholder="deine@email.de"
                   />
                 </div>
-              </template>
+
+                <!-- Spacer -->
+                <div class="w-4"></div>
+
+                <!-- Recipient Email -->
+                <div class="flex-[1.2] flex flex-col gap-1">
+                  <label class="text-xs text-gray-500 font-medium">An</label>
+                  <input
+                    type="email"
+                    v-model="postcard.recipientEmail"
+                    class="w-full border-b-2 border-gray-300 bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    placeholder="empfaenger@beispiel.de"
+                  />
+                </div>
+              </div>
+            </template>
+
+            <!-- Horizontal Layout: Message left, fields right -->
+            <template v-else>
+              <!-- Left Side: Message Area -->
+              <div
+                class="absolute left-8 top-8 bottom-24 w-[45%] pointer-events-auto flex flex-col"
+              >
+                <label class="text-xs text-gray-500 mb-2 font-medium">Deine Nachricht</label>
+                <textarea
+                  v-model="postcard.message"
+                  class="flex-1 border border-gray-300 bg-white/80 backdrop-blur-sm text-base px-3 py-2 rounded-md focus:outline-none focus:border-[var(--color-highlight)] focus:ring-1 focus:ring-[var(--color-highlight)] placeholder-gray-400 resize-none"
+                  placeholder="Schreibe deine Nachricht hier..."
+                ></textarea>
+              </div>
+
+              <!-- Right Side: Sender & Recipient Info -->
+              <div
+                class="absolute right-8 top-8 w-[45%] pointer-events-auto flex flex-col gap-4"
+              >
+                <!-- Sender Handle -->
+                <div class="flex flex-col gap-2">
+                  <label class="text-xs text-gray-500 font-medium">Von (Dein Name/Handle)</label>
+                  <input
+                    v-model="postcard.senderHandle"
+                    class="w-full border-b-2 border-gray-300 bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    placeholder="z.B. Max Mustermann"
+                  />
+                </div>
+
+                <!-- Sender Email -->
+                <div class="flex flex-col gap-2">
+                  <label class="text-xs text-gray-500 font-medium">Deine E-Mail</label>
+                  <input
+                    type="email"
+                    v-model="postcard.senderEmail"
+                    class="w-full border-b-2 border-gray-300 bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    placeholder="deine@email.de"
+                  />
+                </div>
+
+                <!-- Separator -->
+                <div class="h-4"></div>
+
+                <!-- Recipient Email -->
+                <div class="flex flex-col gap-2">
+                  <label class="text-xs text-gray-500 font-medium">An (E-Mail des Empfängers)</label>
+                  <input
+                    type="email"
+                    v-model="postcard.recipientEmail"
+                    class="w-full border-b-2 border-gray-300 bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    placeholder="empfaenger@beispiel.de"
+                  />
+                </div>
+              </div>
+            </template>
+
+            <!-- Audio Recorder at Bottom -->
+            <div class="absolute left-8 bottom-8 z-20 pointer-events-auto">
+              <AudioRecorder
+                v-model:audioUrl="postcard.audioUrl"
+                @update:audioBlob="postcard.audioBlob = $event"
+              />
             </div>
           </div>
         </div>
@@ -580,7 +676,10 @@ interface PostcardElement {
 interface PostcardState {
   frontImage: string | null
   elements: PostcardElement[]
-  addressLines: string[]
+  message: string
+  senderHandle: string
+  senderEmail: string
+  recipientEmail: string
   audioBlob: Blob | null
   audioUrl: string | null
 }
@@ -588,7 +687,10 @@ interface PostcardState {
 const postcard = ref<PostcardState>({
   frontImage: null,
   elements: [],
-  addressLines: ['', '', '', ''],
+  message: '',
+  senderHandle: '',
+  senderEmail: '',
+  recipientEmail: '',
   audioBlob: null,
   audioUrl: null,
 })
@@ -623,7 +725,6 @@ const moodImages = [
 
 const isFront = ref(true)
 const isVertical = ref(true)
-const isFlipping = ref(false)
 
 const triggerFileUpload = () => {
   if (!postcard.value.frontImage) {
@@ -706,11 +807,7 @@ const onSelectEmoji = (emoji: any) => {
 }
 
 const toggleSide = () => {
-  isFlipping.value = true
-  setTimeout(() => {
-    isFront.value = !isFront.value
-    isFlipping.value = false
-  }, 300)
+  isFront.value = !isFront.value
 }
 
 const toggleOrientation = () => {
@@ -901,13 +998,8 @@ const stopResize = () => {
 }
 
 const flipCard = () => {
-  if (isFlipping.value) return
-  isFlipping.value = true
   activeElementId.value = null
-  setTimeout(() => {
-    isFront.value = !isFront.value
-    isFlipping.value = false
-  }, 300)
+  isFront.value = !isFront.value
 }
 
 const onMorePhotos = () => {
