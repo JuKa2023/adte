@@ -1,5 +1,5 @@
 <template>
-  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 h-14">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-[var(--color-sidebar-bg)] backdrop-blur-md border-b border-gray-100 h-14">
     <div class="flex h-full items-center justify-between px-6">
       <nav class="flex items-center gap-6">
         <!-- Postkarte erstellen -->
@@ -19,7 +19,7 @@
         </RouterLink>
       </nav>
 
-      <Button class="w-8 h-8 flex items-center justify-center rounded-md" type="button" @click="toggleTheme" variant="ghost" iconOnly>
+      <Button class="w-8 h-8 flex items-center justify-center rounded-full" type="button" @click="toggleTheme" variant="ghost" iconOnly>
         <template #icon>
           <span v-if="isDark" class="text-lg">🌙</span>
           <span v-else class="text-lg">☀️</span>

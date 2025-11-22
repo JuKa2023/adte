@@ -1,8 +1,9 @@
 <template>
-  <div class="flex h-screen w-screen overflow-hidden bg-[#F5F5F5]">
+  <div class="flex h-screen w-screen overflow-hidden" style="background-color: var(--color-bg)">
     <!-- Left Sidebar -->
     <aside
-      class="flex w-24 flex-col items-center border-r border-gray-200 bg-white pt-20 pb-8 shadow-sm z-20 overflow-y-auto"
+      class="flex w-24 flex-col items-center pt-20 pb-8 shadow-sm z-20 overflow-y-auto"
+      style="background-color: var(--color-sidebar-bg); border-right: 1px solid var(--color-border)"
     >
       <div class="flex flex-col gap-6 w-full px-4">
         <!-- Orientation -->
@@ -11,16 +12,19 @@
           iconOnly
           @click="toggleOrientation"
           :aria-label="isVertical ? 'Zu Querformat wechseln' : 'Zu Hochformat wechseln'"
-          class="w-full hover:bg-gray-100 rounded-md"
+          class="w-full rounded-md"
+          style="--hover-bg: var(--color-sidebar-hover)"
+          @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+          @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
         >
           <template #icon>
-            <span class="material-icons text-xl text-gray-600">{{
+            <span class="material-icons text-xl" style="color: var(--color-icon)">{{
               isVertical ? 'crop_portrait' : 'crop_landscape'
             }}</span>
           </template>
         </Button>
 
-        <div class="h-px w-full bg-gray-200"></div>
+        <div class="h-px w-full" style="background-color: var(--color-divider)"></div>
 
         <!-- Tools -->
         <Button
@@ -28,10 +32,13 @@
           iconOnly
           @click="onAddText"
           aria-label="Text hinzufügen"
-          class="w-full hover:bg-gray-100 rounded-md"
+          class="w-full rounded-md"
+          style="--hover-bg: var(--color-sidebar-hover)"
+          @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+          @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
         >
           <template #icon
-            ><span class="material-icons text-xl text-gray-600">title</span></template
+            ><span class="material-icons text-xl" style="color: var(--color-icon)">title</span></template
           >
         </Button>
 
@@ -40,10 +47,13 @@
           iconOnly
           @click="onAddSticker"
           aria-label="Sticker hinzufügen"
-          class="w-full hover:bg-gray-100 rounded-md"
+          class="w-full rounded-md"
+          style="--hover-bg: var(--color-sidebar-hover)"
+          @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+          @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
         >
           <template #icon
-            ><span class="material-icons text-3xl text-gray-600"
+            ><span class="material-icons text-3xl" style="color: var(--color-icon)"
               >emoji_emotions</span
             ></template
           >
@@ -55,10 +65,13 @@
           iconOnly
           @click="onOpenMoodTemplates"
           aria-label="Mood Vorlagen"
-          class="w-full hover:bg-gray-100 rounded-md"
+          class="w-full rounded-md"
+          style="--hover-bg: var(--color-sidebar-hover)"
+          @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+          @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
         >
           <template #icon
-            ><span class="material-icons text-3xl text-gray-600">palette</span></template
+            ><span class="material-icons text-3xl" style="color: var(--color-icon)">palette</span></template
           >
         </Button>
 
@@ -68,10 +81,13 @@
           iconOnly
           @click="onMorePhotos"
           aria-label="Foto hinzufügen"
-          class="w-full hover:bg-gray-100 rounded-md"
+          class="w-full rounded-md"
+          style="--hover-bg: var(--color-sidebar-hover)"
+          @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+          @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
         >
           <template #icon
-            ><span class="material-icons text-3xl text-gray-600"
+            ><span class="material-icons text-3xl" style="color: var(--color-icon)"
               >add_photo_alternate</span
             ></template
           >
@@ -84,12 +100,16 @@
           iconOnly
           @click="toggleSide"
           aria-label="Seite wechseln"
-          class="w-full hover:bg-gray-100 rounded-md"
+          class="w-full rounded-md"
+          style="--hover-bg: var(--color-sidebar-hover)"
+          @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+          @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
         >
           <template #icon>
             <span
-              class="material-icons text-3xl text-gray-600 transform transition-transform duration-500"
+              class="material-icons text-3xl transform transition-transform duration-500"
               :class="{ 'rotate-180': !isFront }"
+              style="color: var(--color-icon)"
             >
               flip_camera_android
             </span>
@@ -100,7 +120,8 @@
 
     <!-- Main Content -->
     <main
-      class="flex flex-1 items-center justify-center overflow-hidden bg-[#F5F5F5] pt-20 px-8 pb-8 relative"
+      class="flex flex-1 items-center justify-center overflow-hidden pt-20 px-8 pb-8 relative"
+      style="background-color: var(--color-bg)"
     >
       <!-- Postcard Preview with Flip Animation -->
       <div class="perspective-1000 relative flex items-center gap-8">
@@ -115,11 +136,12 @@
         >
           <!-- Front Face -->
           <div
-            class="card-face card-face-front absolute inset-0 bg-white shadow-2xl"
-            :style="{ 'backface-visibility': 'hidden', 'pointer-events': isFront ? 'auto' : 'none' }"
+            class="card-face card-face-front absolute inset-0 shadow-2xl"
+            :style="{ 'backface-visibility': 'hidden', 'pointer-events': isFront ? 'auto' : 'none', 'background-color': 'var(--color-card-bg)' }"
           >
             <div
-              class="flex items-center justify-center h-full w-full overflow-hidden relative bg-white"
+              class="flex items-center justify-center h-full w-full overflow-hidden relative"
+              style="background-color: var(--color-card-bg)"
               @drop.prevent="onDropFile"
               @dragover.prevent
               @click="triggerFileUpload"
@@ -134,10 +156,10 @@
                 v-else
                 class="flex flex-col items-center gap-2 z-10 pointer-events-none"
               >
-                <span class="material-icons text-6xl text-gray-300"
+                <span class="material-icons text-6xl" style="color: var(--color-icon-light)"
                   >add_photo_alternate</span
                 >
-                <p class="text-gray-400 font-light">Füge eine Mediadatei hinzu</p>
+                <p class="font-light" style="color: var(--color-placeholder)">Füge eine Mediadatei hinzu</p>
               </div>
 
               <!-- Draggable Elements Layer (Front) -->
@@ -149,7 +171,7 @@
                   :class="
                     activeElementId === element.id
                       ? 'border-[var(--color-highlight)]'
-                      : 'border-transparent hover:border-gray-300'
+                      : 'border-transparent'
                   "
                   :style="{
                     left: `${element.x}px`,
@@ -199,7 +221,8 @@
                   <!-- Resize Handle (for all types) -->
                   <div
                     v-if="activeElementId === element.id"
-                    class="absolute -bottom-2 -right-2 w-5 h-5 bg-white border border-gray-400 rounded-full cursor-se-resize z-40 shadow-sm"
+                    class="absolute -bottom-2 -right-2 w-5 h-5 rounded-full cursor-se-resize z-40 shadow-sm"
+                    style="background-color: var(--color-card-bg); border: 1px solid var(--color-border-dark)"
                     @mousedown.stop="startResize($event, element)"
                   ></div>
 
@@ -211,7 +234,8 @@
                         'text' &&
                       activeElementId === element.id
                     "
-                    class="absolute z-30 bg-white shadow-lg rounded p-1 flex gap-1 items-center border border-gray-200"
+                    class="absolute z-30 shadow-lg rounded p-1 flex gap-1 items-center"
+                    style="background-color: var(--color-modal-bg); border: 1px solid var(--color-border)"
                     :style="{
                       left: `${postcard.elements.find((e) => e.id === activeElementId)?.x || 0}px`,
                       top: `${(postcard.elements.find((e) => e.id === activeElementId)?.y || 0) - 50}px`,
@@ -219,29 +243,41 @@
                   >
                     <button
                       @click="onChangeFont"
-                      class="p-1 hover:bg-gray-100 rounded font-serif text-sm"
+                      class="p-1 rounded font-serif text-sm"
+                      style="color: var(--color-font)"
+                      @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+                      @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
                     >
                       Aa
                     </button>
                     <button
                       @click="toggleBold"
-                      class="p-1 hover:bg-gray-100 rounded font-bold text-sm"
+                      class="p-1 rounded font-bold text-sm"
+                      style="color: var(--color-font)"
+                      @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+                      @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
                     >
                       B
                     </button>
                     <button
                       @click="toggleItalic"
-                      class="p-1 hover:bg-gray-100 rounded italic text-sm"
+                      class="p-1 rounded italic text-sm"
+                      style="color: var(--color-font)"
+                      @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+                      @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
                     >
                       I
                     </button>
-                    
+
                     <!-- Font Size Controls -->
                     <div class="flex items-center gap-1 border-l pl-2">
                       <button
                         @click="decreaseFontSize"
-                        class="p-1 hover:bg-gray-100 rounded text-sm"
+                        class="p-1 rounded text-sm"
                         title="Schriftgröße verkleinern"
+                        style="color: var(--color-font)"
+                        @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+                        @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
                       >
                         <span class="material-icons" style="font-size: 14px">remove</span>
                       </button>
@@ -251,17 +287,21 @@
                         @input="updateFontSize"
                         min="8"
                         max="200"
-                        class="w-10 text-center border border-gray-300 rounded px-0.5 py-0.5 text-xs"
+                        class="w-10 text-center rounded px-0.5 py-0.5 text-xs"
+                        style="border: 1px solid var(--color-border-light); background-color: var(--color-card-bg); color: var(--color-font)"
                       />
                       <button
                         @click="increaseFontSize"
-                        class="p-1 hover:bg-gray-100 rounded text-sm"
+                        class="p-1 rounded text-sm"
                         title="Schriftgröße vergrößern"
+                        style="color: var(--color-font)"
+                        @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
+                        @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
                       >
                         <span class="material-icons" style="font-size: 14px">add</span>
                       </button>
                     </div>
-                    
+
                     <input
                       type="color"
                       :value="
@@ -300,8 +340,8 @@
 
           <!-- Back Face -->
           <div
-            class="card-face card-face-back absolute inset-0 bg-white shadow-2xl"
-            :style="{ 'backface-visibility': 'hidden', 'transform': 'rotateY(180deg)', 'pointer-events': isFront ? 'none' : 'auto' }"
+            class="card-face card-face-back absolute inset-0 shadow-2xl"
+            :style="{ 'backface-visibility': 'hidden', 'transform': 'rotateY(180deg)', 'pointer-events': isFront ? 'none' : 'auto', 'background-color': 'var(--color-card-bg)' }"
           >
             <!-- Draggable Elements Layer (Back) -->
             <div class="absolute inset-0 z-20 overflow-hidden pointer-events-none">
@@ -396,7 +436,7 @@
                   >
                     I
                   </button>
-                  
+
                   <!-- Font Size Controls -->
                   <div class="flex items-center gap-1 border-l pl-2">
                     <button
@@ -422,7 +462,7 @@
                       <span class="material-icons" style="font-size: 14px">add</span>
                     </button>
                   </div>
-                  
+
                   <input
                     type="color"
                     :value="
@@ -448,10 +488,12 @@
               <div
                 class="absolute left-8 right-8 top-8 bottom-32 pointer-events-auto flex flex-col"
               >
-                <label class="text-xs text-gray-500 mb-2 font-medium">Deine Nachricht</label>
+                <label class="text-xs mb-2 font-medium" style="color: var(--color-text-muted)">Deine Nachricht</label>
                 <textarea
                   v-model="postcard.message"
-                  class="flex-1 border border-gray-300 bg-white/80 backdrop-blur-sm text-base px-3 py-2 rounded-md focus:outline-none focus:border-[var(--color-highlight)] focus:ring-1 focus:ring-[var(--color-highlight)] placeholder-gray-400 resize-none"
+                  class="flex-1 backdrop-blur-sm text-base px-3 py-2 rounded-md focus:outline-none focus:border-[var(--color-highlight)] focus:ring-1 focus:ring-[var(--color-highlight)] resize-none"
+                  style="border: 1px solid var(--color-border-light); background-color: color-mix(in srgb, var(--color-card-bg) 80%, transparent); color: var(--color-font)"
+                  :style="{ '--placeholder-color': 'var(--color-placeholder)' }"
                   placeholder="Schreibe deine Nachricht hier..."
                 ></textarea>
               </div>
@@ -462,21 +504,23 @@
               >
                 <!-- Sender Handle -->
                 <div class="flex-[0.8] flex flex-col gap-1">
-                  <label class="text-xs text-gray-500 font-medium">Von</label>
+                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">Von</label>
                   <input
                     v-model="postcard.senderHandle"
-                    class="w-full border-b-2 border-gray-300 bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    class="w-full bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)]"
+                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
                     placeholder="Dein Name"
                   />
                 </div>
 
                 <!-- Sender Email -->
                 <div class="flex-[1.2] flex flex-col gap-1">
-                  <label class="text-xs text-gray-500 font-medium">Deine E-Mail</label>
+                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">Deine E-Mail</label>
                   <input
                     type="email"
                     v-model="postcard.senderEmail"
-                    class="w-full border-b-2 border-gray-300 bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    class="w-full bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)]"
+                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
                     placeholder="deine@email.de"
                   />
                 </div>
@@ -486,11 +530,12 @@
 
                 <!-- Recipient Email -->
                 <div class="flex-[1.2] flex flex-col gap-1">
-                  <label class="text-xs text-gray-500 font-medium">An</label>
+                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">An</label>
                   <input
                     type="email"
                     v-model="postcard.recipientEmail"
-                    class="w-full border-b-2 border-gray-300 bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    class="w-full bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)]"
+                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
                     placeholder="empfaenger@beispiel.de"
                   />
                 </div>
@@ -503,10 +548,11 @@
               <div
                 class="absolute left-8 top-8 bottom-24 w-[45%] pointer-events-auto flex flex-col"
               >
-                <label class="text-xs text-gray-500 mb-2 font-medium">Deine Nachricht</label>
+                <label class="text-xs mb-2 font-medium" style="color: var(--color-text-muted)">Deine Nachricht</label>
                 <textarea
                   v-model="postcard.message"
-                  class="flex-1 border border-gray-300 bg-white/80 backdrop-blur-sm text-base px-3 py-2 rounded-md focus:outline-none focus:border-[var(--color-highlight)] focus:ring-1 focus:ring-[var(--color-highlight)] placeholder-gray-400 resize-none"
+                  class="flex-1 backdrop-blur-sm text-base px-3 py-2 rounded-md focus:outline-none focus:border-[var(--color-highlight)] focus:ring-1 focus:ring-[var(--color-highlight)] resize-none"
+                  style="border: 1px solid var(--color-border-light); background-color: color-mix(in srgb, var(--color-card-bg) 80%, transparent); color: var(--color-font)"
                   placeholder="Schreibe deine Nachricht hier..."
                 ></textarea>
               </div>
@@ -517,21 +563,23 @@
               >
                 <!-- Sender Handle -->
                 <div class="flex flex-col gap-2">
-                  <label class="text-xs text-gray-500 font-medium">Von (Dein Name/Handle)</label>
+                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">Von (Dein Name/Handle)</label>
                   <input
                     v-model="postcard.senderHandle"
-                    class="w-full border-b-2 border-gray-300 bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    class="w-full bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)]"
+                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
                     placeholder="z.B. Max Mustermann"
                   />
                 </div>
 
                 <!-- Sender Email -->
                 <div class="flex flex-col gap-2">
-                  <label class="text-xs text-gray-500 font-medium">Deine E-Mail</label>
+                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">Deine E-Mail</label>
                   <input
                     type="email"
                     v-model="postcard.senderEmail"
-                    class="w-full border-b-2 border-gray-300 bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    class="w-full bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)]"
+                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
                     placeholder="deine@email.de"
                   />
                 </div>
@@ -541,11 +589,12 @@
 
                 <!-- Recipient Email -->
                 <div class="flex flex-col gap-2">
-                  <label class="text-xs text-gray-500 font-medium">An (E-Mail des Empfängers)</label>
+                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">An (E-Mail des Empfängers)</label>
                   <input
                     type="email"
                     v-model="postcard.recipientEmail"
-                    class="w-full border-b-2 border-gray-300 bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)] placeholder-gray-400"
+                    class="w-full bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)]"
+                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
                     placeholder="empfaenger@beispiel.de"
                   />
                 </div>
@@ -572,24 +621,26 @@
         <template #icon>
           <span class="material-icons text-2xl">check_circle</span>
         </template>
-        Fertig
+        Senden
       </Button>
     </main>
 
       <!-- Onboarding Overlay -->
       <div
         v-if="showOnboarding"
-        class="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-6"
+        class="fixed inset-0 z-[60] flex items-center justify-center p-6"
+        style="background-color: var(--color-modal-overlay)"
         @click="dismissOnboarding"
       >
         <div
-          class="bg-white rounded-xl p-8 max-w-md text-center shadow-2xl transform transition-all scale-100"
+          class="rounded-xl p-8 max-w-md text-center shadow-2xl transform transition-all scale-100"
+          style="background-color: var(--color-modal-bg)"
         >
           <div class="mb-4 text-4xl">✨</div>
-          <h2 class="text-2xl font-bold mb-2 text-gray-900">
+          <h2 class="text-2xl font-bold mb-2" style="color: var(--color-font)">
             Willkommen im Postkarten-Editor!
           </h2>
-          <p class="text-gray-600 mb-6">
+          <p class="mb-6" style="color: var(--color-text-muted)">
             Hier kannst du deine persönliche Postkarte gestalten.<br />
             Klicke auf Elemente, um sie zu bearbeiten, und ziehe sie an die gewünschte
             Position.
@@ -601,17 +652,20 @@
       <!-- Mood Gallery Modal -->
       <div
         v-if="showMoodGallery"
-        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style="background-color: var(--color-modal-overlay)"
         @click.self="showMoodGallery = false"
       >
         <div
-          class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+          class="rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+          style="background-color: var(--color-modal-bg)"
         >
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-semibold">Wähle eine Stimmung</h2>
             <button
               @click="showMoodGallery = false"
-              class="text-gray-500 hover:text-gray-700"
+              class="hover:opacity-70"
+              style="color: var(--color-text-muted)"
             >
               ✕
             </button>
@@ -631,10 +685,11 @@
 
       <div
         v-if="showEmojiPicker"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/20"
+        class="fixed inset-0 z-50 flex items-center justify-center"
+        style="background-color: var(--color-modal-overlay)"
         @click.self="showEmojiPicker = false"
       >
-        <div class="bg-white rounded-lg shadow-xl">
+        <div class="rounded-lg shadow-xl" style="background-color: var(--color-modal-bg)">
           <EmojiPicker :native="true" @select="onSelectEmoji" />
         </div>
       </div>
