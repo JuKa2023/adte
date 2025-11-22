@@ -213,30 +213,57 @@
                             'text' &&
                           activeElementId === element.id
                         "
-                        class="absolute z-30 bg-white shadow-xl rounded-lg p-2 flex gap-2 items-center border border-gray-100"
+                        class="absolute z-30 bg-white shadow-lg rounded p-1 flex gap-1 items-center border border-gray-200"
                         :style="{
                           left: `${postcard.elements.find((e) => e.id === activeElementId)?.x || 0}px`,
-                          top: `${(postcard.elements.find((e) => e.id === activeElementId)?.y || 0) - 60}px`,
+                          top: `${(postcard.elements.find((e) => e.id === activeElementId)?.y || 0) - 50}px`,
                         }"
                       >
                         <button
                           @click="onChangeFont"
-                          class="p-2 hover:bg-gray-100 rounded font-serif text-lg"
+                          class="p-1 hover:bg-gray-100 rounded font-serif text-sm"
                         >
                           Aa
                         </button>
                         <button
                           @click="toggleBold"
-                          class="p-2 hover:bg-gray-100 rounded font-bold"
+                          class="p-1 hover:bg-gray-100 rounded font-bold text-sm"
                         >
                           B
                         </button>
                         <button
                           @click="toggleItalic"
-                          class="p-2 hover:bg-gray-100 rounded italic"
+                          class="p-1 hover:bg-gray-100 rounded italic text-sm"
                         >
                           I
                         </button>
+                        
+                        <!-- Font Size Controls -->
+                        <div class="flex items-center gap-1 border-l pl-2">
+                          <button
+                            @click="decreaseFontSize"
+                            class="p-1 hover:bg-gray-100 rounded text-sm"
+                            title="Schriftgröße verkleinern"
+                          >
+                            <span class="material-icons" style="font-size: 14px">remove</span>
+                          </button>
+                          <input
+                            type="number"
+                            :value="postcard.elements.find((e) => e.id === activeElementId)?.fontSize || 24"
+                            @input="updateFontSize"
+                            min="8"
+                            max="200"
+                            class="w-10 text-center border border-gray-300 rounded px-0.5 py-0.5 text-xs"
+                          />
+                          <button
+                            @click="increaseFontSize"
+                            class="p-1 hover:bg-gray-100 rounded text-sm"
+                            title="Schriftgröße vergrößern"
+                          >
+                            <span class="material-icons" style="font-size: 14px">add</span>
+                          </button>
+                        </div>
+                        
                         <input
                           type="color"
                           :value="
@@ -244,13 +271,13 @@
                             '#000000'
                           "
                           @input="updateColor"
-                          class="w-8 h-8 cursor-pointer border-none p-0 rounded overflow-hidden"
+                          class="w-6 h-6 cursor-pointer border-none p-0 rounded overflow-hidden"
                         />
                         <button
                           @click="deleteElement(activeElementId!)"
-                          class="text-red-500 hover:bg-red-50 rounded p-2"
+                          class="text-red-500 hover:bg-red-50 rounded p-1"
                         >
-                          <span class="material-icons text-lg">delete</span>
+                          <span class="material-icons" style="font-size: 16px">delete</span>
                         </button>
                       </div>
                     </div>
@@ -345,30 +372,57 @@
                             'text' &&
                           activeElementId === element.id
                         "
-                        class="absolute z-30 bg-white shadow-xl rounded-lg p-2 flex gap-2 items-center border border-gray-100"
+                        class="absolute z-30 bg-white shadow-lg rounded p-1 flex gap-1 items-center border border-gray-200"
                         :style="{
                           left: `${postcard.elements.find((e) => e.id === activeElementId)?.x || 0}px`,
-                          top: `${(postcard.elements.find((e) => e.id === activeElementId)?.y || 0) - 60}px`,
+                          top: `${(postcard.elements.find((e) => e.id === activeElementId)?.y || 0) - 50}px`,
                         }"
                       >
                         <button
                           @click="onChangeFont"
-                          class="p-2 hover:bg-gray-100 rounded font-serif text-lg"
+                          class="p-1 hover:bg-gray-100 rounded font-serif text-sm"
                         >
                           Aa
                         </button>
                         <button
                           @click="toggleBold"
-                          class="p-2 hover:bg-gray-100 rounded font-bold"
+                          class="p-1 hover:bg-gray-100 rounded font-bold text-sm"
                         >
                           B
                         </button>
                         <button
                           @click="toggleItalic"
-                          class="p-2 hover:bg-gray-100 rounded italic"
+                          class="p-1 hover:bg-gray-100 rounded italic text-sm"
                         >
                           I
                         </button>
+                        
+                        <!-- Font Size Controls -->
+                        <div class="flex items-center gap-1 border-l pl-2">
+                          <button
+                            @click="decreaseFontSize"
+                            class="p-1 hover:bg-gray-100 rounded text-sm"
+                            title="Schriftgröße verkleinern"
+                          >
+                            <span class="material-icons" style="font-size: 14px">remove</span>
+                          </button>
+                          <input
+                            type="number"
+                            :value="postcard.elements.find((e) => e.id === activeElementId)?.fontSize || 24"
+                            @input="updateFontSize"
+                            min="8"
+                            max="200"
+                            class="w-10 text-center border border-gray-300 rounded px-0.5 py-0.5 text-xs"
+                          />
+                          <button
+                            @click="increaseFontSize"
+                            class="p-1 hover:bg-gray-100 rounded text-sm"
+                            title="Schriftgröße vergrößern"
+                          >
+                            <span class="material-icons" style="font-size: 14px">add</span>
+                          </button>
+                        </div>
+                        
                         <input
                           type="color"
                           :value="
@@ -376,13 +430,13 @@
                             '#000000'
                           "
                           @input="updateColor"
-                          class="w-8 h-8 cursor-pointer border-none p-0 rounded overflow-hidden"
+                          class="w-6 h-6 cursor-pointer border-none p-0 rounded overflow-hidden"
                         />
                         <button
                           @click="deleteElement(activeElementId!)"
-                          class="text-red-500 hover:bg-red-50 rounded p-2"
+                          class="text-red-500 hover:bg-red-50 rounded p-1"
                         >
-                          <span class="material-icons text-lg">delete</span>
+                          <span class="material-icons" style="font-size: 16px">delete</span>
                         </button>
                       </div>
                     </div>
@@ -758,6 +812,32 @@ const toggleItalic = () => {
 const updateColor = (e: Event) => {
   const el = postcard.value.elements.find((e) => e.id === activeElementId.value)
   if (el) el.color = (e.target as HTMLInputElement).value
+}
+
+const updateFontSize = (e: Event) => {
+  const el = postcard.value.elements.find((e) => e.id === activeElementId.value)
+  if (el && el.type === 'text') {
+    const newSize = parseInt((e.target as HTMLInputElement).value)
+    if (newSize >= 8 && newSize <= 200) {
+      el.fontSize = newSize
+    }
+  }
+}
+
+const increaseFontSize = () => {
+  const el = postcard.value.elements.find((e) => e.id === activeElementId.value)
+  if (el && el.type === 'text') {
+    const currentSize = el.fontSize || 24
+    el.fontSize = Math.min(200, currentSize + 2)
+  }
+}
+
+const decreaseFontSize = () => {
+  const el = postcard.value.elements.find((e) => e.id === activeElementId.value)
+  if (el && el.type === 'text') {
+    const currentSize = el.fontSize || 24
+    el.fontSize = Math.max(8, currentSize - 2)
+  }
 }
 
 const stopDrag = () => {
