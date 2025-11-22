@@ -103,7 +103,7 @@
       class="flex flex-1 items-center justify-center overflow-hidden bg-[#F5F5F5] pt-20 px-8 pb-8 relative"
     >
       <!-- Postcard Preview with Flip Animation -->
-      <div class="perspective-1000 relative">
+      <div class="perspective-1000 relative flex items-center gap-8">
         <div
           :class="['relative transition-all duration-500 transform-style-3d shadow-2xl']"
           :style="{
@@ -412,6 +412,19 @@
         </div>
       </div>
 
+      <!-- Finish Button - Bottom Right Corner -->
+      <Button
+        variant="primary"
+        @click="onFinish"
+        class="absolute bottom-8 right-8 rounded-lg px-6 py-3 shadow-lg hover:shadow-xl transition-shadow"
+      >
+        <template #icon>
+          <span class="material-icons text-2xl">check_circle</span>
+        </template>
+        Fertig
+      </Button>
+    </main>
+
       <!-- Onboarding Overlay -->
       <div
         v-if="showOnboarding"
@@ -474,7 +487,6 @@
           <EmojiPicker :native="true" @select="onSelectEmoji" />
         </div>
       </div>
-    </main>
   </div>
 </template>
 

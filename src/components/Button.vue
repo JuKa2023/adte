@@ -3,12 +3,12 @@
     :type="type"
     :disabled="disabled"
     :aria-label="iconOnly ? ariaLabel : undefined"
-    class="inline-flex items-center px-4 py-2 justify-center gap-2 text-base select-none transition-transform duration-200"
+    class="inline-flex items-center px-3 py-2 justify-center gap-2 text-base select-none transition-transform duration-200"
     :class="[
       disabled
         ? 'opacity-50 cursor-not-allowed'
         : 'hover:scale-105 cursor-pointer',
-      iconOnly ? 'p-3 aspect-square' : 'px-4 py-2',
+      iconOnly ? 'p-2 aspect-square' : 'px-3 py-2',
       variantClasses,
     ]"
     @click="emit('click', $event)"
@@ -67,7 +67,7 @@ const variantClasses = computed(() => {
         'py-3',
       ]
 
-    default: // 'primary'
+    default:
       return ['bg-[var(--color-highlight)]', 'text-[var(--color-bg)]']
   }
 })
