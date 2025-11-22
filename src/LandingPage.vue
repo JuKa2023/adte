@@ -1,5 +1,5 @@
 <template>
-  <section class="page" aria-labelledby="page-title">
+  <section class="page pt-20 px-8" aria-labelledby="page-title">
     <header class="intro">
       <h1 id="page-title">Postcard Gallery</h1>
       <p class="tagline font-[--font-sans]">{{ introText }}</p>

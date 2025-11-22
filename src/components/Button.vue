@@ -8,6 +8,7 @@
       disabled
         ? 'opacity-50 cursor-not-allowed'
         : 'hover:scale-105 cursor-pointer',
+      iconOnly ? 'p-3 aspect-square' : 'px-4 py-2',
       variantClasses,
     ]"
     @click="emit('click', $event)"

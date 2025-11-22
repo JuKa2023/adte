@@ -52,7 +52,7 @@ const register = async () => {
 </script>
 
 <template>
-  <div class="page-default flex items-center justify-center">
+  <div class="page-default flex items-center justify-center pt-20 px-8">
     <div class="w-full">
       <h1 class="mb-8">Registrieren</h1>
 

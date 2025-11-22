@@ -1,29 +1,29 @@
 <template>
-  <header class="sticky top-0 z-40 backdrop-blur ml-4 mr-4">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-      <nav class="flex flex-col space-y-4">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 h-14">
+    <div class="flex h-full items-center justify-between px-6">
+      <nav class="flex items-center gap-6">
         <!-- Postkarte erstellen -->
-        <RouterLink to="/create" class="group flex items-center space-x-2 text-[var(--color-highlight)]">
-          <span class="text-lg transition-transform duration-200 group-hover:scale-120"> › </span>
-          <span class="text-lg font-medium transition-transform duration-200 group-hover:scale-110">
+        <RouterLink to="/create" class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity">
+          <span class="text-md">
             Postkarte erstellen
           </span>
         </RouterLink>
 
         <RouterLink
           to="/login"
-          class="group flex items-center space-x-2 text-[var(--color-highlight)]"
+          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
         >
-          <span class="text-lg transition-transform duration-200 group-hover:scale-120"> › </span>
-          <span class="text-lg font-medium transition-transform duration-200 group-hover:scale-110">
+          <span class="text-md">
             Anmelden
           </span>
         </RouterLink>
       </nav>
 
-      <Button class="px-3 py-1.5 text-xs font-medium" type="button" @click="toggleTheme" variant="ghost">
-        <span v-if="isDark">🌙</span>
-        <span v-else>☀️</span>
+      <Button class="w-8 h-8 flex items-center justify-center rounded-full" type="button" @click="toggleTheme" variant="ghost" iconOnly>
+        <template #icon>
+          <span v-if="isDark" class="text-lg">🌙</span>
+          <span v-else class="text-lg">☀️</span>
+        </template>
       </Button>
     </div>
   </header>
@@ -36,7 +36,7 @@ import Button from './Button.vue'
 
 const isDark = ref(false)
 
-const applyTheme = (dark) => {
+const applyTheme = (dark: boolean) => {
   const root = document.documentElement
   root.classList.toggle('dark', dark)
   isDark.value = dark
