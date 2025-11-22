@@ -108,8 +108,9 @@
           :class="['relative transition-all duration-500 transform-style-3d shadow-2xl']"
           :style="{
             transform: isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)',
-            width: isVertical ? '500px' : '750px',
-            height: isVertical ? '750px' : '500px',
+            aspectRatio: isVertical ? '2/3' : '3/2',
+            width: isVertical ? 'min(500px, calc(100vw - 12rem))' : 'min(750px, calc(100vw - 12rem))',
+            maxHeight: 'calc(100vh - 12rem)',
           }"
         >
           <div
