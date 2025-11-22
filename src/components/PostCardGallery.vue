@@ -125,7 +125,7 @@ const props = withDefaults(
 .image {
   display: block;
   width: 100%;
-  height: auto; /* keeps the native aspect ratio */
+  height: auto;
 }
 .title {
   margin: 0;

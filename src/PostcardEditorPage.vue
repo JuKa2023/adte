@@ -1,12 +1,6 @@
 <template>
   <div class="mx-auto flex max-w-5xl items-center justify-center py-6 px-4">
     <div class="">
-      <article class="px-6 pt-6 pb-3">
-        <h1 class="text-lg font-normal text-gray-900 truncate">
-          Füge passende Elemente zu deiner<br />
-          Postkarte hinzu und platziere diese.
-        </h1>
-      </article>
 
       <main class="flex-1 overflow-y-auto px-6 pb-6 flex flex-col items-center">
         <div v-if="isFront" class="mb-6">
@@ -317,7 +311,7 @@
         </section>
 
         <!-- Action Buttons -->
-        <section class="grid grid-cols-2 gap-4 mb-8 w-full max-w-md">
+        <section class="grid grid-cols-4 gap-4 mb-6 w-full max-w-md">
           <Button variant="primaryIconTop" @click="onAddText">
             <template #icon><span class="material-icons">edit</span></template>
             Text
