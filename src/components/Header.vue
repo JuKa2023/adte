@@ -10,7 +10,6 @@
           </span>
         </RouterLink>
 
-        <!-- Anmelden -->
         <RouterLink
           to="/login"
           class="group flex items-center space-x-2 text-[var(--color-highlight)]"
@@ -30,7 +29,7 @@
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import Button from './Button.vue'
