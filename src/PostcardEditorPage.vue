@@ -137,7 +137,7 @@
           <!-- Front Face -->
           <div
             class="card-face card-face-front absolute inset-0 shadow-2xl"
-            :style="{ 'backface-visibility': 'hidden', 'pointer-events': isFront ? 'auto' : 'none', 'background-color': 'var(--color-card-bg)' }"
+            :style="{ 'backface-visibility': 'hidden', 'pointer-events': isFront ? 'auto' : 'none', 'background-color': 'var(--color-card-bg)', 'z-index': isFront ? 2 : 1 }"
           >
             <div
               class="flex items-center justify-center h-full w-full overflow-hidden relative"
@@ -341,7 +341,7 @@
           <!-- Back Face -->
           <div
             class="card-face card-face-back absolute inset-0 shadow-2xl"
-            :style="{ 'backface-visibility': 'hidden', 'transform': 'rotateY(180deg)', 'pointer-events': isFront ? 'none' : 'auto', 'background-color': 'var(--color-card-bg)' }"
+            :style="{ 'backface-visibility': 'hidden', 'transform': 'rotateY(180deg)', 'pointer-events': isFront ? 'none' : 'auto', 'background-color': 'var(--color-card-bg)', 'z-index': isFront ? 1 : 2 }"
           >
             <!-- Draggable Elements Layer (Back) -->
             <div class="absolute inset-0 z-20 overflow-hidden pointer-events-none">
@@ -498,48 +498,7 @@
                 ></textarea>
               </div>
 
-              <!-- Sender & Recipient Info (Bottom) -->
-              <div
-                class="absolute left-8 right-8 bottom-20 pointer-events-auto flex gap-2"
-              >
-                <!-- Sender Handle -->
-                <div class="flex-[0.8] flex flex-col gap-1">
-                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">Von</label>
-                  <input
-                    v-model="postcard.senderHandle"
-                    class="w-full bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)]"
-                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
-                    placeholder="Dein Name"
-                  />
-                </div>
-
-                <!-- Sender Email -->
-                <div class="flex-[1.2] flex flex-col gap-1">
-                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">Deine E-Mail</label>
-                  <input
-                    type="email"
-                    v-model="postcard.senderEmail"
-                    class="w-full bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)]"
-                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
-                    placeholder="deine@email.de"
-                  />
-                </div>
-
-                <!-- Spacer -->
-                <div class="w-4"></div>
-
-                <!-- Recipient Email -->
-                <div class="flex-[1.2] flex flex-col gap-1">
-                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">An</label>
-                  <input
-                    type="email"
-                    v-model="postcard.recipientEmail"
-                    class="w-full bg-transparent text-sm px-2 py-1 focus:outline-none focus:border-[var(--color-highlight)]"
-                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
-                    placeholder="empfaenger@beispiel.de"
-                  />
-                </div>
-              </div>
+              <!-- Sender & Recipient Info (Bottom) removed; handled via save modal -->
             </template>
 
             <!-- Horizontal Layout: Message left, fields right -->
@@ -557,48 +516,7 @@
                 ></textarea>
               </div>
 
-              <!-- Right Side: Sender & Recipient Info -->
-              <div
-                class="absolute right-8 top-8 w-[45%] pointer-events-auto flex flex-col gap-4"
-              >
-                <!-- Sender Handle -->
-                <div class="flex flex-col gap-2">
-                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">Von (Dein Name/Handle)</label>
-                  <input
-                    v-model="postcard.senderHandle"
-                    class="w-full bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)]"
-                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
-                    placeholder="z.B. Max Mustermann"
-                  />
-                </div>
-
-                <!-- Sender Email -->
-                <div class="flex flex-col gap-2">
-                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">Deine E-Mail</label>
-                  <input
-                    type="email"
-                    v-model="postcard.senderEmail"
-                    class="w-full bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)]"
-                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
-                    placeholder="deine@email.de"
-                  />
-                </div>
-
-                <!-- Separator -->
-                <div class="h-4"></div>
-
-                <!-- Recipient Email -->
-                <div class="flex flex-col gap-2">
-                  <label class="text-xs font-medium" style="color: var(--color-text-muted)">An (E-Mail des Empfängers)</label>
-                  <input
-                    type="email"
-                    v-model="postcard.recipientEmail"
-                    class="w-full bg-transparent text-base px-2 py-2 focus:outline-none focus:border-[var(--color-highlight)]"
-                    style="border-bottom: 2px solid var(--color-border-light); color: var(--color-font)"
-                    placeholder="empfaenger@beispiel.de"
-                  />
-                </div>
-              </div>
+              <!-- Contact fields removed; handled via save modal -->
             </template>
 
             <!-- Audio Recorder at Bottom -->
@@ -621,7 +539,7 @@
         <template #icon>
           <span class="material-icons text-2xl">check_circle</span>
         </template>
-        Senden
+        <span class="font-bold text-lg" style="color: var(--color-bg)">Senden</span>
       </Button>
     </main>
 
@@ -693,13 +611,33 @@
           <EmojiPicker :native="true" @select="onSelectEmoji" />
         </div>
       </div>
+
+
+      <SavePostcardModal
+        :is-open="showSaveModal"
+        :is-loading="isSaving"
+        @close="showSaveModal = false"
+        @save="onSavePostcard"
+      />
+
+      <ShareLinkModal
+        :is-open="showShareModal"
+        :link="shareLink"
+        @close="closeShareModal"
+        @go-to-gallery="goToGallery"
+      />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import Button from './components/Button.vue'
 import AudioRecorder from './components/AudioRecorder.vue'
+import SavePostcardModal from './components/SavePostcardModal.vue'
+import ShareLinkModal from './components/ShareLinkModal.vue'
+import { createPostcard, buildShareLink } from './backend'
+import { toast } from 'vue-sonner'
 
 import EmojiPicker from 'vue3-emoji-picker'
 import 'vue3-emoji-picker/css'
@@ -732,20 +670,16 @@ interface PostcardState {
   frontImage: string | null
   elements: PostcardElement[]
   message: string
-  senderHandle: string
-  senderEmail: string
-  recipientEmail: string
   audioBlob: Blob | null
   audioUrl: string | null
 }
+
+const router = useRouter()
 
 const postcard = ref<PostcardState>({
   frontImage: null,
   elements: [],
   message: '',
-  senderHandle: '',
-  senderEmail: '',
-  recipientEmail: '',
   audioBlob: null,
   audioUrl: null,
 })
@@ -756,6 +690,10 @@ const extraFileInput = ref<HTMLInputElement | null>(null)
 const showMoodGallery = ref(false)
 const showEmojiPicker = ref(false)
 const showOnboarding = ref(false)
+const showSaveModal = ref(false)
+const isSaving = ref(false)
+const shareLink = ref('')
+const showShareModal = ref(false)
 
 onMounted(() => {
   const seen = localStorage.getItem('postcard_onboarding_seen')
@@ -767,6 +705,15 @@ onMounted(() => {
 const dismissOnboarding = () => {
   showOnboarding.value = false
   localStorage.setItem('postcard_onboarding_seen', 'true')
+}
+
+const closeShareModal = () => {
+  showShareModal.value = false
+}
+
+const goToGallery = () => {
+  showShareModal.value = false
+  router.push('/gallery')
 }
 
 const moodImages = [
@@ -792,18 +739,7 @@ const onFileSelected = (event: Event) => {
   if (target.files && target.files[0]) {
     const reader = new FileReader()
     reader.onload = (e) => {
-      const newElement: PostcardElement = {
-        id: Date.now().toString(),
-        type: 'image',
-        content: e.target?.result as string,
-        x: 0,
-        y: 0,
-        width: 400, // Default width
-        height: 300, // Default height
-        side: 'front', // Main upload is usually for front
-      }
-      postcard.value.elements.push(newElement)
-      activeElementId.value = newElement.id
+      postcard.value.frontImage = e.target?.result as string
     }
     reader.readAsDataURL(target.files[0])
   }
@@ -816,21 +752,7 @@ const onDropFile = (event: DragEvent) => {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader()
       reader.onload = (e) => {
-        // postcard.value.frontImage = e.target?.result as string // OLD: Set as background
-
-        // NEW: Add as image element
-        const newElement: PostcardElement = {
-          id: Date.now().toString(),
-          type: 'image',
-          content: e.target?.result as string,
-          x: 0,
-          y: 0,
-          width: 400, // Default width
-          height: 300, // Default height
-          side: 'front', // Main upload is usually for front
-        }
-        postcard.value.elements.push(newElement)
-        activeElementId.value = newElement.id
+        postcard.value.frontImage = e.target?.result as string
       }
       reader.readAsDataURL(file)
     }
@@ -1086,8 +1008,61 @@ const onExtraFileSelected = (event: Event) => {
 }
 
 const onFinish = () => {
-  console.log('Finish postcard', postcard.value)
-  alert('Postkarte fertig! (Siehe Konsole für Daten)')
+  showSaveModal.value = true
+}
+
+const onSavePostcard = async (data: { sent: boolean; scheduledTime?: string; recipientEmail: string }) => {
+  // Allow saving without front image if it's just a text card or if user wants to save draft
+  // But if the backend requires it, we might need a placeholder or check.
+  // The user said "i currently get the error that i shoudl add an image first".
+  // The backend schema says front_image is required: true.
+  // So we MUST have an image.
+  // However, maybe the user thinks they added one?
+  // Or maybe we should allow saving drafts without images?
+  // The user said "make sure to double chekc how our editor is tsrtcured and make the right assertions."
+
+  if (!postcard.value.frontImage) {
+    // If no image is selected, we can't save to backend as per schema.
+    // But maybe we can use a default background?
+    // For now, let's keep the check but make it clearer or check if there are other elements.
+    // Actually, looking at the schema: required: true.
+    toast.error('Bitte füge ein Hintergrundbild für die Vorderseite hinzu.')
+    return
+  }
+
+  isSaving.value = true
+  try {
+    // Convert base64 image to blob
+    const response = await fetch(postcard.value.frontImage)
+    const blob = await response.blob()
+
+    const created = await createPostcard({
+      frontImageBlob: blob,
+      audioBlob: postcard.value.audioBlob,
+      message: postcard.value.message,
+      elements: postcard.value.elements,
+      isPublic: true, // Default to public for now or add a toggle
+      sent: data.sent,
+      scheduledTime: data.scheduledTime,
+      recipientEmail: data.recipientEmail
+    })
+
+    showSaveModal.value = false
+    const link = buildShareLink(created)
+    toast.success('Postkarte erfolgreich gespeichert!')
+    if (link) {
+      shareLink.value = link
+      showShareModal.value = true
+    } else {
+      router.push('/gallery')
+    }
+  } catch (error: any) {
+    console.error('Error saving postcard:', error)
+    const message = error?.message || 'Fehler beim Speichern der Postkarte.'
+    toast.error(message)
+  } finally {
+    isSaving.value = false
+  }
 }
 </script>
 
