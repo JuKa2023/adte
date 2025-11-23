@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import { ref, onBeforeUnmount } from 'vue'
+import { toast } from 'vue-sonner'
 
 const props = defineProps<{
   audioUrl: string | null
@@ -77,7 +78,7 @@ const startRecording = async () => {
     isRecording.value = true
   } catch (err) {
     console.error('Error accessing microphone:', err)
-    alert('Mikrofonzugriff verweigert oder nicht verfügbar.')
+    toast.error('Mikrofonzugriff verweigert oder nicht verfügbar.')
   }
 }
 
