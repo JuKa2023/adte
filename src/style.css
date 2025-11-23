@@ -10,6 +10,7 @@
   --color-button-light: #eceef5; /* Button-light */
   --color-dropin-field: #e0e5ec; /* Drop-in-field */
   --color-highlight: #a10d74; /* Highlightcolor */
+  --color-primary: #2563eb; /* Primary action */
   
   /* UI Element colors */
   --color-card-bg: #ffffff; /* Card/postcard background */
@@ -34,6 +35,7 @@
   --color-button-light: #202531;
   --color-dropin-field: #37404f;
   --color-highlight: #ffd7f3;
+  --color-primary: #3b82f6; /* Primary action */
   
   /* UI Element colors */
   --color-card-bg: #1a1f2e; /* Card/postcard background */
