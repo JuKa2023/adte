@@ -1,18 +1,18 @@
 <template>
-  <div class="flex h-screen w-screen overflow-hidden" style="background-color: var(--color-bg)">
-    <!-- Left Sidebar -->
+  <div class="flex flex-col md:flex-row h-screen w-screen overflow-hidden" style="background-color: var(--color-bg)">
+    <!-- Sidebar - Bottom on mobile, Left on desktop -->
     <aside
-      class="flex w-24 flex-col items-center pt-20 pb-8 shadow-sm z-20 overflow-y-auto"
-      style="background-color: var(--color-sidebar-bg); border-right: 1px solid var(--color-border)"
+      class="flex flex-row md:flex-col items-center md:w-24 w-full md:pt-20 md:pb-8 px-4 py-2 md:px-0 shadow-sm z-20 overflow-x-auto md:overflow-y-auto md:overflow-x-visible order-2 md:order-1"
+      style="background-color: var(--color-sidebar-bg); border-top: 1px solid var(--color-border); border-right: none; --md-border-right: 1px solid var(--color-border); --md-border-top: none"
     >
-      <div class="flex flex-col gap-6 w-full px-4">
+      <div class="flex flex-row md:flex-col gap-4 md:gap-6 w-full md:px-4">
         <!-- Orientation -->
         <Button
           variant="ghost"
           iconOnly
           @click="toggleOrientation"
           :aria-label="isVertical ? 'Zu Querformat wechseln' : 'Zu Hochformat wechseln'"
-          class="w-full rounded-md"
+          class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0"
           style="--hover-bg: var(--color-sidebar-hover)"
           @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
           @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
@@ -24,7 +24,7 @@
           </template>
         </Button>
 
-        <div class="h-px w-full" style="background-color: var(--color-divider)"></div>
+        <div class="w-px h-8 md:h-px md:w-full" style="background-color: var(--color-divider)"></div>
 
         <!-- Tools -->
         <Button
@@ -32,7 +32,7 @@
           iconOnly
           @click="onAddText"
           aria-label="Text hinzufügen"
-          class="w-full rounded-md"
+          class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0"
           style="--hover-bg: var(--color-sidebar-hover)"
           @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
           @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
@@ -47,7 +47,7 @@
           iconOnly
           @click="onAddSticker"
           aria-label="Sticker hinzufügen"
-          class="w-full rounded-md"
+          class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0"
           style="--hover-bg: var(--color-sidebar-hover)"
           @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
           @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
@@ -65,7 +65,7 @@
           iconOnly
           @click="onOpenMoodTemplates"
           aria-label="Mood Vorlagen"
-          class="w-full"
+          class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0"
           style="--hover-bg: var(--color-sidebar-hover)"
           @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
           @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
@@ -81,7 +81,7 @@
           iconOnly
           @click="onMorePhotos"
           aria-label="Foto hinzufügen"
-          class="w-full rounded-md"
+          class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0"
           style="--hover-bg: var(--color-sidebar-hover)"
           @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
           @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
@@ -94,13 +94,13 @@
         </Button>
       </div>
 
-      <div class="mt-auto flex flex-col gap-4 w-full px-4">
+      <div class="ml-auto md:ml-0 md:mt-auto flex flex-row md:flex-col gap-4 w-auto md:w-full md:px-4">
         <Button
           variant="ghost"
           iconOnly
           @click="toggleSide"
           aria-label="Seite wechseln"
-          class="w-full rounded-md"
+          class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0"
           style="--hover-bg: var(--color-sidebar-hover)"
           @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
           @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
@@ -120,18 +120,16 @@
 
     <!-- Main Content -->
     <main
-      class="flex flex-1 items-center justify-center overflow-hidden pt-20 px-8 pb-8 relative"
+      class="flex flex-1 items-center justify-center overflow-hidden pt-20 px-4 md:px-8 pb-2 md:pb-8 relative order-1 md:order-2"
       style="background-color: var(--color-bg)"
     >
       <!-- Postcard Preview with Flip Animation -->
       <div class="perspective-1000 relative flex items-center gap-8">
         <div
-          :class="['relative transition-all duration-700 transform-style-3d']"
+          :class="['relative transition-all duration-700 transform-style-3d', 'postcard-container']"
           :style="{
             transform: isFront ? 'rotateY(0deg)' : 'rotateY(180deg)',
             aspectRatio: isVertical ? '2/3' : '3/2',
-            width: isVertical ? 'min(500px, calc(100vw - 12rem))' : 'min(750px, calc(100vw - 12rem))',
-            maxHeight: 'calc(100vh - 12rem)',
           }"
         >
           <!-- Front Face -->
@@ -534,7 +532,7 @@
       <Button
         variant="primary"
         @click="onFinish"
-        class="absolute bottom-8 right-8 rounded-lg px-6 py-3 shadow-lg hover:shadow-xl transition-shadow"
+        class="absolute bottom-2 right-4 md:bottom-8 md:right-8 rounded-lg px-4 py-2 md:px-6 md:py-3 shadow-lg hover:shadow-xl transition-shadow"
       >
         <template #icon>
           <span class="material-icons text-2xl">check_circle</span>
@@ -1072,5 +1070,31 @@ const onSavePostcard = async (data: { sent: boolean; scheduledTime?: string; rec
 }
 .transform-style-3d {
   transform-style: preserve-3d;
+}
+
+/* Responsive postcard sizing */
+.postcard-container {
+  width: min(500px, calc(100vw - 2rem));
+  max-height: calc(100vh - 16rem);
+}
+
+.postcard-container[style*="aspectRatio: 3/2"] {
+  width: min(750px, calc(100vw - 2rem));
+}
+
+@media (min-width: 768px) {
+  .postcard-container {
+    width: min(500px, calc(100vw - 12rem));
+    max-height: calc(100vh - 12rem);
+  }
+  
+  .postcard-container[style*="aspectRatio: 3/2"] {
+    width: min(750px, calc(100vw - 12rem));
+  }
+  
+  aside {
+    border-right: 1px solid var(--color-border) !important;
+    border-top: none !important;
+  }
 }
 </style>
