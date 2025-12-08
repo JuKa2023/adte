@@ -54,7 +54,16 @@ const register = async () => {
     const redirect = (route.query.redirect as string) || '/gallery'
     router.push(redirect)
   } catch (err: any) {
-    toast.error(err?.message || 'Fehler bei der Registrierung.')
+    // Check if the error is related to duplicate email
+    const errorMessage = err?.message || ''
+    const errorData = err?.data?.data || {}
+    
+    // PocketBase returns error with field 'email' when email is already in use
+    if (errorData.email || errorMessage.toLowerCase().includes('email') && errorMessage.toLowerCase().includes('already')) {
+      toast.error('Diese E-Mail-Adresse wird bereits verwendet.')
+    } else {
+      toast.error(errorMessage || 'Fehler bei der Registrierung.')
+    }
   } finally {
     isSubmitting.value = false
   }
@@ -109,12 +118,14 @@ const register = async () => {
           :show-clear="false"
         />
 
-        <Button class="btn btn-lg btn-primary w-full mt-4" :disabled="isSubmitting" type="submit">
-          {{ isSubmitting ? 'Registrieren...' : 'Registrieren' }}
-        </Button>
+        <div class="flex justify-end">
+          <Button class="btn btn-lg btn-primary mt-4" :disabled="isSubmitting" type="submit">
+            {{ isSubmitting ? 'Registrieren...' : 'Registrieren' }}
+          </Button>
+        </div>
 
         <p class="text-sm text-center" style="color: var(--color-text-muted)">
-          Schon angemeldet?
+          Hast du schon ein Login?
           <RouterLink to="/login" class="text-[var(--color-highlight)] hover:underline">Zum Login</RouterLink>
         </p>
       </form>

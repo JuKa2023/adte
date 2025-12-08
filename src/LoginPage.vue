@@ -73,9 +73,11 @@ const handleLogin = async () => {
           :show-clear="false"
         />
 
-        <Button class="btn btn-lg btn-primary w-full mt-4" :disabled="isSubmitting" type="submit">
-          {{ isSubmitting ? 'Anmelden...' : 'Anmelden' }}
-        </Button>
+        <div class="flex justify-end">
+          <Button class="btn btn-lg btn-primary mt-4" :disabled="isSubmitting" type="submit">
+            {{ isSubmitting ? 'Anmelden...' : 'Anmelden' }}
+          </Button>
+        </div>
 
         <p class="text-sm text-center" style="color: var(--color-text-muted)">
           Noch keinen Account?
