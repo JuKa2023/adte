@@ -119,14 +119,14 @@ const register = async () => {
         />
 
         <div class="flex justify-end">
-          <Button class="btn btn-lg btn-primary mt-4" :disabled="isSubmitting" type="submit">
+          <Button class="btn btn-lg btn-primary mt-8" :disabled="isSubmitting" type="submit">
             {{ isSubmitting ? 'Registrieren...' : 'Registrieren' }}
           </Button>
         </div>
 
         <p class="text-sm text-center" style="color: var(--color-text-muted)">
           Hast du schon ein Login?
-          <RouterLink to="/login" class="text-[var(--color-highlight)] hover:underline">Zum Login</RouterLink>
+          <RouterLink to="/login" class="text-[var(--color-highlight)] hover:underline underline-offset-4">Zum Login</RouterLink>
         </p>
       </form>
     </div>

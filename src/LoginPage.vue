@@ -74,14 +74,14 @@ const handleLogin = async () => {
         />
 
         <div class="flex justify-end">
-          <Button class="btn btn-lg btn-primary mt-4" :disabled="isSubmitting" type="submit">
+          <Button class="btn btn-lg btn-primary mt-8" :disabled="isSubmitting" type="submit">
             {{ isSubmitting ? 'Anmelden...' : 'Anmelden' }}
           </Button>
         </div>
 
         <p class="text-sm text-center" style="color: var(--color-text-muted)">
           Noch keinen Account?
-          <RouterLink to="/register" class="text-[var(--color-highlight)] hover:underline">Registrieren</RouterLink>
+          <RouterLink to="/register" class="text-[var(--color-highlight)] hover:underline underline-offset-3">Registrieren</RouterLink>
         </p>
       </form>
     </div>

@@ -13,7 +13,7 @@
         <RouterLink
           v-if="isAuthed"
           to="/create"
-          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity underline underline-offset-3"
         >
           <span class="text-md">
             Postkarte erstellen
@@ -23,7 +23,7 @@
         <RouterLink
           v-if="isAuthed"
           to="/gallery"
-          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity underline underline-offset-3"
         >
           <span class="text-md">
             Meine Galerie
@@ -33,7 +33,7 @@
         <RouterLink
           v-if="!isAuthed"
           to="/login"
-          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity underline underline-offset-3"
         >
           <span class="text-md">
             Anmelden
@@ -43,7 +43,7 @@
         <RouterLink
           v-if="!isAuthed"
           to="/register"
-          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity underline underline-offset-3"
         >
           <span class="text-md">
             Registrieren
