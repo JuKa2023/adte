@@ -24,14 +24,11 @@
         <!-- Recipient -->
         <div class="flex flex-col gap-2">
           <label class="font-medium">E-Mail des Empfängers</label>
-          <input
+          <FormInput
             type="email"
             v-model="recipientEmail"
-            class="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-[var(--color-highlight)]"
-            style="background-color: var(--color-bg); border-color: var(--color-border); color: var(--color-font)"
             placeholder="empfaenger@beispiel.de"
           />
-          <p v-if="recipientError" class="text-sm text-red-500">{{ recipientError }}</p>
         </div>
 
         <!-- Send Option -->
@@ -44,7 +41,7 @@
                 type="radio"
                 v-model="sendOption"
                 value="now"
-                class="w-4 h-4 text-[var(--color-highlight)] focus:ring-[var(--color-highlight)]"
+                class="w-4 h-4"
               />
               <span>Sofort senden</span>
             </label>
@@ -54,7 +51,7 @@
                 type="radio"
                 v-model="sendOption"
                 value="later"
-                class="w-4 h-4 text-[var(--color-highlight)] focus:ring-[var(--color-highlight)]"
+                class="w-4 h-4"
               />
               <span>Später senden</span>
             </label>
@@ -77,17 +74,15 @@
 
         <!-- Actions -->
         <div class="flex justify-end gap-3 mt-4">
-          <button
+          <Button
+            variant="ghost"
             @click="$emit('close')"
-            class="px-4 py-2 rounded-md hover:bg-black/5 transition-colors"
-            style="color: var(--color-text-muted)"
           >
             Abbrechen
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
             @click="handleSave"
-            class="px-6 py-2 rounded-md text-white font-medium shadow-md hover:shadow-lg transition-all transform active:scale-95"
-            style="background-color: var(--color-primary)"
             :disabled="isLoading"
           >
             <span v-if="isLoading" class="flex items-center gap-2">
@@ -95,7 +90,7 @@
               Speichern...
             </span>
             <span v-else>Speichern</span>
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -105,6 +100,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { toast } from 'vue-sonner'
+import FormInput from './FormInput.vue'
+import Button from './Button.vue'
 
 const props = defineProps<{
   isOpen: boolean
@@ -119,7 +116,6 @@ const emit = defineEmits<{
 const sendOption = ref<'now' | 'later'>('now')
 const scheduledTime = ref('')
 const recipientEmail = ref('')
-const recipientError = ref('')
 
 const minDate = computed(() => {
   const now = new Date()
@@ -131,19 +127,15 @@ const handleSave = () => {
   const isSent = sendOption.value === 'now'
 
   if (!recipientEmail.value) {
-    recipientError.value = 'Bitte gib eine E-Mail ein.'
-    toast.error(recipientError.value)
+    toast.error('Bitte gib eine E-Mail ein.')
     return
   }
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailPattern.test(recipientEmail.value)) {
-    recipientError.value = 'Bitte gib eine gültige E-Mail-Adresse ein.'
-    toast.error(recipientError.value)
+    toast.error('Bitte gib eine gültige E-Mail-Adresse ein.')
     return
   }
-
-  recipientError.value = ''
   
   if (sendOption.value === 'later' && !scheduledTime.value) {
     toast.error('Bitte wähle einen Zeitpunkt aus.')
@@ -171,5 +163,11 @@ const handleSave = () => {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom radio button styling */
+input[type="radio"] {
+  accent-color: var(--color-highlight);
+  cursor: pointer;
 }
 </style>
