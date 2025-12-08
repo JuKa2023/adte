@@ -13,13 +13,11 @@
         <span class="material-icons text-6xl mb-4" style="color: var(--color-text-muted)">collections</span>
         <h3 class="text-xl font-medium mb-2" style="color: var(--color-font)">Noch keine Postkarten</h3>
         <p class="mb-6" style="color: var(--color-text-muted)">Erstelle deine erste Postkarte und speichere sie hier.</p>
-        <button
+        <Button
           @click="$emit('navigate', 'create')"
-          class="px-6 py-2 rounded-md font-medium shadow-md hover:shadow-lg transition-all"
-          style="background-color: var(--color-primary); color: white"
         >
           Jetzt erstellen
-        </button>
+        </Button>
       </div>
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -94,6 +92,7 @@ import { ref, onMounted, computed } from 'vue'
 import { getMyPostcards, getFileUrl, type PostcardRecord, currentUser, buildShareLink } from './backend'
 import Header from './components/Header.vue'
 import ShareLinkModal from './components/ShareLinkModal.vue'
+import Button from './components/Button.vue'
 import { format } from 'date-fns'
 
 const postcards = ref<PostcardRecord[]>([])

@@ -67,7 +67,7 @@
           Logout
         </Button>
 
-        <Button class="w-8 h-8 flex items-center justify-center rounded-full" type="button" @click="toggleTheme" variant="ghost" iconOnly>
+        <Button class="w-8 h-8 flex items-center justify-center" type="button" @click="toggleTheme" variant="ghost" iconOnly>
           <template #icon>
             <span v-if="isDark" class="text-lg">🌙</span>
             <span v-else class="text-lg">☀️</span>

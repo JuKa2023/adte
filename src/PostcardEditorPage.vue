@@ -65,7 +65,7 @@
           iconOnly
           @click="onOpenMoodTemplates"
           aria-label="Mood Vorlagen"
-          class="w-full rounded-md"
+          class="w-full"
           style="--hover-bg: var(--color-sidebar-hover)"
           @mouseenter="($event.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-sidebar-hover)'"
           @mouseleave="($event.currentTarget as HTMLElement).style.backgroundColor = 'transparent'"
