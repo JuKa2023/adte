@@ -7,7 +7,7 @@ import { loginUser, registerUser } from './backend'
 import FormInput from './components/FormInput.vue'
 import Button from './components/Button.vue'
 
-const username = ref('')
+const name = ref('')
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
@@ -23,7 +23,7 @@ const emailError = computed(() => {
 })
 
 const register = async () => {
-  if (!username.value || !email.value || !password.value || !confirmPassword.value) {
+  if (!name.value || !email.value || !password.value || !confirmPassword.value) {
     toast.error('Bitte fülle alle Felder aus.')
     return
   }
@@ -43,7 +43,7 @@ const register = async () => {
   isSubmitting.value = true
   try {
     await registerUser({
-      username: username.value,
+      name: name.value,
       email: email.value,
       password: password.value,
       passwordConfirm: confirmPassword.value,
@@ -71,10 +71,10 @@ const register = async () => {
 
       <form id="registerForm" class="space-y-4" @submit.prevent="register">
         <FormInput
-          id="username"
-          v-model="username"
-          label="Benutzername"
-          placeholder="Gib deinen Benutzernamen ein"
+          id="name"
+          v-model="name"
+          label="Name"
+          placeholder="Gib deinen Namen ein"
           type="text"
           required
         />
