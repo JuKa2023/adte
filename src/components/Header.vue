@@ -9,7 +9,8 @@
           PostcardCreator
         </RouterLink>
 
-        <nav class="flex items-center gap-6">
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-6">
         <RouterLink
           v-if="isAuthed"
           to="/create"
@@ -53,13 +54,14 @@
       </div>
 
       <div class="flex items-center gap-4">
-        <div v-if="isAuthed" class="text-sm" style="color: var(--color-text-muted)">
+        <!-- Desktop User Info and Logout -->
+        <div v-if="isAuthed" class="hidden md:block text-sm" style="color: var(--color-text-muted)">
           Eingeloggt als <span class="font-medium" style="color: var(--color-font)">{{ userLabel }}</span>
         </div>
 
         <Button
           v-if="isAuthed"
-          class="rounded-full px-4 py-2"
+          class="hidden md:flex rounded-full px-4 py-2"
           type="button"
           variant="ghost"
           @click="handleLogout"
@@ -67,14 +69,85 @@
           Logout
         </Button>
 
+        <!-- Theme Toggle (visible on all screens) -->
         <Button class="w-8 h-8 flex items-center justify-center" type="button" @click="toggleTheme" variant="ghost" iconOnly>
           <template #icon>
             <span v-if="isDark" class="text-lg">🌙</span>
             <span v-else class="text-lg">☀️</span>
           </template>
         </Button>
+
+        <!-- Burger Menu Button (mobile only) -->
+        <Button 
+          class="md:hidden w-8 h-8 flex items-center justify-center" 
+          type="button" 
+          variant="ghost" 
+          iconOnly
+          @click="toggleMobileMenu"
+        >
+          <template #icon>
+            <span class="text-2xl">☰</span>
+          </template>
+        </Button>
       </div>
     </div>
+
+    <!-- Mobile Menu Overlay -->
+    <Transition name="mobile-menu">
+      <div 
+        v-if="isMobileMenuOpen" 
+        class="fixed inset-0 top-8 bg-[var(--color-sidebar-bg)] backdrop-blur-md z-40 md:hidden"
+        @click="closeMobileMenu"
+      >
+        <nav class="flex flex-col items-end gap-4 pt-12 px-6">
+          <RouterLink
+            v-if="isAuthed"
+            to="/create"
+            class="text-sm text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+            @click="closeMobileMenu"
+          >
+            Postkarte erstellen
+          </RouterLink>
+
+          <RouterLink
+            v-if="isAuthed"
+            to="/gallery"
+            class="text-sm text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+            @click="closeMobileMenu"
+          >
+            Meine Galerie
+          </RouterLink>
+
+          <RouterLink
+            v-if="!isAuthed"
+            to="/login"
+            class="text-2xl text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+            @click="closeMobileMenu"
+          >
+            Anmelden
+          </RouterLink>
+
+          <RouterLink
+            v-if="!isAuthed"
+            to="/register"
+            class="text-2xl text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+            @click="closeMobileMenu"
+          >
+            Registrieren
+          </RouterLink>
+
+          <Button
+            v-if="isAuthed"
+            class="rounded-full px-6 py-3 text-lg mt-4"
+            type="button"
+            variant="ghost"
+            @click="handleLogout"
+          >
+            Logout
+          </Button>
+        </nav>
+      </div>
+    </Transition>
   </header>
 </template>
 
@@ -85,6 +158,7 @@ import { currentUser, logoutUser } from '../backend'
 import Button from './Button.vue'
 
 const isDark = ref(false)
+const isMobileMenuOpen = ref(false)
 const router = useRouter()
 
 const isAuthed = computed(() => !!currentUser.value)
@@ -101,7 +175,16 @@ const toggleTheme = () => {
   applyTheme(!isDark.value)
 }
 
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+}
+
 const handleLogout = () => {
+  closeMobileMenu()
   logoutUser()
   router.push('/login')
 }
@@ -117,3 +200,27 @@ onMounted(() => {
   applyTheme(systemDark)
 })
 </script>
+
+<style scoped>
+/* Mobile menu transition */
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.mobile-menu-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.mobile-menu-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.mobile-menu-enter-to,
+.mobile-menu-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
