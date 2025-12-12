@@ -96,7 +96,7 @@
     <Transition name="mobile-menu">
       <div 
         v-if="isMobileMenuOpen" 
-        class="fixed inset-0 top-8 bg-[var(--color-sidebar-bg)] backdrop-blur-md z-40 md:hidden"
+        class="fixed inset-0 top-16 bg-[var(--color-sidebar-bg)] backdrop-blur-md z-40 md:hidden"
         @click="closeMobileMenu"
       >
         <nav class="flex flex-col items-end gap-4 pt-12 px-6">
