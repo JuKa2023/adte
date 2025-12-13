@@ -206,10 +206,20 @@ const onMorePhotos = () => {
   extraFileInput.value?.click()
 }
 
+// 500KB limit for images in elements (to stay within 1MB JSON limit after base64 encoding)
+const MAX_ELEMENT_IMAGE_SIZE = 500 * 1024 // 500KB in bytes
+
 const onExtraFileSelected = (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   if (!file || !file.type.startsWith('image/')) {
+    target.value = ''
+    return
+  }
+
+  // Check file size
+  if (file.size > MAX_ELEMENT_IMAGE_SIZE) {
+    toast.error('Das Bild ist zu groß. Maximale Größe: 500 KB')
     target.value = ''
     return
   }
