@@ -54,7 +54,7 @@ cronAdd("sendScheduledPostcards", "*/1 * * * *", async () => {
           <p>Hallo,</p>
           <p>Du hast eine Postkarte erhalten. Du kannst sie hier ansehen:</p>
           <p><a href="${shareLink}">${shareLink}</a></p>
-          <p>Viel Spaß!<br/>PostcardCreator</p>
+          <p>Viel Spass!<br/>PostcardCreator</p>
         `,
       })
 

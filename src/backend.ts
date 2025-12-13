@@ -35,6 +35,8 @@ export interface PostcardRecord {
     sent: boolean
     scheduled_time?: string
     recipient_email?: string
+    is_landscape?: boolean
+    is_vertical?: boolean
 }
 
 export async function createPostcard(data: {
@@ -46,6 +48,7 @@ export async function createPostcard(data: {
     sent?: boolean
     scheduledTime?: string
     recipientEmail?: string
+    isLandscape?: boolean
 }) {
     const userId = pb.authStore.model?.id
     if (!userId) {
@@ -65,9 +68,6 @@ export async function createPostcard(data: {
 
     // Append data fields
     formData.append('message', data.message)
-    // Ensure elements is a string and not empty
-    console.log('Sending elements:', data.elements)
-    // Use toRaw to ensure we get the plain array from Vue proxy
     const rawElements = toRaw(data.elements || [])
     formData.append('elements', JSON.stringify(rawElements))
     formData.append('is_public', data.isPublic ? 'true' : 'false')
@@ -78,6 +78,9 @@ export async function createPostcard(data: {
     }
     if (data.recipientEmail) {
         formData.append('recipient_email', data.recipientEmail)
+    }
+    if (data.isLandscape !== undefined) {
+        formData.append('is_landscape', data.isLandscape ? 'true' : 'false')
     }
 
     formData.append('user', userId)

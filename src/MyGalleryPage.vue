@@ -14,7 +14,7 @@
         <h3 class="text-xl font-medium mb-2" style="color: var(--color-font)">Noch keine Postkarten</h3>
         <p class="mb-6" style="color: var(--color-text-muted)">Erstelle deine erste Postkarte und speichere sie hier.</p>
         <Button
-          @click="$emit('navigate', 'create')"
+          @click="router.push('/create')"
         >
           Jetzt erstellen
         </Button>
@@ -28,7 +28,7 @@
           style="background-color: var(--color-card-bg); border-color: var(--color-border)"
         >
           <!-- Card Preview (Front Image) -->
-          <div class="relative aspect-[3/2] overflow-hidden">
+          <div class="relative overflow-hidden" :style="{ aspectRatio: getCardAspectRatio(card) }">
             <img
               :src="getFileUrl(card, card.front_image)"
               class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-500"
@@ -89,21 +89,19 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { getMyPostcards, getFileUrl, type PostcardRecord, currentUser, buildShareLink } from './backend'
 import Header from './components/Header.vue'
 import ShareLinkModal from './components/ShareLinkModal.vue'
 import Button from './components/Button.vue'
 import { format } from 'date-fns'
 
+const router = useRouter()
 const postcards = ref<PostcardRecord[]>([])
 const loading = ref(true)
 const currentUserLabel = computed(() => currentUser.value?.username || currentUser.value?.email || 'Du')
 const showShareModal = ref(false)
 const activeShareLink = ref('')
-
-defineEmits<{
-  (e: 'navigate', page: string): void
-}>()
 
 onMounted(async () => {
   try {
@@ -121,6 +119,17 @@ const openShare = (card: PostcardRecord) => {
   if (!link) return
   activeShareLink.value = link
   showShareModal.value = true
+}
+
+const getCardAspectRatio = (card: PostcardRecord) => {
+  const isLandscape =
+    typeof card.is_landscape === 'boolean'
+      ? card.is_landscape
+      : typeof card.is_vertical === 'boolean'
+        ? !card.is_vertical
+        : true
+
+  return isLandscape ? '3/2' : '2/3'
 }
 
 const closeShareModal = () => {

@@ -10,7 +10,7 @@
       <div class="relative perspective animate-fade-in-slow">
         <div
           class="card"
-          :class="{ 'is-flipped': showBack }"
+          :class="{ 'is-flipped': showBack, 'is-portrait': !isLandscape }"
           @click="toggleSide"
         >
           <div class="card-face card-front">
@@ -95,6 +95,14 @@ const frontElements = computed(() =>
   (postcard.value?.elements || []).filter((el) => el.side === 'front'),
 )
 
+const isLandscape = computed(() => {
+  const record = postcard.value
+  if (!record) return true
+  if (typeof record.is_landscape === 'boolean') return record.is_landscape
+  if (typeof record.is_vertical === 'boolean') return !record.is_vertical
+  return true
+})
+
 const elementStyle = (el: any) => {
   return {
     left: `${el.x || 0}px`,
@@ -170,6 +178,11 @@ onMounted(async () => {
   cursor: pointer;
   box-shadow: 0 25px 60px -20px rgba(0,0,0,0.35);
   border-radius: 20px;
+}
+
+.card.is-portrait {
+  aspect-ratio: 2 / 3;
+  width: min(90vw, 600px);
 }
 
 .card.is-flipped {

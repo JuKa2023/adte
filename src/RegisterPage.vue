@@ -126,7 +126,7 @@ const register = async () => {
 
         <p class="text-sm text-center" style="color: var(--color-text-muted)">
           Hast du schon ein Login?
-          <RouterLink to="/login" class="text-[var(--color-highlight)] hover:underline underline-offset-4">Zum Login</RouterLink>
+          <RouterLink to="/login" class="text-[var(--color-highlight)] hover:underline underline-offset-3">Zum Login</RouterLink>
         </p>
       </form>
     </div>

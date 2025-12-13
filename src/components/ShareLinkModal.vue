@@ -49,7 +49,7 @@
           style="color: var(--color-text-muted)"
           @click="$emit('close')"
         >
-          Schließen
+          Schliessen
         </button>
         <button
           type="button"

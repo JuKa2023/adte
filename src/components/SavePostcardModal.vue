@@ -124,8 +124,6 @@ const minDate = computed(() => {
 })
 
 const handleSave = () => {
-  const isSent = sendOption.value === 'now'
-
   if (!recipientEmail.value) {
     toast.error('Bitte gib eine E-Mail ein.')
     return
