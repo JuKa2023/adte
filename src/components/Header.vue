@@ -93,62 +93,63 @@
     </div>
 
     <!-- Mobile Menu Overlay -->
-    <Transition name="mobile-menu">
-      <div 
-        v-if="isMobileMenuOpen" 
-        class="fixed inset-0 top-14 z-40 md:hidden"
-        :style="{ backgroundColor: 'var(--color-sidebar-bg)', opacity: 1 }"
-        @click="closeMobileMenu"
-      >
-        <nav class="flex flex-col items-end gap-4 pt-12 px-6">
-          <RouterLink
-            v-if="isAuthed"
-            to="/create"
-            class="text-sm text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
-            @click="closeMobileMenu"
-          >
-            Postkarte erstellen
-          </RouterLink>
+    <Teleport to="body">
+      <Transition name="mobile-menu">
+        <div 
+          v-if="isMobileMenuOpen" 
+          class="fixed top-14 left-0 right-0 bottom-0 z-40 md:hidden bg-white dark:bg-[#151a26]"
+          @click="closeMobileMenu"
+        >
+          <nav class="flex flex-col items-end gap-6 pt-12 px-6">
+            <RouterLink 
+              v-if="isAuthed"
+              to="/create" 
+              class="text-xl font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+              @click="closeMobileMenu"
+            >
+              Postkarte erstellen
+            </RouterLink>
+            
+            <RouterLink 
+              v-if="isAuthed"
+              to="/gallery" 
+              class="text-xl font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+              @click="closeMobileMenu"
+            >
+              Meine Galerie
+            </RouterLink>
 
-          <RouterLink
-            v-if="isAuthed"
-            to="/gallery"
-            class="text-sm text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
-            @click="closeMobileMenu"
-          >
-            Meine Galerie
-          </RouterLink>
+            <RouterLink
+              v-if="!isAuthed"
+              to="/login"
+              class="text-xl font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+              @click="closeMobileMenu"
+            >
+              Anmelden
+            </RouterLink>
 
-          <RouterLink
-            v-if="!isAuthed"
-            to="/login"
-            class="text-2xl text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
-            @click="closeMobileMenu"
-          >
-            Anmelden
-          </RouterLink>
-
-          <RouterLink
-            v-if="!isAuthed"
-            to="/register"
-            class="text-2xl text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
-            @click="closeMobileMenu"
-          >
-            Registrieren
-          </RouterLink>
-
-          <Button
-            v-if="isAuthed"
-            class="rounded-full px-6 py-3 text-lg mt-4"
-            type="button"
-            variant="ghost"
-            @click="handleLogout"
-          >
-            Logout
-          </Button>
-        </nav>
-      </div>
-    </Transition>
+            <RouterLink
+              v-if="!isAuthed"
+              to="/register"
+              class="text-xl font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
+              @click="closeMobileMenu"
+            >
+              Registrieren
+            </RouterLink>
+            
+            <Button
+              v-if="isAuthed" 
+              class="rounded-full px-6 py-2 text-lg"
+              type="button"
+              variant="ghost"
+              @click="handleLogout"
+            >
+              Logout
+            </Button>
+          </nav>
+        </div>
+      </Transition>
+    </Teleport>
   </header>
 </template>
 
