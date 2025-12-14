@@ -96,7 +96,8 @@
     <Transition name="mobile-menu">
       <div 
         v-if="isMobileMenuOpen" 
-        class="fixed inset-0 top-16 bg-[var(--color-sidebar-bg)] backdrop-blur-md z-40 md:hidden"
+        class="fixed inset-0 top-14 z-40 md:hidden"
+        :style="{ backgroundColor: 'var(--color-sidebar-bg)', opacity: 1 }"
         @click="closeMobileMenu"
       >
         <nav class="flex flex-col items-end gap-4 pt-12 px-6">
@@ -205,22 +206,19 @@ onMounted(() => {
 /* Mobile menu transition */
 .mobile-menu-enter-active,
 .mobile-menu-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .mobile-menu-enter-from {
-  opacity: 0;
   transform: translateY(-10px);
 }
 
 .mobile-menu-leave-to {
-  opacity: 0;
   transform: translateY(-10px);
 }
 
 .mobile-menu-enter-to,
 .mobile-menu-leave-from {
-  opacity: 1;
   transform: translateY(0);
 }
 </style>
