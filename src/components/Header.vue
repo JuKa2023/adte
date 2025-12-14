@@ -59,15 +59,16 @@
           Eingeloggt als <span class="font-medium" style="color: var(--color-font)">{{ userLabel }}</span>
         </div>
 
-        <Button
-          v-if="isAuthed"
-          class="hidden md:flex rounded-full px-4 py-2"
-          type="button"
-          variant="ghost"
-          @click="handleLogout"
-        >
-          Logout
-        </Button>
+        <div v-if="isAuthed" class="hidden md:flex">
+          <Button
+            class="rounded-full px-4 py-2"
+            type="button"
+            variant="ghost"
+            @click="handleLogout"
+          >
+            Logout
+          </Button>
+        </div>
 
         <!-- Theme Toggle (visible on all screens) -->
         <Button class="w-8 h-8 flex items-center justify-center" type="button" @click="toggleTheme" variant="ghost" iconOnly>
