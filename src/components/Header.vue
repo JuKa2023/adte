@@ -41,15 +41,7 @@
           </span>
         </RouterLink>
 
-        <RouterLink
-          v-if="!isAuthed"
-          to="/register"
-          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
-        >
-          <span class="text-md">
-            Registrieren
-          </span>
-        </RouterLink>
+
         </nav>
       </div>
 
@@ -129,14 +121,7 @@
               Anmelden
             </RouterLink>
 
-            <RouterLink
-              v-if="!isAuthed"
-              to="/register"
-              class="text-xl font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
-              @click="closeMobileMenu"
-            >
-              Registrieren
-            </RouterLink>
+
             
             <Button
               v-if="isAuthed" 

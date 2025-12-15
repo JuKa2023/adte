@@ -7,7 +7,7 @@ import { pb } from './backend'
 
 import MyGalleryPage from './MyGalleryPage.vue';
 import LandingPage from './LandingPage.vue';
-import RegisterPage from './RegisterPage.vue';
+
 import PostcardCreationPage from './PostcardEditorPage.vue'
 import LoginPage from './LoginPage.vue'
 import SharedPostcardPage from './SharedPostcardPage.vue'
@@ -21,11 +21,7 @@ const router = createRouter(
       component: LandingPage,
       name: "landing",
       },
-      {
-        path: "/register",
-        component: RegisterPage,
-        name: "register",
-      },
+
       {
         path: "/login",
         component: LoginPage,

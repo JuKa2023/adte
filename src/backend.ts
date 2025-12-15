@@ -102,12 +102,10 @@ export function getFileUrl(record: PostcardRecord, filename: string) {
     return pb.files.getUrl(record, filename)
 }
 
-export async function registerUser(data: any) {
-    return await pb.collection('users').create(data)
-}
-
-export async function loginUser(data: any) {
-    return await pb.collection('users').authWithPassword(data.email, data.password)
+export async function loginUser() {
+    return await pb.collection('users').authWithOAuth2({
+        provider: 'google'
+    })
 }
 
 import { ref, toRaw } from 'vue'
