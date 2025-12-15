@@ -1,6 +1,7 @@
 import PocketBase from 'pocketbase'
 
-export const pb = new PocketBase('http://127.0.0.1:8090')
+const pbUrl = import.meta.env.VITE_POCKETBASE_URL || window.location.origin
+export const pb = new PocketBase(pbUrl)
 
 export interface PostcardElement {
     id: string
