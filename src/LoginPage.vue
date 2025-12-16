@@ -14,9 +14,7 @@ const handleLogin = async () => {
   isSubmitting.value = true
   try {
     await loginUser()
-    // OAuth redirect happens automatically, so we might not reach here immediately,
-    // but the backend SDK handles the redirect.
-    // However, if it's a popup flow (default in some setups) or if we want to handle success:
+
     toast.success('Erfolgreich angemeldet.')
     const redirect = (route.query.redirect as string) || '/gallery'
     router.push(redirect)
@@ -31,14 +29,25 @@ const handleLogin = async () => {
 
 <template>
   <div class="page-default flex items-center justify-center pt-20 px-8">
-    <div class="w-full max-w-lg rounded-xl shadow-xl p-8" style="background-color: var(--color-card-bg)">
+    <div
+      class="w-full max-w-lg rounded-xl shadow-xl p-8"
+      style="background-color: var(--color-card-bg)"
+    >
       <div class="mb-6">
-        <h1 class="text-2xl font-semibold mb-2" style="color: var(--color-font)">Willkommen zurück</h1>
-        <p class="text-sm" style="color: var(--color-text-muted)">Melde dich an, um deine Postkarten zu sehen und neue zu erstellen.</p>
+        <h1 class="text-2xl font-semibold mb-2" style="color: var(--color-font)">
+          Willkommen zurück
+        </h1>
+        <p class="text-sm" style="color: var(--color-text-muted)">
+          Melde dich an, um deine Postkarten zu sehen und neue zu erstellen.
+        </p>
       </div>
 
       <div class="text-center">
-        <Button class="btn btn-lg btn-primary w-full flex items-center justify-center gap-2" :disabled="isSubmitting" @click="handleLogin">
+        <Button
+          class="btn btn-lg btn-primary w-full flex items-center justify-center gap-2"
+          :disabled="isSubmitting"
+          @click="handleLogin"
+        >
           <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path
               fill="currentColor"
@@ -59,7 +68,6 @@ const handleLogin = async () => {
           </svg>
           {{ isSubmitting ? 'Verbinde mit Google...' : 'Mit Google anmelden' }}
         </Button>
-
       </div>
     </div>
   </div>
