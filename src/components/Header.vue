@@ -6,7 +6,7 @@
           to="/"
           class="text-lg font-semibold tracking-tight text-[var(--color-font)] hover:text-[var(--color-highlight)] transition-colors"
         >
-          PostcardCreator
+          ADTE
         </RouterLink>
 
         <!-- Desktop Navigation -->
@@ -71,10 +71,10 @@
         </Button>
 
         <!-- Burger Menu Button (mobile only) -->
-        <Button 
-          class="md:hidden w-8 h-8 flex items-center justify-center" 
-          type="button" 
-          variant="ghost" 
+        <Button
+          class="md:hidden w-8 h-8 flex items-center justify-center"
+          type="button"
+          variant="ghost"
           iconOnly
           @click="toggleMobileMenu"
         >
@@ -88,24 +88,24 @@
     <!-- Mobile Menu Overlay -->
     <Teleport to="body">
       <Transition name="mobile-menu">
-        <div 
-          v-if="isMobileMenuOpen" 
+        <div
+          v-if="isMobileMenuOpen"
           class="fixed top-14 left-0 right-0 bottom-0 z-40 md:hidden bg-white dark:bg-[#151a26]"
           @click="closeMobileMenu"
         >
           <nav class="flex flex-col items-end gap-6 pt-12 px-6">
-            <RouterLink 
+            <RouterLink
               v-if="isAuthed"
-              to="/create" 
+              to="/create"
               class="text-xl font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
               @click="closeMobileMenu"
             >
               Postkarte erstellen
             </RouterLink>
-            
-            <RouterLink 
+
+            <RouterLink
               v-if="isAuthed"
-              to="/gallery" 
+              to="/gallery"
               class="text-xl font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
               @click="closeMobileMenu"
             >
@@ -122,9 +122,9 @@
             </RouterLink>
 
 
-            
+
             <Button
-              v-if="isAuthed" 
+              v-if="isAuthed"
               class="rounded-full px-6 py-2 text-lg"
               type="button"
               variant="ghost"
