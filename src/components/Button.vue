@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-type BtnVariant = 'primary' | 'ghost' | 'primaryIconTop' | 'danger'
+type BtnVariant = 'primary' | 'ghost' | 'primaryIconTop' | 'danger' | 'outline'
 
 const emit = defineEmits<{
   (e: 'click', ev: MouseEvent): void
@@ -69,6 +69,15 @@ const variantClasses = computed(() => {
     
     case 'danger':
       return ['bg-red-500', 'text-white', 'hover:bg-red-600']
+
+    case 'outline':
+      return [
+        'bg-transparent',
+        'border',
+        'border-[var(--color-border)]',
+        'text-[var(--color-font)]',
+        'hover:border-[var(--color-border-dark)]',
+      ]
 
     default:
       return ['bg-[var(--color-highlight)]', 'text-[var(--color-bg)]']
