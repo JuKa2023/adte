@@ -1,8 +1,5 @@
 <template>
-  <div class="min-h-screen w-full" style="background-color: var(--color-bg)">
-    <!-- Header -->
-    <Header />
-
+  <div class="h-full w-full" style="background-color: var(--color-bg)">
     <!-- Content -->
     <main class="pt-24 px-6 pb-16 max-w-6xl mx-auto">
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -91,7 +88,6 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { getMyPostcards, getFileUrl, type PostcardRecord, currentUser, buildShareLink } from './backend'
-import Header from './components/Header.vue'
 import ShareLinkModal from './components/ShareLinkModal.vue'
 import Button from './components/Button.vue'
 import { format } from 'date-fns'
