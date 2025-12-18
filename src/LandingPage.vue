@@ -17,21 +17,11 @@
         <p class="text-xl md:text-2xl text-slate-700 max-w-2xl mx-auto font-sans leading-relaxed">
           {{ introText }}
         </p>
-        <div class="pt-8">
-           <Button
-            @click="emit('cta')"
-          >
-            {{ ctaLabel }}
-            <template #icon>
-              <img :src="arrowIcon" class="invert brightness-0" alt="" width="24" height="24" aria-hidden="true" />
-            </template>
-          </Button>
-        </div>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow relative z-10 bg-white/60 backdrop-blur-sm shadow-xl rounded-t-3xl border-t border-white/50 mx-4 md:mx-0" role="main">
+    <main class="flex-grow relative z-10 shadow-xl rounded-t-3xl border-t border-white/50 mx-4 md:mx-0" role="main">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="mb-12 flex items-center justify-between">
             <h2 class="text-3xl font-bold text-slate-800 font-handwriting">Community Creations</h2>
@@ -66,6 +56,21 @@
       </div>
     </main>
     
+    <!-- Fixed Floating CTA -->
+    <div class="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+      <div class="pointer-events-auto filter drop-shadow-xl">
+        <Button
+          @click="emit('cta')"
+          size="lg"
+        >
+          {{ ctaLabel }}
+          <template #icon>
+            <img :src="arrowIcon" class="invert brightness-0" alt="" width="24" height="24" aria-hidden="true" />
+          </template>
+        </Button>
+      </div>
+    </div>
+    
     <!-- Footer moved to global App.vue -->
   </div>
 </template>
@@ -74,9 +79,6 @@
 import { ref, computed } from 'vue'
 import PostcardGallery, { type Postcard } from './components/PostCardGallery.vue'
 import Button from './components/Button.vue'
-import vintage1 from './assets/gallery/vintage_1.png'
-import vintage2 from './assets/gallery/vintage_2.png'
-import vintage3 from './assets/gallery/vintage_3.png'
 import arrowIcon from './assets/icons/arrow_icon.svg'
 import heroBg from './assets/hero_bg.png'
 
@@ -97,11 +99,23 @@ const props = withDefaults(
 
 const isLoading = ref(false)
 const error = ref<string | null>(null)
-const allPostcards = ref<Postcard[]>([
-  { id: 'vintage-1', title: 'Swiss Alps Heritage', imageUrl: vintage1 },
-  { id: 'vintage-2', title: 'Romantic Bouquet', imageUrl: vintage2 },
-  { id: 'vintage-3', title: 'Parisian Streets', imageUrl: vintage3 },
-])
+
+const galleryImages = import.meta.glob('./assets/gallery/*.{png,jpg,jpeg,svg}', { eager: true, as: 'url' })
+
+const allPostcards = ref<Postcard[]>(
+  Object.entries(galleryImages).map(([path, url]) => {
+    const filename = path.split('/').pop()?.split('.')[0] || 'Unknown'
+    const title = filename
+      .replace(/[-_]/g, ' ')
+      .replace(/\b\w/g, (l) => l.toUpperCase())
+    
+    return {
+      id: filename,
+      title: title,
+      imageUrl: url
+    }
+  })
+)
 const visibleCount = ref(9)
 
 const postcards = computed(() => allPostcards.value.slice(0, visibleCount.value))
