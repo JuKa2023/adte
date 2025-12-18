@@ -4,9 +4,9 @@
       <div class="flex items-center gap-6">
         <RouterLink
           to="/"
-          class="text-lg font-semibold tracking-tight text-[var(--color-font)] hover:text-[var(--color-highlight)] transition-colors"
+          class="flex items-center hover:opacity-80 transition-opacity"
         >
-          ADTE
+          <img src="/adte.svg" alt="ADTE" class="h-8 w-auto" />
         </RouterLink>
 
         <!-- Desktop Navigation -->
