@@ -65,7 +65,7 @@
         >
           {{ ctaLabel }}
           <template #icon>
-            <img :src="arrowIcon" class="invert brightness-0" alt="" width="24" height="24" aria-hidden="true" />
+            <img :src="arrowIcon" class="brightness-0 invert dark:invert-0" alt="" width="24" height="24" aria-hidden="true" />
           </template>
         </Button>
       </div>
