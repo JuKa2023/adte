@@ -159,9 +159,7 @@ onMounted(async () => {
 
 <style scoped>
 .shared-bg {
-  background: radial-gradient(circle at 20% 20%, rgba(161, 13, 116, 0.08), transparent 30%),
-              radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.08), transparent 28%),
-              linear-gradient(135deg, #f7f7fb 0%, #eef1f8 100%);
+  background: var(--bg-shared-page);
 }
 
 .perspective {

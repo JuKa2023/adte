@@ -27,6 +27,11 @@
   --color-modal-bg: #ffffff; /* Modal background */
   --color-modal-overlay: rgba(0, 0, 0, 0.6); /* Modal overlay */
   --color-divider: #e5e7eb; /* Divider line */
+  
+  /* Page specific backgrounds */
+  --bg-shared-page: radial-gradient(circle at 20% 20%, rgba(161, 13, 116, 0.08), transparent 30%),
+                    radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.08), transparent 28%),
+                    linear-gradient(135deg, #f7f7fb 0%, #eef1f8 100%);
 }
 
 .dark {
@@ -52,6 +57,12 @@
   --color-modal-bg: #1a1f2e; /* Modal background */
   --color-modal-overlay: rgba(0, 0, 0, 0.8); /* Modal overlay */
   --color-divider: #2d3748; /* Divider line */
+
+  /* Page specific backgrounds */
+  /* Page specific backgrounds */
+  --bg-shared-page: radial-gradient(circle at 20% 20%, rgba(255, 215, 243, 0.15), transparent 30%),
+                    radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.15), transparent 28%),
+                    linear-gradient(135deg, #0a0e15 0%, #151a26 100%);
 }
 h1,
 h2,
