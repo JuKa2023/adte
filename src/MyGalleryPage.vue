@@ -67,7 +67,7 @@
             <div class="text-xs" style="color: var(--color-text-muted)">
               <span class="font-semibold">Empfänger:</span>
               {{ card.recipient_email || 'Noch nicht gesetzt' }}
-              <span v-if="card.scheduled_time"> · Geplant für {{ formatDate(card.scheduled_time) }}</span>
+              <span v-if="card.scheduled_time && !card.sent"> · Geplant für {{ formatDate(card.scheduled_time) }}</span>
               <span v-else-if="!card.sent"> · Sofort senden</span>
             </div>
           </div>
