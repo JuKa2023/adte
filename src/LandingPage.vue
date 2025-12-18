@@ -60,7 +60,7 @@
     <div class="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
       <div class="pointer-events-auto filter drop-shadow-xl">
         <Button
-          @click="emit('cta')"
+          @click="handleCtaClick"
           size="lg"
         >
           {{ ctaLabel }}
@@ -81,6 +81,8 @@ import PostcardGallery, { type Postcard } from './components/PostCardGallery.vue
 import Button from './components/Button.vue'
 import arrowIcon from './assets/icons/arrow_icon.svg'
 import heroBg from './assets/hero_bg.png'
+import { useRouter } from 'vue-router'
+import { currentUser } from './backend'
 
 const emit = defineEmits<{ (e: 'cta'): void }>()
 
@@ -99,6 +101,16 @@ const props = withDefaults(
 
 const isLoading = ref(false)
 const error = ref<string | null>(null)
+
+const router = useRouter()
+
+function handleCtaClick() {
+  if (currentUser.value) {
+    router.push('/create')
+  } else {
+    router.push('/login')
+  }
+}
 
 const galleryImages = import.meta.glob('./assets/gallery/*.{png,jpg,jpeg,svg}', { eager: true, as: 'url' })
 
