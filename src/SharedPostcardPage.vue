@@ -60,14 +60,12 @@
       </div>
 
       <div v-if="audioUrl" class="mt-12 flex justify-center">
-        <button
-          class="px-4 py-2 rounded-full text-white font-medium shadow-md hover:shadow-lg transition-all flex items-center gap-2"
-          style="background-color: var(--color-primary)"
-          @click.stop="toggleAudio"
-        >
-          <span class="material-icons text-base">{{ isPlaying ? 'pause' : 'play_arrow' }}</span>
+        <Button @click.stop="toggleAudio">
+          <template #icon>
+            <span class="material-icons text-base">{{ isPlaying ? 'pause' : 'play_arrow' }}</span>
+          </template>
           {{ isPlaying ? 'Stopp' : 'Audio abspielen' }}
-        </button>
+        </Button>
       </div>
     </div>
   </div>
@@ -78,6 +76,7 @@ import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { getSharedPostcard, getFileUrl, type PostcardRecord } from './backend'
 import { toast } from 'vue-sonner'
+import Button from './components/Button.vue'
 
 const route = useRoute()
 const postcard = ref<PostcardRecord | null>(null)
