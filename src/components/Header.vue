@@ -51,7 +51,16 @@
           Eingeloggt als <span class="font-medium" style="color: var(--color-font)">{{ userLabel }}</span>
         </div>
 
-        <div v-if="isAuthed" class="hidden md:flex">
+        <div v-if="isAuthed" class="hidden md:flex items-center gap-2">
+          <Button
+            class="rounded-full px-4 py-2"
+            type="button"
+            variant="ghost"
+            @click="isDeleteModalOpen = true"
+          >
+            Account löschen
+          </Button>
+
           <Button
             class="rounded-full px-4 py-2"
             type="button"
@@ -132,21 +141,41 @@
             >
               Logout
             </Button>
+
+            <Button
+              v-if="isAuthed"
+              class="rounded-full px-6 py-2 text-lg text-red-500 hover:text-red-700"
+              type="button"
+              variant="ghost"
+              @click="() => { closeMobileMenu(); isDeleteModalOpen = true; }"
+            >
+              Account löschen
+            </Button>
           </nav>
         </div>
       </Transition>
     </Teleport>
+
+    <DeleteAccountModal
+      :is-open="isDeleteModalOpen"
+      :is-loading="isDeleting"
+      @close="isDeleteModalOpen = false"
+      @confirm="handleDeleteAccount"
+    />
   </header>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { currentUser, logoutUser } from '../backend'
+import { currentUser, logoutUser, deleteUser } from '../backend'
 import Button from './Button.vue'
+import DeleteAccountModal from './DeleteAccountModal.vue'
 
 const isDark = ref(false)
 const isMobileMenuOpen = ref(false)
+const isDeleteModalOpen = ref(false)
+const isDeleting = ref(false)
 const router = useRouter()
 
 const isAuthed = computed(() => !!currentUser.value)
@@ -175,6 +204,22 @@ const handleLogout = () => {
   closeMobileMenu()
   logoutUser()
   router.push('/login')
+}
+
+const handleDeleteAccount = async () => {
+  if (!currentUser.value?.id) return
+  
+  isDeleting.value = true
+  try {
+    await deleteUser(currentUser.value.id)
+    isDeleteModalOpen.value = false
+    handleLogout()
+  } catch (error) {
+    console.error('Failed to delete account:', error)
+    alert('Fehler beim Löschen des Accounts.')
+  } finally {
+    isDeleting.value = false
+  }
 }
 
 onMounted(() => {

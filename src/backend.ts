@@ -109,6 +109,10 @@ export async function loginUser() {
   })
 }
 
+export async function deleteUser(userId: string) {
+  return await pb.collection('users').delete(userId)
+}
+
 import { ref, toRaw } from 'vue'
 
 export const currentUser = ref(pb.authStore.model)
