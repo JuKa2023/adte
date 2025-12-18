@@ -1,7 +1,7 @@
 <template>
   <section class="page" aria-labelledby="page-title">
     <header class="intro">
-      <h1 id="page-title" class="sr-only">Hier kannst du deine Postkarten einsehen</h1>
+      <h1 id="page-title">Hier kannst du deine Postkarten einsehen</h1>
       <p class="tagline">{{ introText }}</p>
     </header>
 

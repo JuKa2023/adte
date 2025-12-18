@@ -13,7 +13,7 @@ import { Toaster } from 'vue-sonner'
     <div class="flex-grow">
       <router-view></router-view>
     </div>
-    <Footer />
+    <Footer v-if="!$route.meta.hideFooter" />
   </div>
 </template>
 

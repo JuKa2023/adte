@@ -37,7 +37,7 @@ const router = createRouter(
         path: "/create",
         component: PostcardCreationPage,
         name: "postcard creation page",
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, hideFooter: true },
       },
       {
         path: "/share/:id",
