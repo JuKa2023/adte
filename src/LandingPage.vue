@@ -1,30 +1,30 @@
 <template>
-  <div class="min-h-screen flex flex-col relative text-slate-800">
+  <div class="min-h-screen flex flex-col relative text-slate-800 dark:text-slate-100">
     <!-- Global Background -->
     <div 
       class="fixed inset-0 z-0 bg-cover bg-center" 
       :style="{ backgroundImage: `url(${heroBg})` }"
     ></div>
-    <div class="fixed inset-0 z-0 bg-gradient-to-b from-white/30 via-white/70 to-white/90 pointer-events-none"></div>
+    <div class="fixed inset-0 z-0 bg-gradient-to-b from-white/30 via-white/70 to-white/90 dark:from-slate-900/30 dark:via-slate-900/70 dark:to-slate-900/90 pointer-events-none"></div>
 
     <!-- Hero Section -->
     <header class="relative z-10 flex flex-col justify-center items-center text-center px-4 py-32 md:py-48 overflow-hidden">
       
       <div class="relative z-10 max-w-4xl mx-auto space-y-6 animate-fade-in-up">
-        <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-slate-900 drop-shadow-sm font-handwriting">
-          Postcard Gallery
+        <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-slate-900 dark:text-white drop-shadow-sm font-handwriting">
+          adte
         </h1>
-        <p class="text-xl md:text-2xl text-slate-700 max-w-2xl mx-auto font-sans leading-relaxed">
+        <p class="text-xl md:text-2xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto font-sans leading-relaxed">
           {{ introText }}
         </p>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow relative z-10 shadow-xl rounded-t-3xl border-t border-white/50 mx-4 md:mx-0" role="main">
+    <main class="flex-grow relative z-10 shadow-xl rounded-t-3xl border-t border-white/50 mx-4" role="main">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="mb-12 flex items-center justify-between">
-            <h2 class="text-3xl font-bold text-slate-800 font-handwriting">Community Creations</h2>
+            <h2 class="text-3xl font-bold text-slate-800 dark:text-slate-100 font-handwriting">Inspirationen</h2>
              <div class="h-1 flex-grow mx-6 bg-slate-400/20 rounded-full"></div>
         </div>
 
@@ -57,7 +57,7 @@
     </main>
     
     <!-- Fixed Floating CTA -->
-    <div class="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+    <div class="fixed bottom-24 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
       <div class="pointer-events-auto filter drop-shadow-xl">
         <Button
           @click="handleCtaClick"
@@ -71,7 +71,6 @@
       </div>
     </div>
     
-    <!-- Footer moved to global App.vue -->
   </div>
 </template>
 
