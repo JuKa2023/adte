@@ -8,6 +8,8 @@
         iconOnly
         @click="emit('clear')"
         aria-label="Alles zurücksetzen"
+        tooltip="Alles zurücksetzen"
+        tooltip-class="hidden md:block"
         class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
       >
         <template #icon>
@@ -22,6 +24,8 @@
         iconOnly
         @click="emit('toggle-orientation')"
         :aria-label="isLandscape ? 'Zu Hochformat wechseln' : 'Zu Querformat wechseln'"
+        :tooltip="isLandscape ? 'Zu Hochformat wechseln' : 'Zu Querformat wechseln'"
+        tooltip-class="hidden md:block"
         class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
       >
         <template #icon>
@@ -38,6 +42,8 @@
         iconOnly
         @click="emit('add-text')"
         aria-label="Text hinzufügen"
+        tooltip="Text hinzufügen"
+        tooltip-class="hidden md:block"
         class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
       >
         <template #icon>
@@ -50,6 +56,8 @@
         iconOnly
         @click="emit('add-sticker')"
         aria-label="Sticker hinzufügen"
+        tooltip="Sticker hinzufügen"
+        tooltip-class="hidden md:block"
         class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
       >
         <template #icon>
@@ -63,6 +71,8 @@
         iconOnly
         @click="emit('open-mood-templates')"
         aria-label="Mood Vorlagen"
+        tooltip="Mood Vorlagen"
+        tooltip-class="hidden md:block"
         class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
       >
         <template #icon>
@@ -76,6 +86,8 @@
         iconOnly
         @click="emit('add-photo')"
         aria-label="Foto hinzufügen"
+        tooltip="Foto hinzufügen"
+        tooltip-class="hidden md:block"
         class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
       >
         <template #icon>
@@ -90,6 +102,8 @@
         iconOnly
         @click="emit('toggle-side')"
         aria-label="Seite wechseln"
+        tooltip="Seite wechseln"
+        tooltip-class="hidden md:block left-full top-1/2 -translate-y-1/2 ml-3 bg-gray-900 text-white border border-gray-700 shadow-xl"
         class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
       >
         <template #icon>
