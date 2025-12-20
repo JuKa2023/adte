@@ -180,7 +180,7 @@ const isDeleting = ref(false)
 const router = useRouter()
 
 const isAuthed = computed(() => !!currentUser.value)
-const userLabel = computed(() => currentUser.value?.username || currentUser.value?.email || 'Nutzer')
+const userLabel = computed(() => currentUser.value?.name || currentUser.value?.username || currentUser.value?.email || 'Nutzer')
 
 const applyTheme = (dark: boolean) => {
   const root = document.documentElement
