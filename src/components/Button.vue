@@ -19,7 +19,7 @@
     <Teleport to="body">
       <div
         v-if="tooltip && isHovered"
-        class="fixed z-[9999] bg-[var(--color-text)] text-[var(--color-bg)] text-xs px-2 py-1 rounded whitespace-nowrap shadow-sm pointer-events-none transition-opacity duration-200"
+        class="fixed z-[9999] bg-[var(--color-font)] text-[var(--color-bg)] text-sm px-2 py-1 rounded whitespace-nowrap shadow-sm pointer-events-none transition-opacity duration-200"
         :class="tooltipClass"
         :style="tooltipStyle"
       >
@@ -75,7 +75,7 @@ const updatePosition = () => {
 
 const tooltipStyle = computed(() => ({
     top: `${tooltipPosition.value.top}px`,
-    left: `${tooltipPosition.value.left + 12}px`, // Added margin here directly
+    left: `${tooltipPosition.value.left + 6}px`, // Added margin here directly
     transform: 'translateY(-50%)'
 }))
 
