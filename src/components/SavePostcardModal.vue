@@ -13,7 +13,7 @@
         <h2 class="text-xl font-semibold">Postkarte speichern</h2>
         <button
           @click="$emit('close')"
-          class="hover:opacity-70"
+          class="hover:opacity-70 cursor-pointer"
           style="color: var(--color-text-muted)"
         >
           <span class="material-icons">close</span>
