@@ -3,7 +3,7 @@
     :type="type"
     :disabled="disabled"
     :aria-label="iconOnly ? ariaLabel : undefined"
-    class="inline-flex items-center px-3 py-2 justify-center gap-2 text-base select-none transition-transform duration-200 rounded-xs"
+    class="inline-flex items-center px-3 py-2 justify-center gap-2 text-xs sm:text-sm lg:text-base select-none transition-transform duration-200 rounded-xs"
     :class="[
       disabled
         ? 'opacity-50 cursor-not-allowed'
@@ -13,11 +13,11 @@
     ]"
     @click="emit('click', $event)"
   >
-    <span v-if="$slots.icon" class="leading-none transition-transform duration-200">
+    <span v-if="$slots.icon" class="leading-none transition-transform duration-200 icon-wrapper">
       <slot name="icon" />
     </span>
 
-    <span v-if="!iconOnly" class="transition-transform duration-200 text-base">
+    <span v-if="!iconOnly" class="transition-transform duration-200">
       <slot />
     </span>
   </button>
@@ -84,3 +84,10 @@ const variantClasses = computed(() => {
   }
 })
 </script>
+
+<style scoped>
+.icon-wrapper :deep(svg) {
+  width: 1.25em;
+  height: 1.25em;
+}
+</style>

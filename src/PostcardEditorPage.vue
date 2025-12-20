@@ -35,7 +35,7 @@
         <template #icon>
           <span class="material-icons text-2xl">check_circle</span>
         </template>
-        <span class="font-bold text-lg text-[var(--color-bg)]">Senden</span>
+        <span>Senden</span>
       </Button>
     </main>
 
