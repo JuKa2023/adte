@@ -3,7 +3,6 @@
     v-if="isOpen"
     class="fixed inset-0 z-[80] flex items-center justify-center p-4"
     style="background-color: var(--color-modal-overlay)"
-    @click.self="$emit('close')"
   >
     <div
       class="rounded-lg p-6 max-w-lg w-full shadow-2xl space-y-4"

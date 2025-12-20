@@ -3,10 +3,9 @@
     v-if="isOpen"
     class="fixed inset-0 z-[70] flex items-center justify-center p-4"
     style="background-color: var(--color-modal-overlay)"
-    @click.self="$emit('close')"
   >
     <div
-      class="rounded-lg p-6 max-w-md w-full shadow-2xl"
+      class="rounded-lg p-6 max-w-lg w-full shadow-2xl"
       style="background-color: var(--color-modal-bg); color: var(--color-font)"
     >
       <div class="flex justify-between items-center mb-6">
