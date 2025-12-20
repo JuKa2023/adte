@@ -6,7 +6,7 @@
           to="/"
           class="flex items-center hover:opacity-80 transition-opacity"
         >
-          <img src="/adte.svg" alt="ADTE" class="h-8 w-auto" />
+          <AdteLogo class="h-8 w-auto" />
         </RouterLink>
 
         <!-- Desktop Navigation -->
@@ -171,6 +171,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { currentUser, logoutUser, deleteUser } from '../backend'
 import Button from './Button.vue'
 import DeleteAccountModal from './DeleteAccountModal.vue'
+import AdteLogo from './AdteLogo.vue'
 
 const isDark = ref(false)
 const isMobileMenuOpen = ref(false)
