@@ -9,49 +9,14 @@
 
       <div class="relative perspective animate-fade-in-slow">
         <div
+          v-if="postcard"
           class="card"
-          :class="{ 'is-flipped': showBack, 'is-portrait': !isLandscape }"
-          @click="toggleSide"
+          :class="{ 'is-portrait': !isLandscape }"
         >
-          <div class="card-face card-front">
-            <img
-              v-if="postcardImage"
-              :src="postcardImage"
-              class="w-full h-full object-cover"
-              alt="Postkarten Vorderseite"
-            />
-            <div v-else class="w-full h-full flex items-center justify-center text-center text-white/80 px-6">
-              Keine Vorschau verfügbar
-            </div>
-
-            <div class="absolute inset-0 pointer-events-none">
-              <div
-                v-for="el in frontElements"
-                :key="el.id"
-                class="absolute"
-                :style="elementStyle(el)"
-              >
-                <span v-if="el.type === 'text'">{{ el.content }}</span>
-                <span v-else-if="el.type === 'sticker'" :style="{ fontSize: (el.fontSize || 64) + 'px' }">
-                  {{ el.content }}
-                </span>
-                <img
-                  v-else-if="el.type === 'image'"
-                  :src="el.content"
-                  class="w-full h-full object-cover rounded-md"
-                  draggable="false"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="card-face card-back">
-            <div class="h-full w-full p-8 flex flex-col gap-4" style="background-color: var(--color-card-bg); color: var(--color-font)">
-              <p class="text-xs uppercase tracking-wide" style="color: var(--color-text-muted)">Rückseite</p>
-              <p class="text-lg leading-relaxed whitespace-pre-wrap flex-1">{{ postcard?.message || 'Keine Nachricht' }}</p>
-              <div class="text-xs" style="color: var(--color-text-muted)">Karte geteilt über PostcardCreator</div>
-            </div>
-          </div>
+          <InteractivePostcard
+            :postcard="postcard"
+            @flip="showBack = $event"
+          />
         </div>
 
         <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-sm" style="color: var(--color-text-muted)">
@@ -77,22 +42,18 @@ import { useRoute } from 'vue-router'
 import { getSharedPostcard, getFileUrl, type PostcardRecord } from './backend'
 import { toast } from 'vue-sonner'
 import Button from './components/Button.vue'
+import InteractivePostcard from './components/InteractivePostcard.vue'
 
 const route = useRoute()
 const postcard = ref<PostcardRecord | null>(null)
-const postcardImage = ref<string | null>(null)
+// postcardImage ref removed
 const showBack = ref(false)
 const audioUrl = ref<string | null>(null)
 const isPlaying = ref(false)
 let audioEl: HTMLAudioElement | null = null
 
-const toggleSide = () => {
-  showBack.value = !showBack.value
-}
-
-const frontElements = computed(() =>
-  (postcard.value?.elements || []).filter((el) => el.side === 'front'),
-)
+// toggleSide removed (handled by component)
+// frontElements computed removed (handled by component)
 
 const isLandscape = computed(() => {
   const record = postcard.value
@@ -102,19 +63,7 @@ const isLandscape = computed(() => {
   return true
 })
 
-const elementStyle = (el: any) => {
-  return {
-    left: `${el.x || 0}px`,
-    top: `${el.y || 0}px`,
-    fontFamily: el.fontFamily,
-    fontSize: el.fontSize ? `${el.fontSize}px` : undefined,
-    color: el.color,
-    fontWeight: el.fontWeight,
-    fontStyle: el.fontStyle,
-    width: el.width ? `${el.width}px` : undefined,
-    height: el.height ? `${el.height}px` : undefined,
-  }
-}
+// elementStyle removed (handled by component)
 
 const toggleAudio = () => {
   if (!audioUrl.value) return
@@ -146,7 +95,7 @@ onMounted(async () => {
   try {
     const record = await getSharedPostcard(id, token)
     postcard.value = record
-    postcardImage.value = getFileUrl(record, record.front_image)
+    // postcardImage assignment removed
     if (record.audio) {
       audioUrl.value = getFileUrl(record, record.audio)
     }
@@ -170,9 +119,8 @@ onMounted(async () => {
   width: min(90vw, 900px);
   aspect-ratio: 3 / 2;
   margin: 0 auto;
-  transform-style: preserve-3d;
-  transition: transform 0.9s cubic-bezier(0.23, 1, 0.32, 1);
-  cursor: pointer;
+  /* transform-style and transition removed as they might duplicate or conflict */
+  /* keeping basic sizing */
   box-shadow: 0 25px 60px -20px rgba(0,0,0,0.35);
   border-radius: 20px;
 }
@@ -182,26 +130,7 @@ onMounted(async () => {
   width: min(90vw, 600px);
 }
 
-.card.is-flipped {
-  transform: rotateY(180deg);
-}
-
-.card-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-.card-front {
-  transform: rotateY(0deg);
-  background: #000;
-}
-
-.card-back {
-  transform: rotateY(180deg);
-}
+/* card-face, card-front, card-back styles removed */
 
 .animate-fade-in {
   animation: fadeIn 0.6s ease both;

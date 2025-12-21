@@ -20,34 +20,25 @@
           transform: `scale(${scale})`,
         }"
       >
-         <!-- 3D CardFlip Wrapper -->
-         <div 
-            class="w-full h-full relative preserve-3d transition-transform duration-700 cursor-pointer"
-            :style="{ transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }"
-            @click="isFlipped = !isFlipped"
-         >
-            <!-- Front Face -->
-            <PostcardFrontFace
-              :is-active="false"
-              :elements="postcard.elements"
-              :front-image="frontImageUrl"
-              :active-element-id="null"
-            />
+         <!-- 3D CardFlip Wrapper via Component -->
+         <InteractivePostcard
+           :postcard="postcard"
+           @flip="isFlipped = $event"
+         />
+      </div>
 
-            <!-- Back Face -->
-            <PostcardBackFace
-              :is-active="false"
-              :is-landscape="!!isLandscape"
-              :elements="postcard.elements"
-              :active-element-id="null"
-              :message="postcard.message"
-              :audio-url="null"
-            />
-         </div>
+      <!-- Audio Player -->
+      <div v-if="audioUrl" class="absolute bottom-4 z-50 pointer-events-auto animate-fade-in">
+        <Button @click.stop="toggleAudio" class="shadow-lg">
+          <template #icon>
+            <span class="material-icons text-base">{{ isPlaying ? 'pause' : 'play_arrow' }}</span>
+          </template>
+          {{ isPlaying ? 'Stopp' : 'Audio abspielen' }}
+        </Button>
       </div>
 
       <!-- Hint text -->
-      <div class="absolute bottom-8 text-white/80 text-sm font-medium pointer-events-none animate-pulse">
+      <div class="absolute bottom-20 text-white/80 text-sm font-medium pointer-events-none animate-pulse">
         Klicke auf die Karte zum Umdrehen
       </div>
     </div>
@@ -58,8 +49,8 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { PostcardRecord } from '../backend'
 import { getFileUrl } from '../backend'
-import PostcardFrontFace from './postcard-editor/PostcardFrontFace.vue'
-import PostcardBackFace from './postcard-editor/PostcardBackFace.vue'
+import InteractivePostcard from './InteractivePostcard.vue'
+import Button from './Button.vue'
 
 const props = defineProps<{
   isOpen: boolean
@@ -73,6 +64,10 @@ const emit = defineEmits<{
 const isFlipped = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
 const scale = ref(1)
+
+const audioUrl = ref<string | null>(null)
+const isPlaying = ref(false)
+let audioEl: HTMLAudioElement | null = null
 
 const REFERENCE_LONG_SIDE = 900
 const REFERENCE_SHORT_SIDE = 600
@@ -94,19 +89,57 @@ const referenceHeight = computed(() => {
    return isLandscape.value ? REFERENCE_SHORT_SIDE : REFERENCE_LONG_SIDE
 })
 
-const frontImageUrl = computed(() => {
-  return props.postcard && props.postcard.front_image 
-    ? getFileUrl(props.postcard, props.postcard.front_image) 
-    : null
-})
 
-// Reset flipped state when postcard changes or modal opens
+// frontImageUrl logic moved to InteractivePostcard
+
+
+// Reset flipped state and audio when postcard changes or modal opens
 watch(() => props.isOpen, (newVal) => {
   if (newVal) {
     isFlipped.value = false
+    
+    // Reset audio
+    if (audioEl) {
+      audioEl.pause()
+      audioEl.currentTime = 0
+    }
+    isPlaying.value = false
+    
+    // Load new audio if available
+    if (props.postcard?.audio) {
+      audioUrl.value = getFileUrl(props.postcard, props.postcard.audio)
+    } else {
+      audioUrl.value = null
+    }
+
     setTimeout(updateScale, 50)
+  } else {
+    // Stop audio when closing
+    if (audioEl) {
+       audioEl.pause()
+       isPlaying.value = false
+    }
   }
 })
+
+const toggleAudio = () => {
+  if (!audioUrl.value) return
+  if (!audioEl) {
+    audioEl = new Audio(audioUrl.value)
+    audioEl.onended = () => {
+      isPlaying.value = false
+    }
+  }
+
+  if (isPlaying.value) {
+    audioEl.pause()
+    isPlaying.value = false
+  } else {
+    audioEl.currentTime = 0
+    audioEl.play()
+    isPlaying.value = true
+  }
+}
 
 const updateScale = () => {
     if (!containerRef.value || !props.isOpen) return
@@ -114,7 +147,7 @@ const updateScale = () => {
     // Parent container is the modal wrapper (max-w-6xl etc)
     // We want to fit within say 80vw and 80vh to leave room for close button and hints
     const maxWidth = window.innerWidth * 0.85
-    const maxHeight = window.innerHeight * 0.8
+    const maxHeight = window.innerHeight * 0.7 // Reduced slightly to make room for audio button
 
     const scaleX = maxWidth / referenceWidth.value
     const scaleY = maxHeight / referenceHeight.value
@@ -128,6 +161,10 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateScale)
+  if (audioEl) {
+    audioEl.pause()
+    audioEl = null
+  }
 })
 
 </script>
