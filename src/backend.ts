@@ -38,6 +38,8 @@ export interface PostcardRecord {
   recipient_email?: string
   is_landscape?: boolean
   is_vertical?: boolean
+  canvas_width?: number
+  canvas_height?: number
 }
 
 export async function createPostcard(data: {
@@ -50,6 +52,8 @@ export async function createPostcard(data: {
   scheduledTime?: string
   recipientEmail?: string
   isLandscape?: boolean
+  canvasWidth?: number
+  canvasHeight?: number
 }) {
   const userId = pb.authStore.model?.id
   if (!userId) {
@@ -82,6 +86,12 @@ export async function createPostcard(data: {
   }
   if (data.isLandscape !== undefined) {
     formData.append('is_landscape', data.isLandscape ? 'true' : 'false')
+  }
+  if (data.canvasWidth) {
+    formData.append('canvas_width', data.canvasWidth.toString())
+  }
+  if (data.canvasHeight) {
+    formData.append('canvas_height', data.canvasHeight.toString())
   }
 
   formData.append('user', userId)

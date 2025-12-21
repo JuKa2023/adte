@@ -274,6 +274,9 @@ const onSavePostcard = async (data: { sent: boolean; scheduledTime?: string; rec
     const response = await fetch(postcard.value.frontImage)
     const blob = await response.blob()
 
+    const cardElement = document.querySelector('.postcard-container')
+    const rect = cardElement?.getBoundingClientRect()
+
     const created = await createPostcard({
       frontImageBlob: blob,
       audioBlob: postcard.value.audioBlob,
@@ -284,6 +287,8 @@ const onSavePostcard = async (data: { sent: boolean; scheduledTime?: string; rec
       scheduledTime: data.scheduledTime,
       recipientEmail: data.recipientEmail,
       isLandscape: isLandscape.value,
+      canvasWidth: rect?.width,
+      canvasHeight: rect?.height,
     })
 
     showSaveModal.value = false

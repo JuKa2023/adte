@@ -17,7 +17,7 @@
         </Button>
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
         <div
           v-for="card in postcards"
           :key="card.id"
@@ -26,14 +26,10 @@
         >
           <!-- Card Preview (Front Image) -->
           <div class="relative overflow-hidden" :style="{ aspectRatio: getCardAspectRatio(card) }">
-            <img
-              :src="getFileUrl(card, card.front_image)"
-              class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-500"
-              loading="lazy"
-            />
+            <GalleryPostcardPreview :postcard="card" />
 
-            <!-- Gradient overlay -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent"></div>
+            <!-- Gradient overlay (keep for text contrast if needed, or remove if it obscures content too much) -->
+            <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-60"></div>
 
             <!-- Status badge -->
             <div class="absolute top-3 left-3">
@@ -58,17 +54,15 @@
 
           <!-- Info footer -->
           <div class="p-4 flex flex-col gap-2" style="background-color: var(--color-card-bg)">
-            <p class="font-semibold text-base truncate" style="color: var(--color-font)">{{ currentUserLabel }}</p>
+            <p class="font-semibold text-base truncate" style="color: var(--color-font)">{{ card.recipient_email || 'Noch nicht gesetzt' }}</p>
             <p class="text-sm line-clamp-2" style="color: var(--color-text-muted)">{{ card.message || 'Keine Nachricht' }}</p>
             <div class="flex items-center gap-2 text-xs" style="color: var(--color-text-muted)">
               <span class="inline-block w-2 h-2 rounded-full" :class="card.sent ? 'bg-green-500' : 'bg-amber-400'"></span>
               {{ card.sent ? 'Bereits verschickt' : 'Geplant / Entwurf' }}
             </div>
-            <div class="text-xs" style="color: var(--color-text-muted)">
-              <span class="font-semibold">Empfänger:</span>
-              {{ card.recipient_email || 'Noch nicht gesetzt' }}
-              <span v-if="card.scheduled_time && !card.sent"> · Geplant für {{ formatDate(card.scheduled_time) }}</span>
-              <span v-else-if="!card.sent"> · Sofort senden</span>
+            <div class="text-xs" style="color: var(--color-text-muted)" v-if="!card.sent">
+              <span v-if="card.scheduled_time">Geplant für {{ formatDate(card.scheduled_time) }}</span>
+              <span v-else>Sofort senden</span>
             </div>
           </div>
         </div>
@@ -85,17 +79,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getMyPostcards, getFileUrl, type PostcardRecord, currentUser, buildShareLink } from './backend'
+import { getMyPostcards, type PostcardRecord, buildShareLink } from './backend'
 import ShareLinkModal from './components/ShareLinkModal.vue'
 import Button from './components/Button.vue'
-import { format } from 'date-fns'
+import GalleryPostcardPreview from './components/GalleryPostcardPreview.vue'
 
 const router = useRouter()
 const postcards = ref<PostcardRecord[]>([])
 const loading = ref(true)
-const currentUserLabel = computed(() => currentUser.value?.username || currentUser.value?.email || 'Du')
 const showShareModal = ref(false)
 const activeShareLink = ref('')
 
