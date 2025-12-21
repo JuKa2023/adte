@@ -3,11 +3,14 @@
     <div
       v-for="element in elementsForSide"
       :key="element.id"
-      class="absolute cursor-move select-none p-2 border-2 pointer-events-auto"
-      :class="activeElementId === element.id ? 'border-[var(--color-highlight)]' : inactiveBorderClass"
+      class="absolute p-2 border-2"
+      :class="[
+        activeElementId === element.id ? 'border-[var(--color-highlight)]' : inactiveBorderClass,
+        interactive ? 'cursor-move pointer-events-auto select-none' : 'pointer-events-none'
+      ]"
       :style="elementStyle(element)"
-      @mousedown.stop="startDrag($event, element)"
-      @click.stop="emit('update:activeElementId', element.id)"
+      @mousedown.stop="interactive && startDrag($event, element)"
+      @click.stop="interactive && emit('update:activeElementId', element.id)"
     >
       <span
         v-if="element.type === 'text'"
@@ -137,11 +140,17 @@
 import { computed, onUnmounted, ref } from 'vue'
 import type { PostcardElement } from '../../backend'
 
-const props = defineProps<{
-  elements: PostcardElement[]
-  side: 'front' | 'back'
-  activeElementId: string | null
-}>()
+const props = withDefaults(
+  defineProps<{
+    elements: PostcardElement[]
+    side: 'front' | 'back'
+    activeElementId: string | null
+    interactive?: boolean
+  }>(),
+  {
+    interactive: true,
+  },
+)
 
 const emit = defineEmits<{
   (e: 'update:activeElementId', id: string | null): void

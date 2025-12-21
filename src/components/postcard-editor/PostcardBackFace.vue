@@ -16,6 +16,7 @@
       :elements="elements"
       side="back"
       :active-element-id="activeElementId"
+      :interactive="isActive"
       @update:active-element-id="emit('update:activeElementId', $event)"
       @delete-element="emit('delete-element', $event)"
     />

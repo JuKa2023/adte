@@ -21,8 +21,9 @@
         <div
           v-for="card in postcards"
           :key="card.id"
-          class="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border flex flex-col"
+          class="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border flex flex-col cursor-pointer"
           style="background-color: var(--color-card-bg); border-color: var(--color-border)"
+          @click="openViewModal(card)"
         >
           <!-- Card Preview (Front Image) -->
           <div class="relative overflow-hidden" :style="{ aspectRatio: getCardAspectRatio(card) }">
@@ -75,6 +76,12 @@
       @close="closeShareModal"
       @go-to-gallery="closeShareModal"
     />
+
+    <ViewPostcardModal
+      :is-open="!!viewingPostcard"
+      :postcard="viewingPostcard"
+      @close="closeViewModal"
+    />
   </div>
 </template>
 
@@ -85,12 +92,14 @@ import { getMyPostcards, type PostcardRecord, buildShareLink } from './backend'
 import ShareLinkModal from './components/ShareLinkModal.vue'
 import Button from './components/Button.vue'
 import GalleryPostcardPreview from './components/GalleryPostcardPreview.vue'
+import ViewPostcardModal from './components/ViewPostcardModal.vue'
 
 const router = useRouter()
 const postcards = ref<PostcardRecord[]>([])
 const loading = ref(true)
 const showShareModal = ref(false)
 const activeShareLink = ref('')
+const viewingPostcard = ref<PostcardRecord | null>(null)
 
 onMounted(async () => {
   try {
@@ -108,6 +117,14 @@ const openShare = (card: PostcardRecord) => {
   if (!link) return
   activeShareLink.value = link
   showShareModal.value = true
+}
+
+const openViewModal = (card: PostcardRecord) => {
+  viewingPostcard.value = card
+}
+
+const closeViewModal = () => {
+  viewingPostcard.value = null
 }
 
 const getCardAspectRatio = (card: PostcardRecord) => {
