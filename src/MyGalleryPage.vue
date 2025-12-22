@@ -21,7 +21,7 @@
         <div
           v-for="card in postcards"
           :key="card.id"
-          class="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border flex flex-col cursor-pointer"
+          class="group relative rounded-sm overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border flex flex-col cursor-pointer"
           style="background-color: var(--color-card-bg); border-color: var(--color-border)"
           @click="openViewModal(card)"
         >
@@ -45,7 +45,7 @@
             <!-- Action buttons -->
             <div class="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
-                class="px-3 py-1 rounded-full text-xs font-semibold bg-white text-[var(--color-font)] shadow hover:shadow-lg"
+                class="px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-bg)] text-[var(--color-font)] shadow hover:shadow-lg"
                 @click.stop="openShare(card)"
               >
                 Share-Link
