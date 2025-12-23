@@ -11,7 +11,8 @@
         <div
           v-if="postcard"
           class="card"
-          :class="{ 'is-portrait': !isLandscape }"
+          :class="{ 'is-portrait': !isLandscape && !postcard.canvas_width }"
+          :style="cardStyle"
         >
           <InteractivePostcard
             :postcard="postcard"
@@ -64,6 +65,23 @@ const isLandscape = computed(() => {
 })
 
 // elementStyle removed (handled by component)
+
+const cardStyle = computed(() => {
+  const record = postcard.value
+  if (!record) return {}
+  
+  // Use exact saved dimensions if available
+  if (record.canvas_width && record.canvas_height) {
+    return {
+      aspectRatio: `${record.canvas_width} / ${record.canvas_height}`
+    }
+  }
+  
+  // Fallback to defaults
+  return {
+    aspectRatio: isLandscape.value ? '3 / 2' : '2 / 3'
+  }
+})
 
 const toggleAudio = () => {
   if (!audioUrl.value) return

@@ -10,14 +10,17 @@
       class="absolute inset-0 backface-hidden"
       style="transform: rotateY(0deg)"
     >
-      <div v-if="frontImageUrl" class="w-full h-full relative">
+      <div v-if="frontImageUrl" ref="frontContainer" class="w-full h-full relative overflow-hidden">
         <img
           :src="frontImageUrl"
           class="w-full h-full object-cover"
           alt="Postkarten Vorderseite"
         />
         <!-- Elements Overlay -->
-        <div class="absolute inset-0 pointer-events-none">
+        <div 
+          class="absolute inset-0 pointer-events-none origin-top-left"
+          :style="{ transform: `scale(${scale})` }"
+        >
           <div
             v-for="el in frontElements"
             :key="el.id"
@@ -71,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { PostcardRecord } from '../backend'
 import { getFileUrl } from '../backend'
 
@@ -84,6 +87,8 @@ const emit = defineEmits<{
 }>()
 
 const isFlipped = ref(false)
+const frontContainer = ref<HTMLElement | null>(null)
+const scale = ref(1)
 
 const toggleFlip = () => {
   isFlipped.value = !isFlipped.value
@@ -121,6 +126,40 @@ const elementStyle = (el: any) => {
     height: el.height ? `${el.height}px` : undefined,
   }
 }
+
+let resizeObserver: ResizeObserver | null = null
+
+const updateScale = () => {
+  if (!frontContainer.value) {
+    scale.value = 1
+    return
+  }
+  
+  let targetWidth = props.postcard.canvas_width
+  
+  // Fallback for cards created before the fix
+  if (!targetWidth) {
+    const isLandscape = props.postcard.is_landscape !== false // Default to true if undefined
+    targetWidth = isLandscape ? 900 : 600
+  }
+
+  const currentWidth = frontContainer.value.clientWidth
+  scale.value = currentWidth / targetWidth
+}
+
+onMounted(() => {
+  if (frontContainer.value) {
+    resizeObserver = new ResizeObserver(() => {
+     updateScale()
+    })
+    resizeObserver.observe(frontContainer.value)
+    updateScale() // Initial call
+  }
+})
+
+onUnmounted(() => {
+  resizeObserver?.disconnect()
+})
 
 // Expose checks for parent components if needed (e.g. for aspect ratio calculations)
 defineExpose({ isFlipped })
