@@ -10,10 +10,10 @@
       class="absolute p-2 border-2"
       :class="[
         activeElementId === element.id ? 'border-[var(--color-highlight)]' : inactiveBorderClass,
-        interactive ? 'cursor-move pointer-events-auto select-none' : 'pointer-events-none',
+        interactive ? 'cursor-move pointer-events-auto select-none touch-none' : 'pointer-events-none',
       ]"
       :style="elementStyle(element)"
-      @mousedown.stop="interactive && startDrag($event, element)"
+      @pointerdown.stop="interactive && startDrag($event, element)"
       @click.stop="interactive && emit('update:activeElementId', element.id)"
     >
       <span
@@ -42,6 +42,7 @@
       <button
         v-if="activeElementId === element.id"
         class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm shadow-md"
+        @pointerdown.stop
         @click.stop="emit('delete-element', element.id)"
         aria-label="Element löschen"
       >
@@ -52,7 +53,7 @@
         v-if="activeElementId === element.id"
         class="absolute -bottom-2 -right-2 w-5 h-5 rounded-full cursor-se-resize z-40 shadow-sm"
         style="background-color: var(--color-card-bg); border: 1px solid var(--color-border-dark)"
-        @mousedown.stop="startResize($event, element)"
+        @pointerdown.stop="startResize($event, element)"
         aria-label="Grösse ändern"
       ></div>
 
@@ -65,7 +66,7 @@
           z-index: 50;
         "
         :style="{ top: element.y > 60 ? '-52px' : 'calc(100% + 4px)' }"
-        @mousedown.stop
+        @pointerdown.stop
         @click.stop
       >
         <button
@@ -106,7 +107,7 @@
             type="number"
             :value="element.fontSize || 24"
             @input="setFontSize($event, element)"
-            @mousedown.stop
+            @pointerdown.stop
             @click.stop
             min="8"
             max="200"
@@ -133,7 +134,7 @@
           type="color"
           :value="element.color || '#000000'"
           @input="setColor($event, element)"
-          @mousedown.stop
+          @pointerdown.stop
           @click.stop
           class="w-6 h-6 cursor-pointer border-none p-0 rounded overflow-hidden"
           aria-label="Textfarbe"
@@ -252,12 +253,17 @@ type DragState = {
   elementWidth: number
   elementHeight: number
   scale: number
+  pointerId: number
 }
 
 let dragState: DragState | null = null
 
-const startDrag = (event: MouseEvent, element: PostcardElement) => {
+const isPrimaryPointer = (event: PointerEvent) =>
+  event.isPrimary && (event.pointerType !== 'mouse' || event.button === 0)
+
+const startDrag = (event: PointerEvent, element: PostcardElement) => {
   if (!layerEl.value) return
+  if (!isPrimaryPointer(event)) return
   const containerRect = layerEl.value.getBoundingClientRect()
   const targetRect = (event.currentTarget as HTMLElement).getBoundingClientRect()
   const scale = getScale()
@@ -270,16 +276,18 @@ const startDrag = (event: MouseEvent, element: PostcardElement) => {
     elementWidth: targetRect.width / scale,
     elementHeight: targetRect.height / scale,
     scale,
+    pointerId: event.pointerId,
   }
 
   emit('update:activeElementId', element.id)
 
-  window.addEventListener('mousemove', onDrag)
-  window.addEventListener('mouseup', stopDrag)
+  window.addEventListener('pointermove', onDrag)
+  window.addEventListener('pointerup', stopDrag)
+  window.addEventListener('pointercancel', stopDrag)
 }
 
-const onDrag = (event: MouseEvent) => {
-  if (!dragState) return
+const onDrag = (event: PointerEvent) => {
+  if (!dragState || event.pointerId !== dragState.pointerId) return
   const {
     element,
     containerRect,
@@ -305,10 +313,12 @@ const onDrag = (event: MouseEvent) => {
   element.y = newY
 }
 
-const stopDrag = () => {
+const stopDrag = (event?: PointerEvent) => {
+  if (event && dragState && event.pointerId !== dragState.pointerId) return
   dragState = null
-  window.removeEventListener('mousemove', onDrag)
-  window.removeEventListener('mouseup', stopDrag)
+  window.removeEventListener('pointermove', onDrag)
+  window.removeEventListener('pointerup', stopDrag)
+  window.removeEventListener('pointercancel', stopDrag)
 }
 
 type ResizeState = {
@@ -319,11 +329,13 @@ type ResizeState = {
   startHeight: number
   startFontSize: number
   scale: number
+  pointerId: number
 }
 
 let resizeState: ResizeState | null = null
 
-const startResize = (event: MouseEvent, element: PostcardElement) => {
+const startResize = (event: PointerEvent, element: PostcardElement) => {
+  if (!isPrimaryPointer(event)) return
   const scale = getScale()
 
   resizeState = {
@@ -334,16 +346,18 @@ const startResize = (event: MouseEvent, element: PostcardElement) => {
     startHeight: element.height || 150,
     startFontSize: element.fontSize || (element.type === 'sticker' ? 64 : 24),
     scale,
+    pointerId: event.pointerId,
   }
 
   emit('update:activeElementId', element.id)
 
-  window.addEventListener('mousemove', onResize)
-  window.addEventListener('mouseup', stopResize)
+  window.addEventListener('pointermove', onResize)
+  window.addEventListener('pointerup', stopResize)
+  window.addEventListener('pointercancel', stopResize)
 }
 
-const onResize = (event: MouseEvent) => {
-  if (!resizeState) return
+const onResize = (event: PointerEvent) => {
+  if (!resizeState || event.pointerId !== resizeState.pointerId) return
   const { element, startX, startY, startWidth, startHeight, startFontSize, scale } = resizeState
   const dx = (event.clientX - startX) / scale
   const dy = (event.clientY - startY) / scale
@@ -361,10 +375,12 @@ const onResize = (event: MouseEvent) => {
   element.fontSize = newSize
 }
 
-const stopResize = () => {
+const stopResize = (event?: PointerEvent) => {
+  if (event && resizeState && event.pointerId !== resizeState.pointerId) return
   resizeState = null
-  window.removeEventListener('mousemove', onResize)
-  window.removeEventListener('mouseup', stopResize)
+  window.removeEventListener('pointermove', onResize)
+  window.removeEventListener('pointerup', stopResize)
+  window.removeEventListener('pointercancel', stopResize)
 }
 
 onUnmounted(() => {
