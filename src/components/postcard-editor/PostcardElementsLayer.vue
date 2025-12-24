@@ -1,12 +1,16 @@
 <template>
-  <div ref="layerEl" class="absolute inset-0 overflow-visible" @click.self="emit('update:activeElementId', null)">
+  <div
+    ref="layerEl"
+    class="absolute inset-0 overflow-visible"
+    @click.self="emit('update:activeElementId', null)"
+  >
     <div
       v-for="element in elementsForSide"
       :key="element.id"
       class="absolute p-2 border-2"
       :class="[
         activeElementId === element.id ? 'border-[var(--color-highlight)]' : inactiveBorderClass,
-        interactive ? 'cursor-move pointer-events-auto select-none' : 'pointer-events-none'
+        interactive ? 'cursor-move pointer-events-auto select-none' : 'pointer-events-none',
       ]"
       :style="elementStyle(element)"
       @mousedown.stop="interactive && startDrag($event, element)"
@@ -21,7 +25,10 @@
         {{ element.content }}
       </span>
 
-      <span v-else-if="element.type === 'sticker'" :style="{ fontSize: `${element.fontSize || 64}px` }">
+      <span
+        v-else-if="element.type === 'sticker'"
+        :style="{ fontSize: `${element.fontSize || 64}px` }"
+      >
         {{ element.content }}
       </span>
 
@@ -52,7 +59,11 @@
       <div
         v-if="activeElementId === element.id && element.type === 'text'"
         class="absolute left-0 shadow-lg rounded p-1 flex gap-1 items-center whitespace-nowrap"
-        style="background-color: var(--color-modal-bg); border: 1px solid var(--color-border); z-index: 50"
+        style="
+          background-color: var(--color-modal-bg);
+          border: 1px solid var(--color-border);
+          z-index: 50;
+        "
         :style="{ top: element.y > 60 ? '-52px' : 'calc(100% + 4px)' }"
         @mousedown.stop
         @click.stop
@@ -100,7 +111,11 @@
             min="8"
             max="200"
             class="w-10 text-center rounded px-0.5 py-0.5 text-xs"
-            style="border: 1px solid var(--color-border-light); background-color: var(--color-card-bg); color: var(--color-font)"
+            style="
+              border: 1px solid var(--color-border-light);
+              background-color: var(--color-card-bg);
+              color: var(--color-font);
+            "
             aria-label="Schriftgrösse"
           />
 
@@ -146,6 +161,8 @@ const props = withDefaults(
     side: 'front' | 'back'
     activeElementId: string | null
     interactive?: boolean
+    canvasWidth: number
+    canvasHeight: number
   }>(),
   {
     interactive: true,
@@ -176,6 +193,15 @@ const elementStyle = (element: PostcardElement) => ({
   width: element.width ? `${element.width}px` : undefined,
   height: element.height ? `${element.height}px` : undefined,
 })
+
+const getScale = () => {
+  if (!layerEl.value) return 1
+  const rect = layerEl.value.getBoundingClientRect()
+  const scaleX = rect.width / props.canvasWidth
+  const scaleY = rect.height / props.canvasHeight
+  const scale = Math.min(scaleX, scaleY)
+  return Number.isFinite(scale) && scale > 0 ? scale : 1
+}
 
 const updateText = (event: Event, element: PostcardElement) => {
   const target = event.target as HTMLElement | null
@@ -225,6 +251,7 @@ type DragState = {
   pointerOffsetY: number
   elementWidth: number
   elementHeight: number
+  scale: number
 }
 
 let dragState: DragState | null = null
@@ -233,14 +260,16 @@ const startDrag = (event: MouseEvent, element: PostcardElement) => {
   if (!layerEl.value) return
   const containerRect = layerEl.value.getBoundingClientRect()
   const targetRect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+  const scale = getScale()
 
   dragState = {
     element,
     containerRect,
-    pointerOffsetX: event.clientX - targetRect.left,
-    pointerOffsetY: event.clientY - targetRect.top,
-    elementWidth: targetRect.width,
-    elementHeight: targetRect.height,
+    pointerOffsetX: (event.clientX - targetRect.left) / scale,
+    pointerOffsetY: (event.clientY - targetRect.top) / scale,
+    elementWidth: targetRect.width / scale,
+    elementHeight: targetRect.height / scale,
+    scale,
   }
 
   emit('update:activeElementId', element.id)
@@ -251,12 +280,26 @@ const startDrag = (event: MouseEvent, element: PostcardElement) => {
 
 const onDrag = (event: MouseEvent) => {
   if (!dragState) return
-  const { element, containerRect, pointerOffsetX, pointerOffsetY, elementWidth, elementHeight } = dragState
-  const maxX = Math.max(0, containerRect.width - elementWidth)
-  const maxY = Math.max(0, containerRect.height - elementHeight)
+  const {
+    element,
+    containerRect,
+    pointerOffsetX,
+    pointerOffsetY,
+    elementWidth,
+    elementHeight,
+    scale,
+  } = dragState
+  const maxX = Math.max(0, props.canvasWidth - elementWidth)
+  const maxY = Math.max(0, props.canvasHeight - elementHeight)
 
-  const newX = Math.max(0, Math.min(event.clientX - containerRect.left - pointerOffsetX, maxX))
-  const newY = Math.max(0, Math.min(event.clientY - containerRect.top - pointerOffsetY, maxY))
+  const newX = Math.max(
+    0,
+    Math.min((event.clientX - containerRect.left) / scale - pointerOffsetX, maxX),
+  )
+  const newY = Math.max(
+    0,
+    Math.min((event.clientY - containerRect.top) / scale - pointerOffsetY, maxY),
+  )
 
   element.x = newX
   element.y = newY
@@ -270,28 +313,27 @@ const stopDrag = () => {
 
 type ResizeState = {
   element: PostcardElement
-  containerRect: DOMRect
   startX: number
   startY: number
   startWidth: number
   startHeight: number
   startFontSize: number
+  scale: number
 }
 
 let resizeState: ResizeState | null = null
 
 const startResize = (event: MouseEvent, element: PostcardElement) => {
-  if (!layerEl.value) return
-  const containerRect = layerEl.value.getBoundingClientRect()
+  const scale = getScale()
 
   resizeState = {
     element,
-    containerRect,
     startX: event.clientX,
     startY: event.clientY,
     startWidth: element.width || 150,
     startHeight: element.height || 150,
     startFontSize: element.fontSize || (element.type === 'sticker' ? 64 : 24),
+    scale,
   }
 
   emit('update:activeElementId', element.id)
@@ -302,13 +344,13 @@ const startResize = (event: MouseEvent, element: PostcardElement) => {
 
 const onResize = (event: MouseEvent) => {
   if (!resizeState) return
-  const { element, containerRect, startX, startY, startWidth, startHeight, startFontSize } = resizeState
-  const dx = event.clientX - startX
-  const dy = event.clientY - startY
+  const { element, startX, startY, startWidth, startHeight, startFontSize, scale } = resizeState
+  const dx = (event.clientX - startX) / scale
+  const dy = (event.clientY - startY) / scale
 
   if (element.type === 'image') {
-    const maxWidth = Math.max(50, containerRect.width - element.x)
-    const maxHeight = Math.max(50, containerRect.height - element.y)
+    const maxWidth = Math.max(50, props.canvasWidth - element.x)
+    const maxHeight = Math.max(50, props.canvasHeight - element.y)
     element.width = Math.max(50, Math.min(startWidth + dx, maxWidth))
     element.height = Math.max(50, Math.min(startHeight + dy, maxHeight))
     return
@@ -330,4 +372,3 @@ onUnmounted(() => {
   stopResize()
 })
 </script>
-

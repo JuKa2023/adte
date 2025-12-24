@@ -38,6 +38,7 @@
       <div class="w-px h-8 md:h-px md:w-full bg-[var(--color-divider)]"></div>
 
       <Button
+        v-if="isFront"
         variant="ghost"
         iconOnly
         @click="emit('add-text')"
@@ -52,6 +53,7 @@
       </Button>
 
       <Button
+        v-if="isFront"
         variant="ghost"
         iconOnly
         @click="emit('add-sticker')"
@@ -96,7 +98,9 @@
       </Button>
     </div>
 
-    <div class="ml-auto md:ml-0 md:mt-auto flex flex-row md:flex-col gap-4 w-auto md:w-full md:px-4">
+    <div
+      class="ml-auto md:ml-0 md:mt-auto flex flex-row md:flex-col gap-4 w-auto md:w-full md:px-4"
+    >
       <Button
         variant="ghost"
         iconOnly

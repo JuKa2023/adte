@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import PostcardGallery, { type Postcard } from './components/PostCardGallery.vue'
 import Button from './components/Button.vue'
 
@@ -69,7 +69,7 @@ async function fetchPostcards() {
     const data = (await res.json()) as Postcard[]
     allPostcards.value = Array.isArray(data) ? data : []
     visibleCount.value = PAGE_SIZE
-  } catch (e) {
+  } catch {
     error.value = 'Could not load postcards. Showing samples.'
     if (allPostcards.value.length === 0) {
       allPostcards.value = [
@@ -95,7 +95,6 @@ async function fetchPostcards() {
     isLoading.value = false
   }
 }
-
 
 function onLoadMore() {
   visibleCount.value = Math.min(visibleCount.value + PAGE_SIZE, allPostcards.value.length)

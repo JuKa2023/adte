@@ -21,7 +21,6 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'select', emoji: any): void
+  (e: 'select', emoji: { i: string }): void
 }>()
 </script>
-

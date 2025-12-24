@@ -1,34 +1,27 @@
 <template>
-  <div
-    class="absolute inset-0 shadow-2xl overflow-visible"
-    :style="{
-      backfaceVisibility: 'hidden',
-      pointerEvents: isActive ? 'auto' : 'none',
-      backgroundColor: 'var(--color-card-bg)',
-      zIndex: isActive ? 2 : 1,
-    }"
-  >
+  <PostcardFaceShell side="front" :is-active="isActive" overflow-visible shadow>
     <div
       class="flex items-center justify-center h-full w-full overflow-hidden relative bg-[var(--color-card-bg)]"
       @drop.prevent="onDropFile"
       @dragover.prevent
       @click="onBackgroundClick"
     >
-      <img
-        v-if="frontImage"
-        :src="frontImage"
-        class="w-full h-full object-cover absolute inset-0 pointer-events-none"
-        alt="Postcard Front"
-      />
-
-      <div v-else class="flex flex-col items-center gap-2 z-10 pointer-events-none">
-        <span class="material-icons text-6xl text-[var(--color-icon-light)]">add_photo_alternate</span>
-        <p class="font-light text-[var(--color-placeholder)]">Füge eine Mediadatei hinzu</p>
-      </div>
+      <PostcardFrontMedia :image-url="frontImage">
+        <div
+          class="w-full h-full flex flex-col items-center justify-center gap-2 z-10 pointer-events-none"
+        >
+          <span class="material-icons text-6xl text-[var(--color-icon-light)]"
+            >add_photo_alternate</span
+          >
+          <p class="font-light text-[var(--color-placeholder)]">Füge eine Mediadatei hinzu</p>
+        </div>
+      </PostcardFrontMedia>
 
       <PostcardElementsLayer
         class="z-20"
         :elements="elements"
+        :canvas-width="canvasWidth"
+        :canvas-height="canvasHeight"
         side="front"
         :active-element-id="activeElementId"
         :interactive="isActive"
@@ -38,7 +31,7 @@
 
       <input ref="fileInput" type="file" class="hidden" accept="image/*" @change="onFileSelected" />
     </div>
-  </div>
+  </PostcardFaceShell>
 </template>
 
 <script setup lang="ts">
@@ -46,12 +39,16 @@ import { ref } from 'vue'
 import { toast } from 'vue-sonner'
 import type { PostcardElement } from '../../backend'
 import PostcardElementsLayer from './PostcardElementsLayer.vue'
+import PostcardFaceShell from '../postcard/PostcardFaceShell.vue'
+import PostcardFrontMedia from '../postcard/PostcardFrontMedia.vue'
 
 const props = defineProps<{
   elements: PostcardElement[]
   frontImage: string | null
   activeElementId: string | null
   isActive: boolean
+  canvasWidth: number
+  canvasHeight: number
 }>()
 
 const emit = defineEmits<{
@@ -87,7 +84,7 @@ const onFileSelected = async (event: Event) => {
 
   // Check file size
   if (file.size > MAX_FILE_SIZE) {
-    toast.error('Das Bild ist zu groß. Maximale Größe: 2 MB')
+    toast.error('Das Bild ist zu gross. Maximale Grösse: 2 MB')
     target.value = ''
     return
   }
@@ -105,7 +102,7 @@ const onDropFile = async (event: DragEvent) => {
 
   // Check file size
   if (file.size > MAX_FILE_SIZE) {
-    toast.error('Das Bild ist zu groß. Maximale Größe: 2 MB')
+    toast.error('Das Bild ist zu gross. Maximale Grösse: 2 MB')
     return
   }
 
@@ -119,4 +116,3 @@ const onBackgroundClick = () => {
   }
 }
 </script>
-

@@ -1,37 +1,57 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @variant dark (&:where(.dark, .dark *));
 
 :root {
-  --font-sans: "Roboto", sans-serif;
-  --font-mono: "Inconsolata", monospace;
+  --font-sans: 'Roboto', sans-serif;
+  --font-mono: 'Inconsolata', monospace;
 
   /* Base colors */
-  --color-bg: #f0f1f5; /* Background */
-  --color-font: #0a0e15; /* Font */
-  --color-button-light: #eceef5; /* Button-light */
-  --color-dropin-field: #e0e5ec; /* Drop-in-field */
-  --color-highlight: #a10d74; /* Highlightcolor */
-  --color-primary: #2563eb; /* Primary action */
-  
+  --color-bg: #f0f1f5;
+  /* Background */
+  --color-font: #0a0e15;
+  /* Font */
+  --color-button-light: #eceef5;
+  /* Button-light */
+  --color-dropin-field: #e0e5ec;
+  /* Drop-in-field */
+  --color-highlight: #a10d74;
+  /* Highlightcolor */
+  --color-primary: #2563eb;
+  /* Primary action */
+
   /* UI Element colors */
-  --color-card-bg: #ffffff; /* Card/postcard background */
-  --color-sidebar-bg: #ffffff; /* Sidebar background */
-  --color-sidebar-hover: #f3f4f6; /* Sidebar button hover */
-  --color-border: #e5e7eb; /* Border color */
-  --color-border-light: #d1d5db; /* Light border */
-  --color-border-dark: #9ca3af; /* Darker border */
-  --color-icon: #4b5563; /* Icon color */
-  --color-icon-light: #d1d5db; /* Light icon color */
-  --color-text-muted: #6b7280; /* Muted text */
-  --color-placeholder: #9ca3af; /* Placeholder text */
-  --color-modal-bg: #ffffff; /* Modal background */
-  --color-modal-overlay: rgba(0, 0, 0, 0.6); /* Modal overlay */
-  --color-divider: #e5e7eb; /* Divider line */
-  
+  --color-card-bg: #ffffff;
+  /* Card/postcard background */
+  --color-sidebar-bg: #ffffff;
+  /* Sidebar background */
+  --color-sidebar-hover: #f3f4f6;
+  /* Sidebar button hover */
+  --color-border: #e5e7eb;
+  /* Border color */
+  --color-border-light: #d1d5db;
+  /* Light border */
+  --color-border-dark: #9ca3af;
+  /* Darker border */
+  --color-icon: #4b5563;
+  /* Icon color */
+  --color-icon-light: #d1d5db;
+  /* Light icon color */
+  --color-text-muted: #6b7280;
+  /* Muted text */
+  --color-placeholder: #9ca3af;
+  /* Placeholder text */
+  --color-modal-bg: #ffffff;
+  /* Modal background */
+  --color-modal-overlay: rgba(0, 0, 0, 0.6);
+  /* Modal overlay */
+  --color-divider: #e5e7eb;
+  /* Divider line */
+
   /* Page specific backgrounds */
-  --bg-shared-page: radial-gradient(circle at 20% 20%, rgba(161, 13, 116, 0.08), transparent 30%),
-                    radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.08), transparent 28%),
-                    linear-gradient(135deg, #f7f7fb 0%, #eef1f8 100%);
+  --bg-shared-page:
+    radial-gradient(circle at 20% 20%, rgba(161, 13, 116, 0.08), transparent 30%),
+    radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.08), transparent 28%),
+    linear-gradient(135deg, #f7f7fb 0%, #eef1f8 100%);
 }
 
 .dark {
@@ -41,29 +61,45 @@
   --color-button-light: #202531;
   --color-dropin-field: #37404f;
   --color-highlight: #ffd7f3;
-  --color-primary: #3b82f6; /* Primary action */
-  
+  --color-primary: #3b82f6;
+  /* Primary action */
+
   /* UI Element colors */
-  --color-card-bg: #1a1f2e; /* Card/postcard background */
-  --color-sidebar-bg: #151a26; /* Sidebar background */
-  --color-sidebar-hover: #202531; /* Sidebar button hover */
-  --color-border: #2d3748; /* Border color */
-  --color-border-light: #374151; /* Light border */
-  --color-border-dark: #4b5563; /* Darker border */
-  --color-icon: #9ca3af; /* Icon color */
-  --color-icon-light: #4b5563; /* Light icon color */
-  --color-text-muted: #9ca3af; /* Muted text */
-  --color-placeholder: #6b7280; /* Placeholder text */
-  --color-modal-bg: #1a1f2e; /* Modal background */
-  --color-modal-overlay: rgba(0, 0, 0, 0.8); /* Modal overlay */
-  --color-divider: #2d3748; /* Divider line */
+  --color-card-bg: #1a1f2e;
+  /* Card/postcard background */
+  --color-sidebar-bg: #151a26;
+  /* Sidebar background */
+  --color-sidebar-hover: #202531;
+  /* Sidebar button hover */
+  --color-border: #2d3748;
+  /* Border color */
+  --color-border-light: #374151;
+  /* Light border */
+  --color-border-dark: #4b5563;
+  /* Darker border */
+  --color-icon: #9ca3af;
+  /* Icon color */
+  --color-icon-light: #4b5563;
+  /* Light icon color */
+  --color-text-muted: #9ca3af;
+  /* Muted text */
+  --color-placeholder: #6b7280;
+  /* Placeholder text */
+  --color-modal-bg: #1a1f2e;
+  /* Modal background */
+  --color-modal-overlay: rgba(0, 0, 0, 0.8);
+  /* Modal overlay */
+  --color-divider: #2d3748;
+  /* Divider line */
 
   /* Page specific backgrounds */
   /* Page specific backgrounds */
-  --bg-shared-page: radial-gradient(circle at 20% 20%, rgba(255, 215, 243, 0.15), transparent 30%),
-                    radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.15), transparent 28%),
-                    linear-gradient(135deg, #0a0e15 0%, #151a26 100%);
+  --bg-shared-page:
+    radial-gradient(circle at 20% 20%, rgba(255, 215, 243, 0.15), transparent 30%),
+    radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.15), transparent 28%),
+    linear-gradient(135deg, #0a0e15 0%, #151a26 100%);
 }
+
 h1,
 h2,
 p {

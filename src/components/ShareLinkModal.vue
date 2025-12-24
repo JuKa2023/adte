@@ -22,7 +22,11 @@
             readonly
             :value="link"
             class="flex-1 px-3 py-2 rounded-md border text-sm"
-            style="background-color: var(--color-bg); border-color: var(--color-border); color: var(--color-font)"
+            style="
+              background-color: var(--color-bg);
+              border-color: var(--color-border);
+              color: var(--color-font);
+            "
           />
           <Button
             variant="primary"
@@ -31,15 +35,15 @@
             @click="copyLink"
           >
             <template #icon>
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="18" 
-                height="18" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                stroke-width="2" 
-                stroke-linecap="round" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
                 stroke-linejoin="round"
               >
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -55,12 +59,7 @@
       </div>
 
       <div class="flex justify-end gap-3 pt-2">
-        <Button
-          variant="primary"
-          @click="$emit('goToGallery')"
-        >
-          Zur Galerie
-        </Button>
+        <Button variant="primary" @click="$emit('goToGallery')"> Zur Galerie </Button>
       </div>
     </div>
   </div>
@@ -76,7 +75,7 @@ const props = defineProps<{
   link: string
 }>()
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'close'): void
   (e: 'goToGallery'): void
 }>()
@@ -88,7 +87,7 @@ const copyLink = async () => {
     await navigator.clipboard.writeText(props.link)
     copied.value = true
     setTimeout(() => (copied.value = false), 2000)
-  } catch (err) {
+  } catch {
     toast.error('Konnte Link nicht kopieren.')
   }
 }

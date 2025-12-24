@@ -23,35 +23,21 @@
         <!-- Recipient -->
         <div class="flex flex-col gap-2">
           <label class="font-medium">E-Mail des Empfängers</label>
-          <FormInput
-            type="email"
-            v-model="recipientEmail"
-            placeholder="empfaenger@beispiel.de"
-          />
+          <FormInput type="email" v-model="recipientEmail" placeholder="E-Mail eingeben" />
         </div>
 
         <!-- Send Option -->
         <div class="flex flex-col gap-3">
           <label class="font-medium">Wann soll die Karte gesendet werden?</label>
-          
+
           <div class="flex gap-4">
             <label class="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                v-model="sendOption"
-                value="now"
-                class="w-4 h-4"
-              />
+              <input type="radio" v-model="sendOption" value="now" class="w-4 h-4" />
               <span>Sofort senden</span>
             </label>
-            
+
             <label class="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                v-model="sendOption"
-                value="later"
-                class="w-4 h-4"
-              />
+              <input type="radio" v-model="sendOption" value="later" class="w-4 h-4" />
               <span>Später senden</span>
             </label>
           </div>
@@ -66,24 +52,19 @@
             type="datetime-local"
             v-model="scheduledTime"
             class="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-[var(--color-highlight)]"
-            style="background-color: var(--color-bg); border-color: var(--color-border); color: var(--color-font)"
+            style="
+              background-color: var(--color-bg);
+              border-color: var(--color-border);
+              color: var(--color-font);
+            "
             :min="minDate"
           />
         </div>
 
         <!-- Actions -->
         <div class="flex justify-end gap-3 mt-4">
-          <Button
-            variant="ghost"
-            @click="$emit('close')"
-          >
-            Abbrechen
-          </Button>
-          <Button
-            variant="primary"
-            @click="handleSave"
-            :disabled="isLoading"
-          >
+          <Button variant="ghost" @click="$emit('close')"> Abbrechen </Button>
+          <Button variant="primary" @click="handleSave" :disabled="isLoading">
             <span v-if="isLoading" class="flex items-center gap-2">
               <span class="animate-spin material-icons text-sm">refresh</span>
               Speichern...
@@ -102,7 +83,7 @@ import { toast } from 'vue-sonner'
 import FormInput from './FormInput.vue'
 import Button from './Button.vue'
 
-const props = defineProps<{
+defineProps<{
   isOpen: boolean
   isLoading?: boolean
 }>()
@@ -133,7 +114,7 @@ const handleSave = () => {
     toast.error('Bitte gib eine gültige E-Mail-Adresse ein.')
     return
   }
-  
+
   if (sendOption.value === 'later' && !scheduledTime.value) {
     toast.error('Bitte wähle einen Zeitpunkt aus.')
     return
@@ -147,7 +128,7 @@ const handleSave = () => {
   emit('save', {
     sent: false,
     scheduledTime: scheduledTimeValue,
-    recipientEmail: recipientEmail.value
+    recipientEmail: recipientEmail.value,
   })
 }
 </script>
@@ -158,12 +139,18 @@ const handleSave = () => {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Custom radio button styling */
-input[type="radio"] {
+input[type='radio'] {
   accent-color: var(--color-highlight);
   cursor: pointer;
 }

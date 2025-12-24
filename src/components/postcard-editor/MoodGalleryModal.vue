@@ -10,7 +10,11 @@
     >
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold">Wähle eine Stimmung</h2>
-        <button @click="emit('close')" class="hover:opacity-70 text-[var(--color-text-muted)]" aria-label="Schliessen">
+        <button
+          @click="emit('close')"
+          class="hover:opacity-70 text-[var(--color-text-muted)]"
+          aria-label="Schliessen"
+        >
           ✕
         </button>
       </div>
@@ -39,4 +43,3 @@ const emit = defineEmits<{
   (e: 'select', img: string): void
 }>()
 </script>
-

@@ -1,11 +1,14 @@
 <template>
-  <div ref="wrapperRef" class="w-full h-full flex items-center justify-center overflow-hidden relative">
+  <div
+    ref="wrapperRef"
+    class="w-full h-full flex items-center justify-center overflow-hidden relative"
+  >
     <div
-      class="origin-center transition-transform duration-100 ease-out shadow-2xl"
+      class="origin-center flex-shrink-0 transition-transform duration-100 ease-out shadow-2xl"
       :style="{
-        width: isLandscape ? '900px' : '600px',
-        height: isLandscape ? '600px' : '900px',
-        transform: `scale(${scale})`
+        width: `${canvasSize.width}px`,
+        height: `${canvasSize.height}px`,
+        transform: `scale(${scale})`,
       }"
     >
       <div class="relative w-full h-full perspective-1000">
@@ -17,6 +20,8 @@
             :is-active="isFront"
             :elements="elements"
             :front-image="frontImage"
+            :canvas-width="canvasSize.width"
+            :canvas-height="canvasSize.height"
             :active-element-id="activeElementId"
             @update:front-image="emit('update:frontImage', $event)"
             @update:active-element-id="emit('update:activeElementId', $event)"
@@ -26,15 +31,15 @@
           <PostcardBackFace
             :is-active="!isFront"
             :is-landscape="isLandscape"
-            :elements="elements"
-            :active-element-id="activeElementId"
             :message="message"
             :audio-url="audioUrl"
-            @update:active-element-id="emit('update:activeElementId', $event)"
+            :theme-id="themeId"
+            :location="location"
             @update:message="emit('update:message', $event)"
             @update:audio-url="emit('update:audioUrl', $event)"
             @update:audio-blob="emit('update:audioBlob', $event)"
-            @delete-element="emit('delete-element', $event)"
+            @update:theme-id="emit('update:themeId', $event)"
+            @update:location="emit('update:location', $event)"
           />
         </div>
       </div>
@@ -43,8 +48,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import type { PostcardElement } from '../../backend'
+import { getCanvasSize } from '../../postcard/canvas'
 import PostcardBackFace from './PostcardBackFace.vue'
 import PostcardFrontFace from './PostcardFrontFace.vue'
 
@@ -56,6 +62,8 @@ const props = defineProps<{
   activeElementId: string | null
   message: string
   audioUrl: string | null
+  themeId?: string
+  location?: { city: string; weather: string }
 }>()
 
 const emit = defineEmits<{
@@ -64,23 +72,25 @@ const emit = defineEmits<{
   (e: 'update:message', value: string): void
   (e: 'update:audioUrl', value: string | null): void
   (e: 'update:audioBlob', value: Blob | null): void
+  (e: 'update:themeId', value: string): void
+  (e: 'update:location', value: { city: string; weather: string }): void
   (e: 'delete-element', id: string): void
 }>()
 
 const wrapperRef = ref<HTMLElement | null>(null)
 const scale = ref(1)
+const canvasSize = computed(() => getCanvasSize(props.isLandscape))
 
 const updateScale = () => {
   if (!wrapperRef.value) return
-  
+
   const { clientWidth, clientHeight } = wrapperRef.value
   // Leave some padding
   const padding = 40
   const availableW = Math.max(0, clientWidth - padding)
   const availableH = Math.max(0, clientHeight - padding)
 
-  const targetW = props.isLandscape ? 900 : 600
-  const targetH = props.isLandscape ? 600 : 900
+  const { width: targetW, height: targetH } = canvasSize.value
 
   const scaleW = availableW / targetW
   const scaleH = availableH / targetH
@@ -103,10 +113,13 @@ onUnmounted(() => {
   resizeObserver?.disconnect()
 })
 
-watch(() => props.isLandscape, () => {
-  // Update scale immediately when orientation changes
-  setTimeout(updateScale, 0)
-})
+watch(
+  () => props.isLandscape,
+  () => {
+    // Update scale immediately when orientation changes
+    setTimeout(updateScale, 0)
+  },
+)
 </script>
 
 <style scoped>

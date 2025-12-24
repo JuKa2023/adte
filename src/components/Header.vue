@@ -1,54 +1,46 @@
 <template>
-  <header class="fixed top-0 left-0 right-0 z-[100] bg-[var(--color-sidebar-bg)] backdrop-blur-md border-b border-gray-100 h-14">
+  <header
+    class="fixed top-0 left-0 right-0 z-[100] bg-[var(--color-sidebar-bg)] backdrop-blur-md border-b border-gray-100 h-14"
+  >
     <div class="flex h-full items-center justify-between px-6">
       <div class="flex items-center gap-6">
-        <RouterLink
-          to="/"
-          class="flex items-center hover:opacity-80 transition-opacity"
-        >
+        <RouterLink to="/" class="flex items-center hover:opacity-80 transition-opacity">
           <AdteLogo class="h-8 w-auto" />
         </RouterLink>
 
         <!-- Desktop Navigation -->
         <nav class="hidden lg:flex items-center gap-6">
-        <RouterLink
-          v-if="isAuthed"
-          to="/create"
-          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
-        >
-          <span class="text-lg font-medium">
-            Postkarte erstellen
-          </span>
-        </RouterLink>
+          <RouterLink
+            v-if="isAuthed"
+            to="/create"
+            class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
+          >
+            <span class="text-lg font-medium"> Postkarte erstellen </span>
+          </RouterLink>
 
-        <RouterLink
-          v-if="isAuthed"
-          to="/gallery"
-          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
-        >
-          <span class="text-lg font-medium">
-            Meine Galerie
-          </span>
-        </RouterLink>
+          <RouterLink
+            v-if="isAuthed"
+            to="/gallery"
+            class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
+          >
+            <span class="text-lg font-medium"> Meine Galerie </span>
+          </RouterLink>
 
-        <RouterLink
-          v-if="!isAuthed"
-          to="/login"
-          class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
-        >
-          <span class="text-lg font-medium">
-            Anmelden
-          </span>
-        </RouterLink>
-
-
+          <RouterLink
+            v-if="!isAuthed"
+            to="/login"
+            class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
+          >
+            <span class="text-lg font-medium"> Anmelden </span>
+          </RouterLink>
         </nav>
       </div>
 
       <div class="flex items-center gap-4">
         <!-- Desktop User Info and Logout -->
         <div v-if="isAuthed" class="hidden lg:block text-sm" style="color: var(--color-text-muted)">
-          Eingeloggt als <span class="font-medium" style="color: var(--color-font)">{{ userLabel }}</span>
+          Eingeloggt als
+          <span class="font-medium" style="color: var(--color-font)">{{ userLabel }}</span>
         </div>
 
         <div v-if="isAuthed" class="hidden lg:flex items-center gap-2">
@@ -72,7 +64,13 @@
         </div>
 
         <!-- Theme Toggle (visible on all screens) -->
-        <Button class="w-8 h-8 flex items-center justify-center" type="button" @click="toggleTheme" variant="ghost" iconOnly>
+        <Button
+          class="w-8 h-8 flex items-center justify-center"
+          type="button"
+          @click="toggleTheme"
+          variant="ghost"
+          iconOnly
+        >
           <template #icon>
             <span v-if="isDark" class="text-lg">🌙</span>
             <span v-else class="text-lg">☀️</span>
@@ -130,8 +128,6 @@
               Anmelden
             </RouterLink>
 
-
-
             <Button
               v-if="isAuthed"
               class="rounded-full px-6 py-2 text-lg"
@@ -147,7 +143,12 @@
               class="rounded-full px-6 py-2 text-lg text-red-500 hover:text-red-700"
               type="button"
               variant="ghost"
-              @click="() => { closeMobileMenu(); isDeleteModalOpen = true; }"
+              @click="
+                () => {
+                  closeMobileMenu()
+                  isDeleteModalOpen = true
+                }
+              "
             >
               Account löschen
             </Button>
@@ -180,7 +181,10 @@ const isDeleting = ref(false)
 const router = useRouter()
 
 const isAuthed = computed(() => !!currentUser.value)
-const userLabel = computed(() => currentUser.value?.name || currentUser.value?.username || currentUser.value?.email || 'Nutzer')
+const userLabel = computed(
+  () =>
+    currentUser.value?.name || currentUser.value?.username || currentUser.value?.email || 'Nutzer',
+)
 
 const applyTheme = (dark: boolean) => {
   const root = document.documentElement
@@ -209,7 +213,7 @@ const handleLogout = () => {
 
 const handleDeleteAccount = async () => {
   if (!currentUser.value?.id) return
-  
+
   isDeleting.value = true
   try {
     await deleteUser(currentUser.value.id)

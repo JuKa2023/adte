@@ -40,6 +40,8 @@ export interface PostcardRecord {
   is_vertical?: boolean
   canvas_width?: number
   canvas_height?: number
+  theme_id?: string
+  location?: string // JSON string of { city, weather }
 }
 
 export async function createPostcard(data: {
@@ -54,6 +56,8 @@ export async function createPostcard(data: {
   isLandscape?: boolean
   canvasWidth?: number
   canvasHeight?: number
+  themeId?: string
+  location?: string
 }) {
   const userId = pb.authStore.model?.id
   if (!userId) {
@@ -93,30 +97,52 @@ export async function createPostcard(data: {
   if (data.canvasHeight) {
     formData.append('canvas_height', data.canvasHeight.toString())
   }
+  if (data.themeId) {
+    formData.append('theme_id', data.themeId)
+  }
+  if (data.location) {
+    formData.append('location', data.location)
+  }
 
   formData.append('user', userId)
 
   return await pb.collection('postcards').create<PostcardRecord>(formData)
 }
 
-export async function updatePostcard(id: string, data: Partial<PostcardRecord>) {
-  return await pb.collection('postcards').update<PostcardRecord>(id, data)
-}
-
-export async function getPostcards(page = 1, perPage = 20) {
-  return await pb.collection('postcards').getList<PostcardRecord>(page, perPage, {
-    filter: 'is_public = true',
-  })
-}
-
 export function getFileUrl(record: PostcardRecord, filename: string) {
-  return pb.files.getUrl(record, filename)
+  return pb.files.getURL(record, filename)
 }
 
 export async function loginUser() {
-  return await pb.collection('users').authWithOAuth2({
-    provider: 'google',
-  })
+  try {
+    // First, verify that OAuth2 is configured by listing auth methods
+    const authMethods = await pb.collection('users').listAuthMethods()
+
+    if (!authMethods?.oauth2?.providers?.length) {
+      throw new Error(
+        'OAuth2 is not configured on the PocketBase server. Please configure Google OAuth2 in PocketBase admin panel.',
+      )
+    }
+
+    // Check if Google provider is available
+    const googleProvider = authMethods.oauth2.providers.find(
+      (p: { name: string }) => p.name === 'google',
+    )
+
+    if (!googleProvider) {
+      throw new Error(
+        'Google OAuth2 provider is not configured. Available providers: ' +
+          authMethods.oauth2.providers.map((p: { name: string }) => p.name).join(', '),
+      )
+    }
+
+    return await pb.collection('users').authWithOAuth2({
+      provider: 'google',
+    })
+  } catch (error) {
+    console.error('OAuth2 login error:', error)
+    throw error
+  }
 }
 
 export async function deleteUser(userId: string) {
@@ -154,7 +180,7 @@ export async function getSharedPostcard(id: string, token: string) {
     }
 
     return postcard
-  } catch (error) {
+  } catch {
     throw new Error('Postcard not found or invalid token')
   }
 }

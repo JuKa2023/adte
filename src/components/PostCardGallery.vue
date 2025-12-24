@@ -21,7 +21,7 @@
 
     <div v-if="hasMore" class="cta">
       <slot name="cta" :disabled="isLoading" :onClick="() => emit('loadMore')">
-        <MehrButton :disabled="isLoading" @click="emit('loadMore')" >
+        <MehrButton :disabled="isLoading" @click="emit('loadMore')">
           {{ moreLabel }}
         </MehrButton>
       </slot>
@@ -43,7 +43,7 @@ const emit = defineEmits<{
   (e: 'loadMore'): void
 }>()
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     items: Postcard[]
     isLoading?: boolean

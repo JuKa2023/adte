@@ -10,20 +10,22 @@ const isSubmitting = ref(false)
 const router = useRouter()
 const route = useRoute()
 
-const handleLogin = async () => {
+const handleLogin = () => {
   isSubmitting.value = true
-  try {
-    await loginUser()
 
-    toast.success('Erfolgreich angemeldet.')
-    const redirect = (route.query.redirect as string) || '/gallery'
-    router.push(redirect)
-  } catch (error: any) {
-    if (error?.isAbort) return // User cancelled
-    toast.error(error?.message || 'Anmeldung fehlgeschlagen.')
-  } finally {
-    isSubmitting.value = false
-  }
+  loginUser()
+    .then(() => {
+      toast.success('Erfolgreich angemeldet.')
+      const redirect = (route.query.redirect as string) || '/gallery'
+      router.push(redirect)
+    })
+    .catch((error: unknown) => {
+      if ((error as { isAbort?: boolean })?.isAbort) return // User cancelled
+      toast.error((error as { message?: string })?.message || 'Anmeldung fehlgeschlagen.')
+    })
+    .finally(() => {
+      isSubmitting.value = false
+    })
 }
 </script>
 
@@ -43,10 +45,7 @@ const handleLogin = async () => {
       </div>
 
       <div class="text-center">
-        <Button
-          :disabled="isSubmitting"
-          @click="handleLogin"
-        >
+        <Button :disabled="isSubmitting" @click="handleLogin">
           <template #icon>
             <svg class="w-5 h-5" viewBox="0 0 24 24">
               <path

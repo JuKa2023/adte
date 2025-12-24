@@ -23,7 +23,10 @@
         v-model:active-element-id="activeElementId"
         v-model:message="postcard.message"
         v-model:audio-url="postcard.audioUrl"
+        v-model:theme-id="postcard.themeId"
+        :location="postcard.location"
         @update:audio-blob="postcard.audioBlob = $event"
+        @update:location="postcard.location = $event"
         @delete-element="deleteElement"
       />
 
@@ -56,7 +59,11 @@
       @select="selectMood"
     />
 
-    <EmojiPickerModal :is-open="showEmojiPicker" @close="showEmojiPicker = false" @select="onSelectEmoji" />
+    <EmojiPickerModal
+      :is-open="showEmojiPicker"
+      @close="showEmojiPicker = false"
+      @select="onSelectEmoji"
+    />
 
     <SavePostcardModal
       :is-open="showSaveModal"
@@ -75,10 +82,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { buildShareLink, createPostcard } from './backend'
+import { getCanvasSize } from './postcard/canvas'
 import type { PostcardElement } from './backend'
 import Button from './components/Button.vue'
 import SavePostcardModal from './components/SavePostcardModal.vue'
@@ -95,6 +103,8 @@ interface PostcardState {
   message: string
   audioBlob: Blob | null
   audioUrl: string | null
+  themeId?: string
+  location?: { city: string; weather: string }
 }
 
 const router = useRouter()
@@ -105,6 +115,8 @@ const postcard = ref<PostcardState>({
   message: '',
   audioBlob: null,
   audioUrl: null,
+  themeId: 'classic',
+  // location is undefined initially
 })
 
 const activeElementId = ref<string | null>(null)
@@ -121,9 +133,19 @@ const showShareModal = ref(false)
 const isFront = ref(true)
 const isLandscape = ref(true)
 
+const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+  e.preventDefault()
+  e.returnValue = ''
+}
+
 onMounted(() => {
   const seen = localStorage.getItem('postcard_onboarding_seen')
   if (!seen) showOnboarding.value = true
+  window.addEventListener('beforeunload', handleBeforeUnload)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload)
 })
 
 const dismissOnboarding = () => {
@@ -154,7 +176,8 @@ const selectMood = (img: string) => {
   showMoodGallery.value = false
 }
 
-const onSelectEmoji = (emoji: any) => {
+const onSelectEmoji = (emoji: { i: string }) => {
+  if (!isFront.value) return
   const newElement: PostcardElement = {
     id: crypto.randomUUID(),
     type: 'sticker',
@@ -176,10 +199,46 @@ const toggleSide = () => {
 }
 
 const toggleOrientation = () => {
+  const fromSize = getCanvasSize(isLandscape.value)
+  const toSize = getCanvasSize(!isLandscape.value)
+  const scaleX = toSize.width / fromSize.width
+  const scaleY = toSize.height / fromSize.height
+  const fromShortSide = Math.min(fromSize.width, fromSize.height)
+  const toShortSide = Math.min(toSize.width, toSize.height)
+  const fontScale = toShortSide / fromShortSide
+
+  postcard.value.elements.forEach((element) => {
+    element.x *= scaleX
+    element.y *= scaleY
+
+    if (element.width) {
+      element.width *= scaleX
+    }
+    if (element.height) {
+      element.height *= scaleY
+    }
+    if (element.fontSize) {
+      element.fontSize = Math.max(12, Math.min(400, element.fontSize * fontScale))
+    }
+
+    if (element.width) {
+      element.x = Math.min(Math.max(0, element.x), toSize.width - element.width)
+    } else {
+      element.x = Math.min(Math.max(0, element.x), toSize.width)
+    }
+
+    if (element.height) {
+      element.y = Math.min(Math.max(0, element.y), toSize.height - element.height)
+    } else {
+      element.y = Math.min(Math.max(0, element.y), toSize.height)
+    }
+  })
+
   isLandscape.value = !isLandscape.value
 }
 
 const onAddText = () => {
+  if (!isFront.value) return
   const newElement: PostcardElement = {
     id: crypto.randomUUID(),
     type: 'text',
@@ -210,6 +269,7 @@ const onMorePhotos = () => {
 const MAX_ELEMENT_IMAGE_SIZE = 500 * 1024 // 500KB in bytes
 
 const onExtraFileSelected = (event: Event) => {
+  if (!isFront.value) return
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   if (!file || !file.type.startsWith('image/')) {
@@ -219,7 +279,7 @@ const onExtraFileSelected = (event: Event) => {
 
   // Check file size
   if (file.size > MAX_ELEMENT_IMAGE_SIZE) {
-    toast.error('Das Bild ist zu groß. Maximale Größe: 500 KB')
+    toast.error('Das Bild ist zu gross. Maximale Grösse: 500 KB')
     target.value = ''
     return
   }
@@ -244,7 +304,11 @@ const onExtraFileSelected = (event: Event) => {
 }
 
 const onClearPostcard = () => {
-  if (!confirm('Möchtest du wirklich alles zurücksetzen? Alle nicht gespeicherten Änderungen gehen verloren.')) {
+  if (
+    !confirm(
+      'Möchtest du wirklich alles zurücksetzen? Alle nicht gespeicherten Änderungen gehen verloren.',
+    )
+  ) {
     return
   }
 
@@ -263,7 +327,11 @@ const onFinish = () => {
   showSaveModal.value = true
 }
 
-const onSavePostcard = async (data: { sent: boolean; scheduledTime?: string; recipientEmail: string }) => {
+const onSavePostcard = async (data: {
+  sent: boolean
+  scheduledTime?: string
+  recipientEmail: string
+}) => {
   if (!postcard.value.frontImage) {
     toast.error('Bitte füge ein Hintergrundbild für die Vorderseite hinzu.')
     return
@@ -274,20 +342,24 @@ const onSavePostcard = async (data: { sent: boolean; scheduledTime?: string; rec
     const response = await fetch(postcard.value.frontImage)
     const blob = await response.blob()
 
-    const cardElement = document.querySelector('.postcard-container') as HTMLElement | null
+    const canvasSize = getCanvasSize(isLandscape.value)
+
+    const frontElements = postcard.value.elements.filter((element) => element.side === 'front')
 
     const created = await createPostcard({
       frontImageBlob: blob,
       audioBlob: postcard.value.audioBlob,
       message: postcard.value.message,
-      elements: postcard.value.elements,
+      elements: frontElements,
       isPublic: true,
       sent: data.sent,
       scheduledTime: data.scheduledTime,
       recipientEmail: data.recipientEmail,
       isLandscape: isLandscape.value,
-      canvasWidth: cardElement?.offsetWidth,
-      canvasHeight: cardElement?.offsetHeight,
+      canvasWidth: canvasSize.width,
+      canvasHeight: canvasSize.height,
+      themeId: postcard.value.themeId,
+      location: postcard.value.location ? JSON.stringify(postcard.value.location) : undefined,
     })
 
     showSaveModal.value = false
@@ -300,9 +372,10 @@ const onSavePostcard = async (data: { sent: boolean; scheduledTime?: string; rec
     } else {
       router.push('/gallery')
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error saving postcard:', error)
-    const message = error?.message || 'Fehler beim Speichern der Postkarte.'
+    const message =
+      (error as { message?: string })?.message || 'Fehler beim Speichern der Postkarte.'
     toast.error(message)
   } finally {
     isSaving.value = false
