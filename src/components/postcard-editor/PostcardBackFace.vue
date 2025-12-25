@@ -45,7 +45,7 @@
         <textarea
           v-model="messageModel"
           class="w-full flex-1 bg-transparent resize-none border-none focus:ring-0 p-0 text-lg leading-relaxed text-gray-800 placeholder-gray-300"
-          :placeholder="readonly ? '' : 'Liebe Freunde,...'"
+          :placeholder="readonly ? '' : 'Hallo du,...'"
           :readonly="readonly"
         ></textarea>
 
