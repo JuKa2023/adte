@@ -1,6 +1,5 @@
 <template>
   <div class="h-full w-full" style="background-color: var(--color-bg)">
-    <!-- Content -->
     <main class="pt-24 px-6 pb-16 max-w-6xl mx-auto">
       <div v-if="loading" class="flex justify-center items-center h-64">
         <span class="material-icons animate-spin text-4xl" style="color: var(--color-primary)"
@@ -24,78 +23,64 @@
         <Button @click="router.push('/create')"> Jetzt erstellen </Button>
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
-        <div
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 items-start">
+        <PolaroidCard
           v-for="card in postcards"
           :key="card.id"
-          class="group relative rounded-sm overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border flex flex-col cursor-pointer"
-          style="background-color: var(--color-card-bg); border-color: var(--color-border)"
+          class="h-full"
           @click="openViewModal(card)"
         >
-          <!-- Card Preview (Front Image) -->
-          <div class="relative overflow-hidden" :style="{ aspectRatio: getCardAspectRatio(card) }">
-            <GalleryPostcardPreview :postcard="card" />
+          <template #image>
+            <div class="w-full h-full relative" :style="{ aspectRatio: getCardAspectRatio(card) }">
+              <GalleryPostcardPreview :postcard="card" />
+            </div>
+          </template>
 
-            <!-- Gradient overlay (keep for text contrast if needed, or remove if it obscures content too much) -->
+          <template #overlay>
             <div
-              class="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-60"
+              class="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-60"
             ></div>
 
-            <!-- Status badge -->
             <div class="absolute top-3 left-3">
               <span
-                class="px-3 py-1 rounded-full text-xs font-semibold shadow"
-                :class="card.sent ? 'bg-green-500 text-white' : 'bg-amber-400 text-black'"
+                class="px-2 py-0.5 rounded-sm text-[10px] uppercase tracking-wider font-bold shadow-sm"
+                :class="
+                  card.sent ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                "
               >
                 {{ card.sent ? 'Gesendet' : 'Entwurf' }}
               </span>
             </div>
 
-            <!-- Action buttons -->
             <div
               class="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <button
-                class="px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-bg)] text-[var(--color-font)] shadow hover:shadow-lg"
+                class="p-2 rounded-full bg-white/90 text-gray-700 shadow-sm hover:bg-white transition-colors"
+                title="Share"
                 @click.stop="openShare(card)"
               >
-                Share-Link
+                <span class="material-icons text-sm">share</span>
               </button>
             </div>
-          </div>
+          </template>
 
-          <!-- Info footer -->
-          <div class="p-4 flex flex-col gap-2" style="background-color: var(--color-card-bg)">
-            <p class="font-semibold text-base truncate" style="color: var(--color-font)">
-              {{ card.recipient_email || 'Noch nicht gesetzt' }}
-            </p>
-            <p class="text-sm line-clamp-2" style="color: var(--color-text-muted)">
-              {{ card.message || 'Keine Nachricht' }}
-            </p>
-            <div class="flex items-center gap-2 text-xs" style="color: var(--color-text-muted)">
-              <span
-                class="inline-block w-2 h-2 rounded-full"
-                :class="card.sent ? 'bg-green-500' : 'bg-amber-400'"
-              ></span>
-              {{ card.sent ? 'Bereits verschickt' : 'Geplant / Entwurf' }}
+          <template #caption>
+            <div class="flex flex-col gap-1 text-left px-1">
+              <p class="font-handwriting text-lg !text-gray-900 truncate">
+                {{ card.recipient_email || 'No Recipient' }}
+              </p>
+              <p class="text-xs !text-gray-500 font-mono mt-1">
+                {{ card.sent ? 'Gesendet am ' : 'Geplant für ' }}
+                {{ card.scheduled_time ? formatDate(card.scheduled_time) : 'Sofort' }}
+              </p>
             </div>
-            <div class="text-xs" style="color: var(--color-text-muted)" v-if="!card.sent">
-              <span v-if="card.scheduled_time"
-                >Geplant für {{ formatDate(card.scheduled_time) }}</span
-              >
-              <span v-else>Sofort senden</span>
-            </div>
-          </div>
-        </div>
+          </template>
+        </PolaroidCard>
       </div>
     </main>
 
-    <ShareLinkModal
-      :is-open="showShareModal"
-      :link="activeShareLink"
-      @close="closeShareModal"
-      @go-to-gallery="closeShareModal"
-    />
+    <ShareLinkModal :is-open="showShareModal" :link="activeShareLink" @close="closeShareModal" />
 
     <ViewPostcardModal
       :is-open="!!viewingPostcard"
@@ -114,6 +99,7 @@ import ShareLinkModal from './components/ShareLinkModal.vue'
 import Button from './components/Button.vue'
 import GalleryPostcardPreview from './components/GalleryPostcardPreview.vue'
 import ViewPostcardModal from './components/ViewPostcardModal.vue'
+import PolaroidCard from './components/PolaroidCard.vue'
 
 const router = useRouter()
 const postcards = ref<PostcardRecord[]>([])

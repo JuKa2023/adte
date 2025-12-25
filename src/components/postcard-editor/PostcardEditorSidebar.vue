@@ -3,40 +3,7 @@
     class="flex flex-row md:flex-col items-center md:w-24 w-full md:pt-20 md:pb-8 px-4 py-2 md:px-0 shadow-sm z-20 overflow-x-auto md:overflow-y-auto md:overflow-x-visible order-2 md:order-1 bg-[var(--color-sidebar-bg)] border-t md:border-t-0 md:border-r border-[var(--color-border)]"
   >
     <div class="flex flex-row md:flex-col gap-4 md:gap-6 w-full md:px-4">
-      <Button
-        variant="ghost"
-        iconOnly
-        @click="emit('clear')"
-        aria-label="Alles zurücksetzen"
-        tooltip="Alles zurücksetzen"
-        tooltip-class="hidden md:block"
-        class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
-      >
-        <template #icon>
-          <span class="material-icons text-xl text-[var(--color-icon)]">refresh</span>
-        </template>
-      </Button>
-
-      <div class="w-px h-8 md:h-px md:w-full bg-[var(--color-divider)]"></div>
-
-      <Button
-        variant="ghost"
-        iconOnly
-        @click="emit('toggle-orientation')"
-        :aria-label="isLandscape ? 'Zu Hochformat wechseln' : 'Zu Querformat wechseln'"
-        :tooltip="isLandscape ? 'Zu Hochformat wechseln' : 'Zu Querformat wechseln'"
-        tooltip-class="hidden md:block"
-        class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
-      >
-        <template #icon>
-          <span class="material-icons text-xl text-[var(--color-icon)]">{{
-            isLandscape ? 'crop_landscape' : 'crop_portrait'
-          }}</span>
-        </template>
-      </Button>
-
-      <div class="w-px h-8 md:h-px md:w-full bg-[var(--color-divider)]"></div>
-
+      <!-- Creation Tools Group -->
       <Button
         v-if="isFront"
         variant="ghost"
@@ -71,6 +38,21 @@
         v-if="isFront"
         variant="ghost"
         iconOnly
+        @click="emit('add-photo')"
+        aria-label="Foto hinzufügen"
+        tooltip="Foto hinzufügen"
+        tooltip-class="hidden md:block"
+        class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
+      >
+        <template #icon>
+          <span class="material-icons text-3xl text-[var(--color-icon)]">add_photo_alternate</span>
+        </template>
+      </Button>
+
+      <Button
+        v-if="isFront"
+        variant="ghost"
+        iconOnly
         @click="emit('open-mood-templates')"
         aria-label="Mood Vorlagen"
         tooltip="Mood Vorlagen"
@@ -82,22 +64,27 @@
         </template>
       </Button>
 
+      <div class="w-px h-8 md:h-px md:w-full bg-[var(--color-divider)]"></div>
+
+      <!-- Settings Group -->
       <Button
-        v-if="isFront"
         variant="ghost"
         iconOnly
-        @click="emit('add-photo')"
-        aria-label="Foto hinzufügen"
-        tooltip="Foto hinzufügen"
+        @click="emit('toggle-orientation')"
+        :aria-label="isLandscape ? 'Zu Hochformat wechseln' : 'Zu Querformat wechseln'"
+        :tooltip="isLandscape ? 'Zu Hochformat wechseln' : 'Zu Querformat wechseln'"
         tooltip-class="hidden md:block"
         class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors"
       >
         <template #icon>
-          <span class="material-icons text-3xl text-[var(--color-icon)]">add_photo_alternate</span>
+          <span class="material-icons text-xl text-[var(--color-icon)]">{{
+            isLandscape ? 'crop_landscape' : 'crop_portrait'
+          }}</span>
         </template>
       </Button>
     </div>
 
+    <!-- Clear Action (Bottom/Right) -->
     <div
       class="ml-auto md:ml-0 md:mt-auto flex flex-row md:flex-col gap-4 w-auto md:w-full md:px-4"
     >
@@ -117,6 +104,22 @@
           >
             flip_camera_android
           </span>
+        </template>
+      </Button>
+
+      <div class="w-px h-8 md:h-px md:w-full bg-[var(--color-divider)] md:hidden"></div>
+
+      <Button
+        variant="ghost"
+        iconOnly
+        @click="emit('clear')"
+        aria-label="Alles zurücksetzen"
+        tooltip="Alles zurücksetzen"
+        tooltip-class="hidden md:block"
+        class="w-14 h-14 md:w-16 md:h-16 rounded-md flex-shrink-0 bg-transparent hover:bg-[var(--color-sidebar-hover)] transition-colors text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+      >
+        <template #icon>
+          <span class="material-icons text-xl">delete_outline</span>
         </template>
       </Button>
     </div>

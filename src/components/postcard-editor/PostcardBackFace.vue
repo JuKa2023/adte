@@ -3,7 +3,6 @@
     side="back"
     :is-active="isActive"
     overflow-visible
-    shadow
     :style="currentThemeStyle"
     class="transition-colors duration-700"
   >

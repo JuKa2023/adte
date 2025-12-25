@@ -1,5 +1,5 @@
 <template>
-  <PostcardFaceShell side="front" :is-active="isActive" overflow-visible shadow>
+  <PostcardFaceShell side="front" :is-active="isActive" overflow-visible>
     <div
       class="flex items-center justify-center h-full w-full overflow-hidden relative bg-[var(--color-card-bg)]"
       @drop.prevent="onDropFile"
@@ -36,7 +36,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
 import type { PostcardElement } from '../../backend'
 import PostcardElementsLayer from './PostcardElementsLayer.vue'
 import PostcardFaceShell from '../postcard/PostcardFaceShell.vue'
@@ -59,9 +58,6 @@ const emit = defineEmits<{
 
 const fileInput = ref<HTMLInputElement | null>(null)
 
-// 2MB limit for background images (stored separately from elements JSON)
-const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB in bytes
-
 const openFileDialog = () => {
   fileInput.value?.click()
 }
@@ -82,13 +78,6 @@ const onFileSelected = async (event: Event) => {
     return
   }
 
-  // Check file size
-  if (file.size > MAX_FILE_SIZE) {
-    toast.error('Das Bild ist zu gross. Maximale Grösse: 2 MB')
-    target.value = ''
-    return
-  }
-
   try {
     emit('update:frontImage', await readFileAsDataUrl(file))
   } finally {
@@ -99,12 +88,6 @@ const onFileSelected = async (event: Event) => {
 const onDropFile = async (event: DragEvent) => {
   const file = event.dataTransfer?.files?.[0]
   if (!file || !file.type.startsWith('image/')) return
-
-  // Check file size
-  if (file.size > MAX_FILE_SIZE) {
-    toast.error('Das Bild ist zu gross. Maximale Grösse: 2 MB')
-    return
-  }
 
   emit('update:frontImage', await readFileAsDataUrl(file))
 }

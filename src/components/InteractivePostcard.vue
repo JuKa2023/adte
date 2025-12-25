@@ -9,12 +9,9 @@
     @click="!disableClickFlip && toggleFlip()"
   >
     <PostcardFaceView
+      :postcard="postcard"
       side="front"
-      :elements="postcard.elements || []"
-      :front-image-url="frontImageUrl"
       empty-state-text="Keine Vorschau verfügbar"
-      :canvas-width="canvasSize.width"
-      :canvas-height="canvasSize.height"
     />
 
     <PostcardBackFace
@@ -33,7 +30,6 @@
 import { ref, computed, watch } from 'vue'
 import type { PostcardRecord } from '../backend'
 import { getFileUrl } from '../backend'
-import { getRecordCanvasSize } from '../postcard/canvas'
 import PostcardFaceView from './postcard/PostcardFaceView.vue'
 import PostcardBackFace from './postcard-editor/PostcardBackFace.vue'
 
@@ -69,17 +65,10 @@ const parsedLocation = computed(() => {
   }
 })
 
-const frontImageUrl = computed(() => {
-  return props.postcard.front_image ? getFileUrl(props.postcard, props.postcard.front_image) : null
-})
-
 const audioUrl = computed(() => {
   return props.postcard.audio ? getFileUrl(props.postcard, props.postcard.audio) : null
 })
 
-const canvasSize = computed(() => getRecordCanvasSize(props.postcard))
-
-// Expose checks for parent components if needed (e.g. for aspect ratio calculations)
 defineExpose({ isFlipped, toggleFlip })
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div
     class="absolute inset-0"
-    :class="[overflowVisible ? 'overflow-visible' : 'overflow-hidden', shadow ? 'shadow-2xl' : '']"
+    :class="[overflowVisible ? 'overflow-visible' : 'overflow-hidden', shadow ? 'shadow-xl' : '']"
     :style="shellStyle"
   >
     <slot />

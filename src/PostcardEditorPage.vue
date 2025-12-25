@@ -72,12 +72,7 @@
       @save="onSavePostcard"
     />
 
-    <ShareLinkModal
-      :is-open="showShareModal"
-      :link="shareLink"
-      @close="closeShareModal"
-      @go-to-gallery="goToGallery"
-    />
+    <ShareLinkModal :is-open="showShareModal" :link="shareLink" @close="closeShareModal" />
   </div>
 </template>
 
@@ -154,10 +149,6 @@ const dismissOnboarding = () => {
 }
 
 const closeShareModal = () => {
-  showShareModal.value = false
-}
-
-const goToGallery = () => {
   showShareModal.value = false
   router.push('/gallery')
 }
@@ -257,6 +248,11 @@ const onAddText = () => {
 }
 
 const deleteElement = (id: string) => {
+  const element = postcard.value.elements.find((e) => e.id === id)
+  if (element?.type === 'image' && element.content.startsWith('blob:')) {
+    URL.revokeObjectURL(element.content)
+    elementImageFiles.delete(id)
+  }
   postcard.value.elements = postcard.value.elements.filter((e) => e.id !== id)
   if (activeElementId.value === id) activeElementId.value = null
 }
@@ -265,8 +261,7 @@ const onMorePhotos = () => {
   extraFileInput.value?.click()
 }
 
-// 500KB limit for images in elements (to stay within 1MB JSON limit after base64 encoding)
-const MAX_ELEMENT_IMAGE_SIZE = 500 * 1024 // 500KB in bytes
+const elementImageFiles = new Map<string, File>()
 
 const onExtraFileSelected = (event: Event) => {
   if (!isFront.value) return
@@ -277,29 +272,22 @@ const onExtraFileSelected = (event: Event) => {
     return
   }
 
-  // Check file size
-  if (file.size > MAX_ELEMENT_IMAGE_SIZE) {
-    toast.error('Das Bild ist zu gross. Maximale Grösse: 500 KB')
-    target.value = ''
-    return
-  }
+  const elementId = crypto.randomUUID()
+  elementImageFiles.set(elementId, file)
+  const objectUrl = URL.createObjectURL(file)
 
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    const newElement: PostcardElement = {
-      id: crypto.randomUUID(),
-      type: 'image',
-      content: e.target?.result as string,
-      x: 100,
-      y: 100,
-      width: 300,
-      height: 300,
-      side: isFront.value ? 'front' : 'back',
-    }
-    postcard.value.elements.push(newElement)
-    activeElementId.value = newElement.id
+  const newElement: PostcardElement = {
+    id: elementId,
+    type: 'image',
+    content: objectUrl,
+    x: 100,
+    y: 100,
+    width: 300,
+    height: 300,
+    side: isFront.value ? 'front' : 'back',
   }
-  reader.readAsDataURL(file)
+  postcard.value.elements.push(newElement)
+  activeElementId.value = newElement.id
   target.value = ''
 }
 
@@ -311,6 +299,13 @@ const onClearPostcard = () => {
   ) {
     return
   }
+
+  postcard.value.elements.forEach((element) => {
+    if (element.type === 'image' && element.content.startsWith('blob:')) {
+      URL.revokeObjectURL(element.content)
+    }
+  })
+  elementImageFiles.clear()
 
   postcard.value = {
     frontImage: null,
@@ -351,6 +346,7 @@ const onSavePostcard = async (data: {
       audioBlob: postcard.value.audioBlob,
       message: postcard.value.message,
       elements: frontElements,
+      elementImageFiles,
       isPublic: true,
       sent: data.sent,
       scheduledTime: data.scheduledTime,

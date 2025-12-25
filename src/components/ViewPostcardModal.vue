@@ -1,14 +1,8 @@
 <template>
-  <div
-    v-if="isOpen && postcard"
-    class="fixed inset-0 z-[80] flex items-center justify-center p-4"
-    style="background-color: var(--color-modal-overlay)"
-    @click.self="$emit('close')"
-  >
+  <BaseModal :is-open="isOpen && !!postcard" :z-index="80" @close="$emit('close')">
     <div
       class="relative w-[85vw] h-[70vh] max-w-6xl max-h-[90vh] flex flex-col items-center justify-center pointer-events-none"
     >
-      <!-- Card Container with scaling -->
       <div class="relative w-full h-full flex items-center justify-center pointer-events-auto">
         <PostcardStage
           :canvas-width="canvasSize.width"
@@ -16,8 +10,8 @@
           :max-scale="1"
           frame-class="transition-transform duration-500"
         >
-          <!-- 3D CardFlip Wrapper via Component -->
           <InteractivePostcard
+            v-if="postcard"
             ref="interactivePostcardRef"
             :postcard="postcard"
             disable-click-flip
@@ -26,7 +20,6 @@
         </PostcardStage>
       </div>
 
-      <!-- Flip Button -->
       <div class="absolute bottom-4 z-50 pointer-events-auto animate-fade-in">
         <Button
           @click="toggleFlip"
@@ -42,20 +35,20 @@
         </Button>
       </div>
 
-      <!-- Hint text -->
       <div
         class="absolute bottom-24 text-white/80 text-sm font-medium pointer-events-none animate-pulse"
       >
         {{ showBack ? 'Rückseite' : 'Vorderseite' }}
       </div>
     </div>
-  </div>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { PostcardRecord } from '../backend'
 import { getCanvasSize, getRecordCanvasSize } from '../postcard/canvas'
+import BaseModal from './BaseModal.vue'
 import InteractivePostcard from './InteractivePostcard.vue'
 import PostcardStage from './postcard/PostcardStage.vue'
 import Button from './Button.vue'
@@ -80,7 +73,6 @@ const toggleFlip = () => {
   interactivePostcardRef.value?.toggleFlip()
 }
 
-// Reset flipped state when modal opens
 watch(
   () => props.isOpen,
   (newVal) => {

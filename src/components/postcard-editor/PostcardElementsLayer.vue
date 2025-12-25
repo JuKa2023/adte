@@ -10,7 +10,9 @@
       class="absolute p-2 border-2"
       :class="[
         activeElementId === element.id ? 'border-[var(--color-highlight)]' : inactiveBorderClass,
-        interactive ? 'cursor-move pointer-events-auto select-none touch-none' : 'pointer-events-none',
+        interactive
+          ? 'cursor-move pointer-events-auto select-none touch-none'
+          : 'pointer-events-none',
       ]"
       :style="elementStyle(element)"
       @pointerdown.stop="interactive && startDrag($event, element)"
@@ -153,8 +155,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, onUnmounted, ref, toRef } from 'vue'
 import type { PostcardElement } from '../../backend'
+import { useCanvasScaling } from '../../composables/useCanvasScaling'
 
 const props = withDefaults(
   defineProps<{
@@ -176,6 +179,11 @@ const emit = defineEmits<{
 }>()
 
 const layerEl = ref<HTMLDivElement | null>(null)
+const { getScale } = useCanvasScaling(
+  layerEl,
+  toRef(props, 'canvasWidth'),
+  toRef(props, 'canvasHeight'),
+)
 
 const elementsForSide = computed(() => props.elements.filter((e) => e.side === props.side))
 
@@ -194,15 +202,6 @@ const elementStyle = (element: PostcardElement) => ({
   width: element.width ? `${element.width}px` : undefined,
   height: element.height ? `${element.height}px` : undefined,
 })
-
-const getScale = () => {
-  if (!layerEl.value) return 1
-  const rect = layerEl.value.getBoundingClientRect()
-  const scaleX = rect.width / props.canvasWidth
-  const scaleY = rect.height / props.canvasHeight
-  const scale = Math.min(scaleX, scaleY)
-  return Number.isFinite(scale) && scale > 0 ? scale : 1
-}
 
 const updateText = (event: Event, element: PostcardElement) => {
   const target = event.target as HTMLElement | null

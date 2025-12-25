@@ -1,10 +1,5 @@
 <template>
-  <div
-    v-if="isOpen"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4"
-    style="background-color: var(--color-modal-overlay)"
-    @click.self="emit('close')"
-  >
+  <BaseModal :is-open="isOpen" @close="emit('close')">
     <div
       class="rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto bg-[var(--color-modal-bg)] text-[var(--color-font)]"
     >
@@ -29,10 +24,12 @@
         </button>
       </div>
     </div>
-  </div>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
+import BaseModal from '../BaseModal.vue'
+
 defineProps<{
   isOpen: boolean
   moodImages: string[]

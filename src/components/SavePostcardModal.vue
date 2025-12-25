@@ -1,15 +1,11 @@
 <template>
-  <div
-    v-if="isOpen"
-    class="fixed inset-0 z-[70] flex items-center justify-center p-4"
-    style="background-color: var(--color-modal-overlay)"
-  >
+  <BaseModal :is-open="isOpen" :z-index="70" :close-on-backdrop="false" @close="$emit('close')">
     <div
       class="rounded-lg p-6 max-w-lg w-full shadow-2xl"
       style="background-color: var(--color-modal-bg); color: var(--color-font)"
     >
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-semibold">Postkarte speichern</h2>
+        <h2 class="text-xl font-semibold">Postkarte senden</h2>
         <button
           @click="$emit('close')"
           class="hover:opacity-70 cursor-pointer"
@@ -67,19 +63,20 @@
           <Button variant="primary" @click="handleSave" :disabled="isLoading">
             <span v-if="isLoading" class="flex items-center gap-2">
               <span class="animate-spin material-icons text-sm">refresh</span>
-              Speichern...
+              Wird gesendet...
             </span>
-            <span v-else>Speichern</span>
+            <span v-else>Absenden</span>
           </Button>
         </div>
       </div>
     </div>
-  </div>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { toast } from 'vue-sonner'
+import BaseModal from './BaseModal.vue'
 import FormInput from './FormInput.vue'
 import Button from './Button.vue'
 

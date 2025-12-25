@@ -12,9 +12,9 @@
 
     <PostcardElementsLayer
       class="absolute inset-0 z-30 pointer-events-none"
-      :elements="elements"
-      :canvas-width="canvasWidth"
-      :canvas-height="canvasHeight"
+      :elements="resolvedElements"
+      :canvas-width="canvasSize.width"
+      :canvas-height="canvasSize.height"
       :active-element-id="null"
       :interactive="false"
       :side="side"
@@ -29,7 +29,7 @@
         {{ backLabel }}
       </p>
       <p class="text-lg leading-relaxed whitespace-pre-wrap flex-1">
-        {{ message || 'Keine Nachricht' }}
+        {{ postcard.message || 'Keine Nachricht' }}
       </p>
       <div v-if="backFooter" class="text-xs" style="color: var(--color-text-muted)">
         {{ backFooter }}
@@ -39,20 +39,28 @@
 </template>
 
 <script setup lang="ts">
-import type { PostcardElement } from '../../backend'
+import { computed, toRef } from 'vue'
+import type { PostcardRecord } from '../../backend'
+import { getFileUrl } from '../../backend'
+import { getRecordCanvasSize } from '../../postcard/canvas'
+import { useResolvedElements } from '../../composables/useResolvedElements'
 import PostcardElementsLayer from '../postcard-editor/PostcardElementsLayer.vue'
 import PostcardFaceShell from './PostcardFaceShell.vue'
 import PostcardFrontMedia from './PostcardFrontMedia.vue'
 
-defineProps<{
+const props = defineProps<{
+  postcard: PostcardRecord
   side: 'front' | 'back'
-  elements: PostcardElement[]
-  frontImageUrl?: string | null
-  message?: string
   emptyStateText?: string
   backLabel?: string
   backFooter?: string
-  canvasWidth: number
-  canvasHeight: number
 }>()
+
+const canvasSize = computed(() => getRecordCanvasSize(props.postcard))
+
+const frontImageUrl = computed(() =>
+  props.postcard.front_image ? getFileUrl(props.postcard, props.postcard.front_image) : null,
+)
+
+const resolvedElements = useResolvedElements(toRef(props, 'postcard'))
 </script>

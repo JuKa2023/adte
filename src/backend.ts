@@ -27,8 +27,9 @@ export interface PostcardRecord {
   created: string
   updated: string
   user?: string
-  front_image: string // Filename
-  audio?: string // Filename
+  front_image: string
+  audio?: string
+  element_images?: string[]
   message: string
   elements: PostcardElement[]
   is_public: boolean
@@ -41,7 +42,38 @@ export interface PostcardRecord {
   canvas_width?: number
   canvas_height?: number
   theme_id?: string
-  location?: string // JSON string of { city, weather }
+  location?: string
+}
+
+function processElementsForUpload(
+  elements: PostcardElement[],
+  elementImageFiles: Map<string, File> | undefined,
+  formData: FormData,
+): PostcardElement[] {
+  const rawElements = toRaw(elements || [])
+  const processedElements: PostcardElement[] = []
+  let imageIndex = 0
+
+  for (const element of rawElements) {
+    if (element.type === 'image') {
+      const file = elementImageFiles?.get(element.id)
+      if (file) {
+        const ext = file.type.split('/')[1] || 'png'
+        formData.append('element_images', file, `element_${imageIndex}.${ext}`)
+        processedElements.push({
+          ...element,
+          content: `element_image:${imageIndex}`,
+        })
+        imageIndex++
+      } else {
+        processedElements.push(element)
+      }
+    } else {
+      processedElements.push(element)
+    }
+  }
+
+  return processedElements
 }
 
 export async function createPostcard(data: {
@@ -49,6 +81,7 @@ export async function createPostcard(data: {
   audioBlob: Blob | null
   message: string
   elements: PostcardElement[]
+  elementImageFiles?: Map<string, File>
   isPublic: boolean
   sent?: boolean
   scheduledTime?: string
@@ -65,20 +98,20 @@ export async function createPostcard(data: {
   }
 
   const formData = new FormData()
-
-  // Append files
   formData.append('front_image', data.frontImageBlob)
   if (data.audioBlob) {
     formData.append('audio', data.audioBlob)
   }
 
-  // Generate unique share token
-  const shareToken = crypto.randomUUID()
+  const processedElements = processElementsForUpload(
+    data.elements,
+    data.elementImageFiles,
+    formData,
+  )
 
-  // Append data fields
+  const shareToken = crypto.randomUUID()
   formData.append('message', data.message)
-  const rawElements = toRaw(data.elements || [])
-  formData.append('elements', JSON.stringify(rawElements))
+  formData.append('elements', JSON.stringify(processedElements))
   formData.append('is_public', data.isPublic ? 'true' : 'false')
   formData.append('share_token', shareToken)
   formData.append('sent', data.sent ? 'true' : 'false')
@@ -113,9 +146,20 @@ export function getFileUrl(record: PostcardRecord, filename: string) {
   return pb.files.getURL(record, filename)
 }
 
+export function resolveElementImageUrl(record: PostcardRecord, content: string): string {
+  if (content.startsWith('element_image:')) {
+    const indexStr = content.slice('element_image:'.length)
+    const index = parseInt(indexStr, 10)
+    const filename = record.element_images?.[index]
+    if (filename) {
+      return pb.files.getURL(record, filename)
+    }
+  }
+  return content
+}
+
 export async function loginUser() {
   try {
-    // First, verify that OAuth2 is configured by listing auth methods
     const authMethods = await pb.collection('users').listAuthMethods()
 
     if (!authMethods?.oauth2?.providers?.length) {
@@ -124,7 +168,6 @@ export async function loginUser() {
       )
     }
 
-    // Check if Google provider is available
     const googleProvider = authMethods.oauth2.providers.find(
       (p: { name: string }) => p.name === 'google',
     )
@@ -173,12 +216,9 @@ export async function getMyPostcards(page = 1, perPage = 20) {
 export async function getSharedPostcard(id: string, token: string) {
   try {
     const postcard = await pb.collection('postcards').getOne<PostcardRecord>(id)
-
-    // Validate token for privacy
     if (postcard.share_token !== token) {
       throw new Error('Invalid share token')
     }
-
     return postcard
   } catch {
     throw new Error('Postcard not found or invalid token')

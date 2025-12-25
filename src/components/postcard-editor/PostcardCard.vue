@@ -1,10 +1,7 @@
 <template>
-  <div
-    ref="wrapperRef"
-    class="w-full h-full flex items-center justify-center overflow-hidden relative"
-  >
+  <div ref="wrapperRef" class="w-full h-full flex items-center justify-center relative">
     <div
-      class="origin-center flex-shrink-0 transition-transform duration-100 ease-out shadow-2xl"
+      class="origin-center flex-shrink-0 transition-transform duration-100 ease-out shadow-xl overflow-hidden"
       :style="{
         width: `${canvasSize.width}px`,
         height: `${canvasSize.height}px`,
@@ -48,9 +45,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
+import { computed, ref } from 'vue'
 import type { PostcardElement } from '../../backend'
 import { getCanvasSize } from '../../postcard/canvas'
+import { useCanvasScaling } from '../../composables/useCanvasScaling'
 import PostcardBackFace from './PostcardBackFace.vue'
 import PostcardFrontFace from './PostcardFrontFace.vue'
 
@@ -78,47 +76,13 @@ const emit = defineEmits<{
 }>()
 
 const wrapperRef = ref<HTMLElement | null>(null)
-const scale = ref(1)
 const canvasSize = computed(() => getCanvasSize(props.isLandscape))
 
-const updateScale = () => {
-  if (!wrapperRef.value) return
-
-  const { clientWidth, clientHeight } = wrapperRef.value
-  // Leave some padding
-  const padding = 40
-  const availableW = Math.max(0, clientWidth - padding)
-  const availableH = Math.max(0, clientHeight - padding)
-
-  const { width: targetW, height: targetH } = canvasSize.value
-
-  const scaleW = availableW / targetW
-  const scaleH = availableH / targetH
-
-  // Scale to fit, but allow slight upscale if screen is large, but mostly fit
-  scale.value = Math.min(scaleW, scaleH)
-}
-
-let resizeObserver: ResizeObserver | null = null
-
-onMounted(() => {
-  if (wrapperRef.value) {
-    resizeObserver = new ResizeObserver(() => updateScale())
-    resizeObserver.observe(wrapperRef.value)
-    updateScale()
-  }
-})
-
-onUnmounted(() => {
-  resizeObserver?.disconnect()
-})
-
-watch(
-  () => props.isLandscape,
-  () => {
-    // Update scale immediately when orientation changes
-    setTimeout(updateScale, 0)
-  },
+const { scale } = useCanvasScaling(
+  wrapperRef,
+  computed(() => canvasSize.value.width),
+  computed(() => canvasSize.value.height),
+  { padding: 40 },
 )
 </script>
 
