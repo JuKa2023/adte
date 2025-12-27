@@ -160,25 +160,6 @@ export function resolveElementImageUrl(record: PostcardRecord, content: string):
 
 export async function loginUser() {
   try {
-    const authMethods = await pb.collection('users').listAuthMethods()
-
-    if (!authMethods?.oauth2?.providers?.length) {
-      throw new Error(
-        'OAuth2 is not configured on the PocketBase server. Please configure Google OAuth2 in PocketBase admin panel.',
-      )
-    }
-
-    const googleProvider = authMethods.oauth2.providers.find(
-      (p: { name: string }) => p.name === 'google',
-    )
-
-    if (!googleProvider) {
-      throw new Error(
-        'Google OAuth2 provider is not configured. Available providers: ' +
-          authMethods.oauth2.providers.map((p: { name: string }) => p.name).join(', '),
-      )
-    }
-
     return await pb.collection('users').authWithOAuth2({
       provider: 'google',
     })
