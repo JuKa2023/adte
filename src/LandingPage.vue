@@ -113,6 +113,8 @@
           <svg
             class="hidden md:block absolute top-[60px] left-[16%] right-[16%] w-[68%] h-20 -z-10"
             overflow="visible"
+            viewBox="0 0 600 80"
+            preserveAspectRatio="none"
           >
             <path
               d="M0,0 Q150,50 300,0 T600,0"
@@ -120,6 +122,7 @@
               class="stroke-slate-300 dark:stroke-slate-700"
               stroke-width="3"
               stroke-dasharray="8 8"
+              vector-effect="non-scaling-stroke"
             />
           </svg>
 
