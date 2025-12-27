@@ -1,7 +1,7 @@
 <template>
   <BaseModal :is-open="isOpen" :z-index="80" @close="$emit('close')">
     <div
-      class="rounded-xl p-6 max-w-md w-full shadow-2xl space-y-5 text-center relative overflow-hidden"
+      class="rounded-lg p-6 max-w-md w-full shadow-2xl space-y-5 text-center relative overflow-hidden"
       style="background-color: var(--color-modal-bg); color: var(--color-font)"
     >
       <div
@@ -15,7 +15,7 @@
 
       <div class="relative group">
         <div
-          class="flex items-center gap-2 p-1.5 rounded-lg border transition-colors duration-200"
+          class="flex items-center gap-2 p-1.5 rounded-sm border transition-colors duration-200"
           :class="
             copied
               ? 'border-green-400 bg-green-50/50'
@@ -27,7 +27,7 @@
           </div>
           <button
             @click="copyLink"
-            class="flex-shrink-0 p-2 rounded-md transition-all duration-200"
+            class="flex-shrink-0 p-2 rounded-sm transition-all duration-200"
             :class="
               copied
                 ? 'bg-green-100 text-green-700'

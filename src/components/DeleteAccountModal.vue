@@ -6,7 +6,7 @@
       @click.self="close"
     >
       <div
-        class="bg-[var(--color-sidebar-bg)] border border-gray-700 p-6 rounded-lg shadow-xl max-w-md w-full mx-4"
+        class="bg-[var(--color-sidebar-bg)] p-6 rounded-lg shadow-xl max-w-md w-full mx-4"
       >
         <h2 class="text-xl font-bold text-[var(--color-font)] mb-4">Account löschen</h2>
 

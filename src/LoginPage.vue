@@ -42,7 +42,7 @@ const handleLogin = () => {
     ></div>
 
     <div
-      class="relative w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 p-8 md:p-10 text-center"
+      class="relative w-full max-w-md bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-100 dark:border-slate-700 p-8 md:p-10 text-center"
     >
       <!-- Brand Logo/Name -->
       <div class="mb-8">
@@ -56,7 +56,7 @@ const handleLogin = () => {
       <Button
         :disabled="isSubmitting"
         @click="handleLogin"
-        class="w-full rounded-lg shadow-sm py-3"
+        class="rounded-lg shadow-sm py-3"
       >
         <template #icon>
           <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
