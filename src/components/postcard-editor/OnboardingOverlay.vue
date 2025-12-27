@@ -5,7 +5,7 @@
     style="background-color: var(--color-modal-overlay)"
     @click.self="emit('dismiss')"
   >
-    <div class="rounded-xl p-8 max-w-md text-center shadow-2xl bg-[var(--color-modal-bg)]">
+    <div class="rounded-lg p-8 max-w-md text-center shadow-2xl bg-[var(--color-modal-bg)]">
       <div class="mb-4 text-4xl">✨</div>
       <h2 class="text-2xl font-bold mb-2 text-[var(--color-font)]">
         Willkommen im Postkarten-Editor!
