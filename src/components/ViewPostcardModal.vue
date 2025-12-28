@@ -1,13 +1,13 @@
 <template>
   <BaseModal :is-open="isOpen && !!postcard" :z-index="80" @close="$emit('close')">
     <div
-      class="relative w-[85vw] h-[70vh] max-w-6xl max-h-[90vh] flex flex-col items-center justify-center pointer-events-none"
+      class="relative w-[90vw] h-[85vh] max-w-7xl max-h-[92vh] flex flex-col items-center justify-center pointer-events-none"
     >
       <div class="relative w-full h-full flex items-center justify-center pointer-events-auto">
         <PostcardStage
           :canvas-width="canvasSize.width"
           :canvas-height="canvasSize.height"
-          :max-scale="1"
+          :max-scale="1.5"
           frame-class="transition-transform duration-500"
         >
           <InteractivePostcard

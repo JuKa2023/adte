@@ -119,8 +119,8 @@ const handleSave = () => {
 
   const scheduledTimeValue =
     sendOption.value === 'later'
-      ? new Date(scheduledTime.value).toISOString()
-      : new Date().toISOString()
+      ? new Date(scheduledTime.value).toISOString().replace('T', ' ')
+      : new Date().toISOString().replace('T', ' ')
 
   emit('save', {
     sent: false,

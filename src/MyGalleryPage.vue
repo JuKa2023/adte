@@ -1,6 +1,41 @@
 <template>
   <div class="h-full w-full" style="background-color: var(--color-bg)">
     <main class="pt-24 px-6 pb-16 max-w-6xl mx-auto">
+      <div
+        v-if="!loading && postcards.length > 0"
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
+      >
+        <div class="flex gap-1 p-1" style="background-color: var(--color-card-bg)">
+          <button
+            v-for="filter in filters"
+            :key="filter.value"
+            class="px-4 py-2 text-sm font-medium transition-all"
+            :class="
+              activeFilter === filter.value
+                ? 'bg-white shadow-sm'
+                : 'hover:bg-white/50'
+            "
+            :style="{ color: activeFilter === filter.value ? 'var(--color-primary)' : 'var(--color-text-muted)' }"
+            @click="activeFilter = filter.value"
+          >
+            {{ filter.label }}
+            <span
+              v-if="filter.count > 0"
+              class="ml-1.5 text-xs opacity-60"
+            >({{ filter.count }})</span>
+          </button>
+        </div>
+
+        <button
+          class="flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors hover:bg-black/5"
+          style="color: var(--color-text-muted)"
+          @click="toggleSort"
+        >
+          <span class="material-icons text-base">swap_vert</span>
+          {{ sortNewestFirst ? 'Neueste zuerst' : 'Älteste zuerst' }}
+        </button>
+      </div>
+
       <div v-if="loading" class="flex justify-center items-center h-64">
         <span class="material-icons animate-spin text-4xl" style="color: var(--color-primary)"
           >refresh</span
@@ -23,9 +58,12 @@
         <Button @click="router.push('/create')"> Jetzt erstellen </Button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 items-start">
+      <div
+        v-if="filteredPostcards.length > 0"
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 items-start"
+      >
         <PolaroidCard
-          v-for="card in postcards"
+          v-for="card in filteredPostcards"
           :key="card.id"
           class="h-full"
           @click="openViewModal(card)"
@@ -78,6 +116,16 @@
           </template>
         </PolaroidCard>
       </div>
+
+      <div
+        v-if="!loading && postcards.length > 0 && filteredPostcards.length === 0"
+        class="flex flex-col items-center justify-center h-48 text-center"
+      >
+        <span class="material-icons text-4xl mb-3" style="color: var(--color-text-muted)">filter_list_off</span>
+        <p style="color: var(--color-text-muted)">
+          Keine {{ activeFilter === 'sent' ? 'gesendeten' : '' }}{{ activeFilter === 'draft' ? 'Entwürfe' : '' }} Postkarten gefunden.
+        </p>
+      </div>
     </main>
 
     <ShareLinkModal :is-open="showShareModal" :link="activeShareLink" @close="closeShareModal" />
@@ -91,7 +139,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getMyPostcards, type PostcardRecord, buildShareLink } from './backend'
 import { getCanvasAspectRatio, getRecordCanvasSize } from './postcard/canvas'
@@ -101,12 +149,45 @@ import GalleryPostcardPreview from './components/GalleryPostcardPreview.vue'
 import ViewPostcardModal from './components/ViewPostcardModal.vue'
 import PolaroidCard from './components/PolaroidCard.vue'
 
+type FilterValue = 'all' | 'draft' | 'sent'
+
 const router = useRouter()
 const postcards = ref<PostcardRecord[]>([])
 const loading = ref(true)
 const showShareModal = ref(false)
 const activeShareLink = ref('')
 const viewingPostcard = ref<PostcardRecord | null>(null)
+
+const activeFilter = ref<FilterValue>('all')
+const sortNewestFirst = ref(true)
+
+const filters = computed(() => [
+  { value: 'all' as FilterValue, label: 'Alle', count: postcards.value.length },
+  { value: 'draft' as FilterValue, label: 'Entwürfe', count: postcards.value.filter(p => !p.sent).length },
+  { value: 'sent' as FilterValue, label: 'Gesendet', count: postcards.value.filter(p => p.sent).length },
+])
+
+const filteredPostcards = computed(() => {
+  let result = [...postcards.value]
+
+  if (activeFilter.value === 'draft') {
+    result = result.filter(p => !p.sent)
+  } else if (activeFilter.value === 'sent') {
+    result = result.filter(p => p.sent)
+  }
+
+  result.sort((a, b) => {
+    const dateA = new Date(a.scheduled_time || a.created).getTime()
+    const dateB = new Date(b.scheduled_time || b.created).getTime()
+    return sortNewestFirst.value ? dateB - dateA : dateA - dateB
+  })
+
+  return result
+})
+
+const toggleSort = () => {
+  sortNewestFirst.value = !sortNewestFirst.value
+}
 
 onMounted(async () => {
   try {
@@ -145,7 +226,7 @@ const closeShareModal = () => {
 const formatDate = (value?: string) => {
   if (!value) return ''
   try {
-    const d = new Date(value) // stored in UTC; Date will handle offset; display in user locale
+    const d = new Date(value)
     return d.toLocaleString(undefined, {
       day: '2-digit',
       month: '2-digit',
