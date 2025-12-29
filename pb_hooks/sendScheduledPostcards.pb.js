@@ -144,7 +144,7 @@ cronAdd("sendScheduledPostcards", "*/1 * * * *", async () => {
                 Erstellt mit viel ❤️ auf
               </p>
               <a href="${appUrl}" style="text-decoration: none;">
-                <img src="${appUrl}/adtepng.png" alt="adte" width="80" style="display: inline-block; border: none;">
+                <img src="https://adte.juka.dev/adtepng.png" alt="adte" width="80" style="display: inline-block; border: none;">
               </a>
             </td>
           </tr>
