@@ -47,7 +47,7 @@
             '--card-scale': card.scale,
           }"
         >
-          <PolaroidCard class="shadow-2xl w-48 md:w-60">
+          <PolaroidCard class="shadow-2xl w-48 md:w-60" disable-pointer>
             <template #image>
               <img
                 :src="card.image"
@@ -219,6 +219,7 @@
 
         <PostcardGallery
           use-local-gallery
+          disable-card-pointer
           :isLoading="isLoading"
           :error="error"
           :more-label="'Mehr laden'"

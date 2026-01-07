@@ -22,6 +22,7 @@
           :image-url="card.imageUrl"
           :title="card.title"
           :aspect-class="card.aspectClass"
+          :disable-pointer="disableCardPointer"
           @click="emit('select', card)"
         />
       </li>
@@ -71,6 +72,7 @@ const props = withDefaults(
     hasMore?: boolean
     moreLabel?: string
     useLocalGallery?: boolean
+    disableCardPointer?: boolean
   }>(),
   {
     items: () => [],
@@ -81,6 +83,7 @@ const props = withDefaults(
     hasMore: false,
     moreLabel: 'Show more postcards',
     useLocalGallery: false,
+    disableCardPointer: false,
   },
 )
 

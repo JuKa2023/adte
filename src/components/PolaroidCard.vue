@@ -1,16 +1,15 @@
 <template>
   <div
     class="polaroid-card group relative"
-    :class="{ 'disabled-effects': disableEffects }"
+    :class="{ 'disable-pointer': disablePointer }"
     role="button"
     tabindex="0"
-    @click="emit('click')"
-    @keydown.enter="emit('click')"
-    @keydown.space="emit('click')"
+    @click="!disablePointer && emit('click')"
+    @keydown.enter="!disablePointer && emit('click')"
+    @keydown.space="!disablePointer && emit('click')"
   >
     <div
-      class="polaroid-inner transition-transform duration-300"
-      :class="{ 'group-hover:scale-[1.02]': !disableEffects }"
+      class="polaroid-inner group-hover:scale-[1.02] transition-transform duration-300"
     >
       <div
         class="image-wrapper overflow-hidden bg-gray-100 relative"
@@ -50,11 +49,11 @@ withDefaults(
     imageUrl?: string
     title?: string
     aspectClass?: string
-    disableEffects?: boolean
+    disablePointer?: boolean
   }>(),
   {
     aspectClass: 'aspect-[3/2]',
-    disableEffects: false,
+    disablePointer: false,
   },
 )
 
@@ -71,10 +70,11 @@ const emit = defineEmits<{
 .polaroid-card {
   perspective: 1000px;
   cursor: pointer;
+  animation: fadeUp 0.6s ease-out backwards;
 }
 
-.polaroid-card:not(.disabled-effects) {
-  animation: fadeUp 0.6s ease-out backwards;
+.polaroid-card.disable-pointer {
+  cursor: default;
 }
 
 .polaroid-inner {
@@ -99,7 +99,7 @@ const emit = defineEmits<{
   --polaroid-bg: #e5e5e5;
 }
 
-.polaroid-card:not(.disabled-effects):hover .polaroid-inner {
+.polaroid-card:hover .polaroid-inner {
   transform: scale(1.03) rotate(-1deg);
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
