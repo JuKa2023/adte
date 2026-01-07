@@ -11,20 +11,20 @@
         <!-- Desktop Navigation -->
         <nav class="hidden lg:flex items-center gap-6">
           <RouterLink
-            v-if="isAuthed"
+            v-if="isAuthed && !isCreatePage"
             to="/create"
             class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
           >
             <span class="text-lg font-medium"> Postkarte erstellen </span>
           </RouterLink>
 
-          <RouterLink
+          <button
             v-if="isAuthed"
-            to="/gallery"
+            @click="handleGalleryNavigation"
             class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
           >
             <span class="text-lg font-medium"> Meine Galerie </span>
-          </RouterLink>
+          </button>
 
           <RouterLink
             v-if="!isAuthed && !isLoginPage"
@@ -102,7 +102,7 @@
         >
           <nav class="flex flex-col items-end gap-6 pt-12 px-6">
             <RouterLink
-              v-if="isAuthed"
+              v-if="isAuthed && !isCreatePage"
               to="/create"
               class="text-sm md:text-base font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
               @click="closeMobileMenu"
@@ -110,14 +110,16 @@
               Postkarte erstellen
             </RouterLink>
 
-            <RouterLink
+            <button
               v-if="isAuthed"
-              to="/gallery"
+              @click="() => {
+                closeMobileMenu()
+                handleGalleryNavigation()
+              }"
               class="text-sm md:text-base font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
-              @click="closeMobileMenu"
             >
               Meine Galerie
-            </RouterLink>
+            </button>
 
             <RouterLink
               v-if="!isAuthed && !isLoginPage"
@@ -163,6 +165,12 @@
       @close="isDeleteModalOpen = false"
       @confirm="handleDeleteAccount"
     />
+
+    <ConfirmNavigationModal
+      :is-open="isNavModalOpen"
+      @close="isNavModalOpen = false"
+      @confirm="confirmGalleryNavigation"
+    />
   </header>
 </template>
 
@@ -172,16 +180,19 @@ import { RouterLink, useRouter, useRoute } from 'vue-router'
 import { currentUser, logoutUser, deleteUser } from '../backend'
 import Button from './Button.vue'
 import DeleteAccountModal from './DeleteAccountModal.vue'
+import ConfirmNavigationModal from './ConfirmNavigationModal.vue'
 import AdteLogo from './AdteLogo.vue'
 
 const isDark = ref(false)
 const isMobileMenuOpen = ref(false)
 const isDeleteModalOpen = ref(false)
+const isNavModalOpen = ref(false)
 const isDeleting = ref(false)
 const router = useRouter()
 const route = useRoute()
 
 const isLoginPage = computed(() => route.path === '/login')
+const isCreatePage = computed(() => route.path === '/create')
 
 const isAuthed = computed(() => !!currentUser.value)
 const userLabel = computed(
@@ -231,6 +242,19 @@ const handleDeleteAccount = async () => {
   } finally {
     isDeleting.value = false
   }
+}
+
+const handleGalleryNavigation = () => {
+  if (isCreatePage.value) {
+    isNavModalOpen.value = true
+  } else {
+    router.push('/gallery')
+  }
+}
+
+const confirmGalleryNavigation = () => {
+  isNavModalOpen.value = false
+  router.push('/gallery')
 }
 
 onMounted(() => {
