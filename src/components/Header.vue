@@ -27,7 +27,7 @@
           </RouterLink>
 
           <RouterLink
-            v-if="!isAuthed"
+            v-if="!isAuthed && !isLoginPage"
             to="/login"
             class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
           >
@@ -120,7 +120,7 @@
             </RouterLink>
 
             <RouterLink
-              v-if="!isAuthed"
+              v-if="!isAuthed && !isLoginPage"
               to="/login"
               class="text-sm md:text-base font-medium text-[var(--color-highlight)] hover:opacity-80 transition-opacity"
               @click="closeMobileMenu"
@@ -168,7 +168,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink, useRouter, useRoute } from 'vue-router'
 import { currentUser, logoutUser, deleteUser } from '../backend'
 import Button from './Button.vue'
 import DeleteAccountModal from './DeleteAccountModal.vue'
@@ -179,6 +179,9 @@ const isMobileMenuOpen = ref(false)
 const isDeleteModalOpen = ref(false)
 const isDeleting = ref(false)
 const router = useRouter()
+const route = useRoute()
+
+const isLoginPage = computed(() => route.path === '/login')
 
 const isAuthed = computed(() => !!currentUser.value)
 const userLabel = computed(
