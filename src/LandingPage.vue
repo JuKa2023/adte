@@ -131,7 +131,7 @@
               class="relative transform group-hover:rotate-[-3deg] transition-transform duration-300"
             >
               <div
-                class="w-32 h-32 rounded-3xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center shadow-lg border-2 border-slate-100 dark:border-slate-700"
+                class="w-32 h-32 rounded-3xl bg-blue-50 dark:bg-blue-950 flex items-center justify-center shadow-lg border-2 border-slate-100 dark:border-slate-700"
               >
                 <span class="material-icons text-5xl text-blue-500 dark:text-blue-400"
                   >add_a_photo</span
@@ -158,7 +158,7 @@
               class="relative transform group-hover:rotate-[3deg] transition-transform duration-300"
             >
               <div
-                class="w-32 h-32 rounded-3xl bg-pink-50 dark:bg-pink-500/10 flex items-center justify-center shadow-lg border-2 border-slate-100 dark:border-slate-700"
+                class="w-32 h-32 rounded-3xl bg-pink-50 dark:bg-pink-950 flex items-center justify-center shadow-lg border-2 border-slate-100 dark:border-slate-700"
               >
                 <span class="material-icons text-5xl text-pink-500 dark:text-pink-400">brush</span>
               </div>
@@ -181,7 +181,7 @@
               class="relative transform group-hover:rotate-[-3deg] transition-transform duration-300"
             >
               <div
-                class="w-32 h-32 rounded-3xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center shadow-lg border-2 border-slate-100 dark:border-slate-700"
+                class="w-32 h-32 rounded-3xl bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center shadow-lg border-2 border-slate-100 dark:border-slate-700"
               >
                 <span class="material-icons text-5xl text-emerald-500 dark:text-emerald-400"
                   >send</span
