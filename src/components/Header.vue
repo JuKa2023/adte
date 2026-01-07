@@ -19,7 +19,7 @@
           </RouterLink>
 
           <button
-            v-if="isAuthed"
+            v-if="isAuthed && !isGalleryPage"
             @click="handleGalleryNavigation"
             class="group flex items-center gap-2 text-[var(--color-highlight)] hover:opacity-80 transition-opacity hover:underline underline-offset-3"
           >
@@ -111,7 +111,7 @@
             </RouterLink>
 
             <button
-              v-if="isAuthed"
+              v-if="isAuthed && !isGalleryPage"
               @click="() => {
                 closeMobileMenu()
                 handleGalleryNavigation()
@@ -193,6 +193,7 @@ const route = useRoute()
 
 const isLoginPage = computed(() => route.path === '/login')
 const isCreatePage = computed(() => route.path === '/create')
+const isGalleryPage = computed(() => route.path === '/gallery')
 
 const isAuthed = computed(() => !!currentUser.value)
 const userLabel = computed(
