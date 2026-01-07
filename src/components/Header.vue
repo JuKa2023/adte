@@ -211,7 +211,7 @@ const closeMobileMenu = () => {
 const handleLogout = () => {
   closeMobileMenu()
   logoutUser()
-  router.push('/login')
+  router.push('/')
 }
 
 const handleDeleteAccount = async () => {
@@ -221,7 +221,10 @@ const handleDeleteAccount = async () => {
   try {
     await deleteUser(currentUser.value.id)
     isDeleteModalOpen.value = false
-    handleLogout()
+    
+    closeMobileMenu()
+    logoutUser()
+    router.push('/goodbye')
   } catch (error) {
     console.error('Failed to delete account:', error)
     alert('Fehler beim Löschen des Accounts.')

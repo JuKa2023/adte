@@ -11,6 +11,7 @@ import LandingPage from './LandingPage.vue'
 import PostcardCreationPage from './PostcardEditorPage.vue'
 import LoginPage from './LoginPage.vue'
 import SharedPostcardPage from './SharedPostcardPage.vue'
+import GoodbyePage from './GoodbyePage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -42,6 +43,11 @@ const router = createRouter({
       path: '/share/:id',
       component: SharedPostcardPage,
       name: 'shared postcard view',
+    },
+    {
+      path: '/goodbye',
+      component: GoodbyePage,
+      name: 'goodbye',
     },
   ],
 })
