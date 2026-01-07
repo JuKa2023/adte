@@ -26,13 +26,28 @@
       </span>
     </div>
 
-    <!-- Instructions / Status Text -->
+    <!-- Controls / Status Area -->
     <div
-      v-if="!(readonly && state === 'idle')"
-      class="absolute bottom-2 text-xs font-medium tracking-wider uppercase transition-opacity duration-300 pointer-events-none select-none"
-      :class="statusTextClass"
+      class="absolute bottom-2 left-0 w-full flex items-center justify-center gap-8 z-20 pointer-events-none"
     >
-      {{ statusText }}
+      <!-- Status Text -->
+      <div
+        v-if="!(readonly && state === 'idle')"
+        class="text-xs font-medium tracking-wider uppercase transition-opacity duration-300 select-none"
+        :class="statusTextClass"
+      >
+        {{ statusText }}
+      </div>
+
+      <!-- Delete Button (Next to text) -->
+      <button
+        v-if="!readonly && (state === 'recorded' || state === 'playing')"
+        class="pointer-events-auto p-2 rounded-full bg-white/90 shadow-sm hover:bg-white text-gray-600 hover:text-red-500 transition-all flex items-center justify-center hover:scale-105"
+        @click.stop="resetRecording"
+        title="Aufnahme löschen"
+      >
+        <span class="material-icons text-base">delete</span>
+      </button>
     </div>
 
     <!-- Hidden audio element for playback -->
@@ -115,7 +130,7 @@ watch(state, (s) => {
       statusTextClass.value = 'text-red-500 animate-pulse'
       break
     case 'recorded':
-      statusText.value = 'Anhören / Neu Starten'
+      statusText.value = 'Anhören'
       statusTextClass.value = 'text-[var(--color-highlight)]'
       break
     case 'playing':
@@ -288,6 +303,14 @@ const stopAudio = () => {
     audioRef.value.currentTime = 0
   }
   state.value = 'recorded'
+}
+
+const resetRecording = () => {
+  stopAudio()
+  state.value = 'idle'
+  audioChunks = []
+  emit('update:audioUrl', null)
+  emit('update:audioBlob', null)
 }
 
 const onPlaybackEnded = () => {
