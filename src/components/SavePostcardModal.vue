@@ -41,13 +41,13 @@
 
         <!-- Date Picker (only if 'later') -->
         <div v-if="sendOption === 'later'" class="flex flex-col gap-2 animate-fade-in">
-          <label class="text-sm font-medium" style="color: var(--color-text-muted)">
+          <label class="font-medium" style="color: var(--color-text-muted)">
             Zeitpunkt wählen
           </label>
           <input
             type="datetime-local"
             v-model="scheduledTime"
-            class="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-[var(--color-highlight)]"
+            class="w-full px-3 py-2 rounded-full border-[1.5px] border-solid focus:outline-none focus:ring-2 focus:ring-[var(--color-highlight)]"
             style="
               background-color: var(--color-bg);
               border-color: var(--color-border);
