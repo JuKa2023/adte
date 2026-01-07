@@ -8,7 +8,10 @@
     @keydown.space="emit('click')"
   >
     <div class="polaroid-inner group-hover:scale-[1.02] transition-transform duration-300">
-      <div class="image-wrapper aspect-[4/3] overflow-hidden bg-gray-100 relative">
+      <div
+        class="image-wrapper overflow-hidden bg-gray-100 relative"
+        :class="aspectClass"
+      >
         <slot name="image">
           <img
             v-if="imageUrl"
@@ -16,7 +19,7 @@
             :alt="title || 'Postcard'"
             loading="lazy"
             decoding="async"
-            class="w-full h-full object-cover"
+            class="w-full h-full object-contain"
           />
         </slot>
 
@@ -25,7 +28,10 @@
 
       <div class="polaroid-caption relative">
         <slot name="caption">
-          <h3 v-if="title" class="font-handwriting text-xl text-gray-900 text-center truncate px-2">
+          <h3
+            v-if="title"
+            class="font-handwriting text-xl text-gray-900 text-center truncate px-2"
+          >
             {{ title }}
           </h3>
         </slot>
@@ -35,10 +41,16 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  imageUrl?: string
-  title?: string
-}>()
+withDefaults(
+  defineProps<{
+    imageUrl?: string
+    title?: string
+    aspectClass?: string
+  }>(),
+  {
+    aspectClass: 'aspect-[3/2]',
+  },
+)
 
 const emit = defineEmits<{
   (e: 'click'): void

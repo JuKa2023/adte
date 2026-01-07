@@ -218,12 +218,10 @@
         </div>
 
         <PostcardGallery
-          :items="postcards"
+          use-local-gallery
           :isLoading="isLoading"
           :error="error"
-          :has-more="hasMore"
           :more-label="'Mehr laden'"
-          @load-more="onLoadMore"
         >
           <template #cta="{ disabled, onClick }">
             <div class="flex justify-center mt-16">
@@ -250,7 +248,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import PostcardGallery, { type Postcard } from './components/PostCardGallery.vue'
 import PolaroidCard from './components/PolaroidCard.vue'
 import Button from './components/Button.vue'
@@ -305,32 +303,6 @@ function handleCtaClick() {
 
 const isLoading = ref(false)
 const error = ref<string | null>(null)
-
-const galleryImages = import.meta.glob('./assets/gallery/*.{png,jpg,jpeg,svg}', {
-  eager: true,
-  as: 'url',
-})
-
-const captionMap: Record<string, string> = {
-  postcard_example_1: 'Van Life Diaries 🚐',
-  postcard_example_2: 'Secret Garden 🌸',
-}
-
-const allPostcards = ref<Postcard[]>(
-  Object.entries(galleryImages).map(([path, url]) => {
-    const filename = path.split('/').pop()?.split('.')[0] || 'Unknown'
-    const title =
-      captionMap[filename] ||
-      filename.replace(/[-_]/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
-
-    return {
-      id: filename,
-      title: title,
-      imageUrl: url,
-    }
-  }),
-)
-const visibleCount = ref(9)
 
 const heroCards = [
   {
@@ -424,13 +396,6 @@ const heroCards = [
     delay: '7s',
   },
 ]
-
-const postcards = computed(() => allPostcards.value.slice(0, visibleCount.value))
-const hasMore = computed(() => allPostcards.value.length > visibleCount.value)
-
-function onLoadMore() {
-  visibleCount.value = Math.min(visibleCount.value + 3, allPostcards.value.length)
-}
 </script>
 
 <style scoped>
