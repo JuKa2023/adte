@@ -99,12 +99,26 @@ onMounted(() => {
     })
 
     const captionMap: Record<string, string> = {
-      postcard_example_1: 'Van Life Diaries 🚐',
-      postcard_example_2: 'Secret Garden 🌸',
+      postcard_example_1: 'du udn ig 🫶🏻',
+      postcard_example_2: 'Verbotener Garten 🌸',
+      postcard_example_3: 'Insel-Auszeit',
+      postcard_example_4: 'Festtags-Stimmung mal anders',
+      postcard_example_5: 'Insel Auszeit 🌅',
+      postcard_example_6: 'Kleine Schritte, grosse Flügel',
+      postcard_example_7: 'Engels Chor 🪽',
+      postcard_example_8: 'Winterwunderland 🌲',
+      postcard_example_9: 'Wissenschaftlich genug?',
+      postcard_example_10: 'Road Trip 🚗',
+      postcard_example_11: 'Winter Wunderland ❄️',
+      postcard_example_12: 'Etwas Kreatives ☀️',
+      postcard_example_13: 'ig lad di i',
+      postcard_example_14: ' ❄️',
+      postcard_example_15: 'Dream Big ✨',
     }
 
     localItems.value = Object.entries(galleryImages).map(([path, url]) => {
       const filename = path.split('/').pop()?.split('.')[0] || 'Unknown'
+      // Fallback: Use the mapped caption if available, otherwise format the filename
       const title =
         captionMap[filename] ||
         filename.replace(/[-_]/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
