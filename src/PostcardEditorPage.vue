@@ -72,6 +72,12 @@
       @save="onSavePostcard"
     />
 
+    <ResetCanvasModal
+      :is-open="showResetModal"
+      @close="showResetModal = false"
+      @confirm="performClearPostcard"
+    />
+
     <ShareLinkModal :is-open="showShareModal" :link="shareLink" @close="closeShareModal" />
   </div>
 </template>
@@ -91,6 +97,7 @@ import MoodGalleryModal from './components/postcard-editor/MoodGalleryModal.vue'
 import OnboardingOverlay from './components/postcard-editor/OnboardingOverlay.vue'
 import PostcardCard from './components/postcard-editor/PostcardCard.vue'
 import PostcardEditorSidebar from './components/postcard-editor/PostcardEditorSidebar.vue'
+import ResetCanvasModal from './components/postcard-editor/ResetCanvasModal.vue'
 
 interface PostcardState {
   frontImage: string | null
@@ -124,6 +131,7 @@ const showSaveModal = ref(false)
 const isSaving = ref(false)
 const shareLink = ref('')
 const showShareModal = ref(false)
+const showResetModal = ref(false)
 
 const isFront = ref(true)
 const isLandscape = ref(true)
@@ -318,14 +326,10 @@ const onExtraFileSelected = (event: Event) => {
 }
 
 const onClearPostcard = () => {
-  if (
-    !confirm(
-      'Möchtest du wirklich alles zurücksetzen? Alle nicht gespeicherten Änderungen gehen verloren.',
-    )
-  ) {
-    return
-  }
+  showResetModal.value = true
+}
 
+const performClearPostcard = () => {
   postcard.value.elements.forEach((element) => {
     if (element.type === 'image' && element.content.startsWith('blob:')) {
       URL.revokeObjectURL(element.content)
@@ -339,6 +343,7 @@ const onClearPostcard = () => {
     message: '',
     audioBlob: null,
     audioUrl: null,
+    themeId: 'classic',
   }
   activeElementId.value = null
   toast.success('Postkarte wurde zurückgesetzt.')

@@ -42,7 +42,7 @@
       <!-- Delete Button (Next to text) -->
       <button
         v-if="!readonly && (state === 'recorded' || state === 'playing')"
-        class="pointer-events-auto p-2 rounded-full bg-white/90 shadow-sm hover:bg-white text-gray-600 hover:text-red-500 transition-all flex items-center justify-center hover:scale-105"
+        class="pointer-events-auto cursor-pointer p-2 rounded-full bg-white/90 shadow-sm hover:bg-white text-gray-600 hover:text-red-500 transition-all flex items-center justify-center hover:scale-105"
         @click.stop="resetRecording"
         title="Aufnahme löschen"
       >
