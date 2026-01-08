@@ -2,6 +2,7 @@
   <Teleport to="body">
     <div
       v-if="isOpen"
+      v-bind="$attrs"
       class="fixed inset-0 flex items-center justify-center"
       :class="[padding ? 'p-4' : '', centerContent ? '' : 'items-start pt-20']"
       :style="{ zIndex, backgroundColor: 'var(--color-modal-overlay)' }"

@@ -1,14 +1,14 @@
 <template>
-  <BaseModal :is-open="isOpen && !!postcard" :z-index="80" @close="$emit('close')">
+  <BaseModal :is-open="isOpen && !!postcard" :z-index="80" class="cursor-pointer" @close="$emit('close')">
     <div
       class="relative w-[90vw] h-[85vh] max-w-7xl max-h-[92vh] flex flex-col items-center justify-center pointer-events-none"
     >
-      <div class="relative w-full h-full flex items-center justify-center pointer-events-auto">
+      <div class="relative w-full h-full flex items-center justify-center">
         <PostcardStage
           :canvas-width="canvasSize.width"
           :canvas-height="canvasSize.height"
           :max-scale="1.5"
-          frame-class="transition-transform duration-500"
+          frame-class="transition-transform duration-500 pointer-events-auto"
         >
           <InteractivePostcard
             v-if="postcard"
