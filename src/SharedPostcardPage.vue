@@ -14,7 +14,7 @@
       </div>
 
       <div class="relative perspective animate-fade-in-slow">
-        <div v-if="canvasSize && postcard" :style="cardStyle">
+        <div v-if="canvasSize && postcard" class="mx-auto" :style="cardStyle">
           <PostcardStage
             :canvas-width="canvasSize.width"
             :canvas-height="canvasSize.height"
