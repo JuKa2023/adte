@@ -196,11 +196,7 @@ export async function getMyPostcards(page = 1, perPage = 20) {
 
 export async function getSharedPostcard(id: string, token: string) {
   try {
-    const postcard = await pb.collection('postcards').getOne<PostcardRecord>(id)
-    if (postcard.share_token !== token) {
-      throw new Error('Invalid share token')
-    }
-    return postcard
+    return await pb.collection('postcards').getOne<PostcardRecord>(id, { query: { token } })
   } catch {
     throw new Error('Postcard not found or invalid token')
   }
