@@ -76,14 +76,9 @@ cronAdd("sendScheduledPostcards", "*/1 * * * *", async () => {
         ? `Du erhältst diese E-Mail, weil <strong>${safeSender}</strong>${safeSenderEmail ? ` (${safeSenderEmail})` : ''} dir eine Postkarte über adte geschickt hat.`
         : "Du erhältst diese E-Mail, weil dir jemand eine Postkarte geschickt hat."
 
-      const message = new MailerMessage({
-        from: {
-          address: $app.settings().meta.senderAddress,
-          name: hasKnownSender ? `${senderDisplay} via adte` : $app.settings().meta.senderName,
-        },
-        to: [{ address: toAddress }],
-        subject: subject,
-        html: `
+      const fromAddress = $app.settings().meta.senderAddress
+      const fromName = hasKnownSender ? `${senderDisplay} via adte` : $app.settings().meta.senderName
+      const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -164,17 +159,45 @@ cronAdd("sendScheduledPostcards", "*/1 * * * *", async () => {
   </table>
 </body>
 </html>
-        `,
-      })
+      `
 
-      await mailer.send(message)
+      // Railway blocks outbound SMTP on non-Pro plans, so production sends through the Resend API.
+      const resendApiKey = process.env.RESEND_API_KEY
+      if (resendApiKey) {
+        const safeFromName = String(fromName).replace(/["\\<>]/g, "")
+        const res = $http.send({
+          url: "https://api.resend.com/emails",
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${resendApiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: `"${safeFromName}" <${fromAddress}>`,
+            to: [toAddress],
+            subject: subject,
+            html: html,
+          }),
+          timeout: 20,
+        })
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          throw new Error(`Resend API responded with ${res.statusCode}: ${toString(res.body)}`)
+        }
+      } else {
+        await mailer.send(new MailerMessage({
+          from: { address: fromAddress, name: fromName },
+          to: [{ address: toAddress }],
+          subject: subject,
+          html: html,
+        }))
+      }
 
       record.set("sent", true)
       await $app.save(record)
 
       $app.logger().info("Postcard marked as sent", "postcardId", record.id)
     } catch (err) {
-      $app.logger().debug(
+      $app.logger().error(
         "Failed to send scheduled postcard",
         "postcardId",
         record.id,
