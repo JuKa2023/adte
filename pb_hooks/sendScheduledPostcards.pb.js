@@ -48,6 +48,11 @@ cronAdd("sendScheduledPostcards", "*/1 * * * *", async () => {
 
       const senderDisplay = senderName || (senderEmail ? senderEmail.split('@')[0] : null)
       const hasKnownSender = !!senderDisplay
+      const escapeHtml = (value) => String(value)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;")
+      const safeSender = hasKnownSender ? escapeHtml(senderDisplay) : ""
+      const safeSenderEmail = senderEmail ? escapeHtml(senderEmail) : ""
 
       const shareToken = record.get("share_token")
       const shareLink = shareToken
@@ -60,15 +65,15 @@ cronAdd("sendScheduledPostcards", "*/1 * * * *", async () => {
         : "📬 Eine Postkarte wartet auf dich!"
 
       const headline = hasKnownSender
-        ? `${senderDisplay} hat dir eine Postkarte geschickt!`
+        ? `${safeSender} hat dir eine Postkarte geschickt!`
         : "Du hast Post!"
 
       const description = hasKnownSender
-        ? `<strong>${senderDisplay}</strong> hat sich die Zeit genommen, dir eine ganz besondere digitale Postkarte zu gestalten.`
+        ? `<strong>${safeSender}</strong> hat sich die Zeit genommen, dir eine ganz besondere digitale Postkarte zu gestalten.`
         : "Jemand hat sich die Zeit genommen, dir eine ganz besondere digitale Postkarte zu gestalten."
 
       const footerNote = hasKnownSender
-        ? `Du erhältst diese E-Mail, weil <strong>${senderDisplay}</strong>${senderEmail ? ` (${senderEmail})` : ''} dir eine Postkarte über adte geschickt hat.`
+        ? `Du erhältst diese E-Mail, weil <strong>${safeSender}</strong>${safeSenderEmail ? ` (${safeSenderEmail})` : ''} dir eine Postkarte über adte geschickt hat.`
         : "Du erhältst diese E-Mail, weil dir jemand eine Postkarte geschickt hat."
 
       const message = new MailerMessage({
@@ -144,7 +149,7 @@ cronAdd("sendScheduledPostcards", "*/1 * * * *", async () => {
                 Erstellt mit viel ❤️ auf
               </p>
               <a href="${appUrl}" style="text-decoration: none;">
-                <img src="https://adte.juka.dev/adtepng.png" alt="adte" width="80" style="display: inline-block; border: none;">
+                <img src="${appUrl}/adtepng.png" alt="adte" width="80" style="display: inline-block; border: none;">
               </a>
             </td>
           </tr>
