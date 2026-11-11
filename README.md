@@ -55,5 +55,7 @@ docker run -p 8080:80 -e PUBLIC_APP_URL=http://localhost:8080 -v adte_data:/pb/p
 | Variable | Beschreibung |
 | --- | --- |
 | `PUBLIC_APP_URL` | Öffentliche URL der App, wird für Links in E-Mails verwendet |
+| `RESEND_API_KEY` | Optional: versendet E-Mails über die Resend API statt SMTP (z. B. auf Hosts ohne SMTP) |
+| `TRUSTED_PROXY_HEADER` | Optional: Header mit der Client-IP hinter einem Proxy, z. B. `CF-Connecting-IP` bei Cloudflare |
 | `PB_ENCRYPTION_KEY` | 32 Zeichen, verschlüsselt die gespeicherten Settings (SMTP-Passwort, OAuth-Secret) |
 | `VITE_POCKETBASE_URL` | Nur für die lokale Entwicklung, in Produktion wird der eigene Origin verwendet |
