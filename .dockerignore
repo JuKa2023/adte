@@ -1,0 +1,8 @@
+node_modules
+dist
+pb_data
+pocketbase
+.git
+.env
+.env.*
+!.env.example
