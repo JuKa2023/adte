@@ -2,6 +2,8 @@
 
 Digitale Postkarten, die sich wie echte anfühlen. Mit adte gestaltest du persönliche Postkarten aus Bildern, Text, Stickern und Sprachnachrichten und verschickst sie per Link oder E-Mail – auf Wunsch zeitgesteuert.
 
+**Live:** [adte.juka.dev](https://adte.juka.dev) · Konzept, Design und Entwicklung von [Juliette Kauflin](https://github.com/JuKa2023)
+
 ![Landing Page](.github/screenshot-landing.png)
 
 ## Features
