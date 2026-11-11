@@ -43,4 +43,4 @@ __screenshots__/
 .env
 .env.local
 # PocketBase binary (download locally)
-/pocketbase
+/bin/

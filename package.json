@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "pb": "PUBLIC_APP_URL=http://localhost:5173 ./bin/pocketbase serve --dir=pb_data --hooksDir=pb_hooks --migrationsDir=pb_migrations --http=127.0.0.1:8090",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",

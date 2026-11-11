@@ -24,11 +24,11 @@ Digitale Postkarten, die sich wie echte anfühlen. Mit adte gestaltest du persö
 
 ## Lokale Entwicklung
 
-Voraussetzungen: Node.js 20.19+ und die [PocketBase](https://github.com/pocketbase/pocketbase/releases/tag/v0.40.6) Binary (`0.40.6`) im Projektroot.
+Voraussetzungen: Node.js 20.19+ und die [PocketBase](https://github.com/pocketbase/pocketbase/releases/tag/v0.40.6) Binary (`0.40.6`) unter `bin/pocketbase`.
 
 ```sh
 # Backend
-PUBLIC_APP_URL=http://localhost:5173 ./pocketbase serve --http=127.0.0.1:8090
+npm run pb
 
 # Frontend
 cp .env.example .env.local
