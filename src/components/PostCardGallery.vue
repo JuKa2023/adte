@@ -93,9 +93,10 @@ const localItems = ref<Postcard[]>([])
 
 onMounted(() => {
   if (props.useLocalGallery) {
-    const galleryImages = import.meta.glob('../assets/gallery/*.{png,jpg,jpeg,svg}', {
+    const galleryImages = import.meta.glob<string>('../assets/gallery/*.{webp,png,jpg,jpeg,svg}', {
       eager: true,
-      as: 'url',
+      query: '?url',
+      import: 'default',
     })
 
     const captionMap: Record<string, string> = {
