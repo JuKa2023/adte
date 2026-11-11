@@ -25,4 +25,4 @@ COPY --from=builder /app/dist/ /pb/pb_public/
 
 WORKDIR /pb
 EXPOSE 80
-CMD ["./pocketbase", "serve", "--http=0.0.0.0:80"]
+CMD ["./pocketbase", "serve", "--http=0.0.0.0:80", "--encryptionEnv=PB_ENCRYPTION_KEY"]

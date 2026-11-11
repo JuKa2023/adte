@@ -42,3 +42,5 @@ __screenshots__/
 # Environment variables
 .env
 .env.local
+# PocketBase binary (download locally)
+/pocketbase

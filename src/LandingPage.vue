@@ -250,7 +250,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import PostcardGallery, { type Postcard } from './components/PostCardGallery.vue'
+import PostcardGallery from './components/PostCardGallery.vue'
 import PolaroidCard from './components/PolaroidCard.vue'
 import Button from './components/Button.vue'
 import heroBg from './assets/hero_bg.png'
