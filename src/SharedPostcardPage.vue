@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen w-full flex items-center justify-center px-4 py-10 shared-bg">
+  <div class="flex-1 pt-24 w-full flex items-center justify-center px-4 pb-10 shared-bg">
     <div class="max-w-5xl w-full">
       <div class="text-center mb-6 animate-fade-in">
         <p class="uppercase text-xs tracking-[0.3em]" style="color: var(--color-text-muted)">

@@ -8,7 +8,7 @@ import { Toaster } from 'vue-sonner'
   <div class="min-h-screen flex flex-col">
     <Header />
     <Toaster position="top-right" rich-colors />
-    <div class="flex-grow">
+    <div class="flex-grow flex flex-col">
       <router-view></router-view>
     </div>
     <Footer v-if="!$route.meta.hideFooter" />

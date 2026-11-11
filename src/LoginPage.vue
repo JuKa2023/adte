@@ -31,7 +31,7 @@ const handleLogin = () => {
 
 <template>
   <div
-    class="min-h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 relative overflow-hidden text-slate-900 dark:text-gray-100 font-sans"
+    class="flex-1 pt-14 w-full flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 relative overflow-hidden text-slate-900 dark:text-gray-100 font-sans"
   >
     <div class="absolute inset-0 bg-dot-pattern opacity-50 pointer-events-none"></div>
     <div

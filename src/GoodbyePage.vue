@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center" style="background: var(--bg-shared-page)">
+  <div class="flex-1 pt-20 flex flex-col items-center justify-center p-6 text-center" style="background: var(--bg-shared-page)">
     <div class="max-w-md w-full bg-[var(--color-card-bg)] rounded-lg shadow-xl p-8 border border-[var(--color-border)]">
       <div class="mb-6 text-6xl animate-bounce">👋</div>
       <h1 class="text-3xl font-bold mb-4 bg-gradient-to-r from-[var(--color-highlight)] to-[var(--color-primary)] bg-clip-text text-transparent">
