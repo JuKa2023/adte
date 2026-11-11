@@ -210,7 +210,7 @@
           <h2
             class="text-5xl md:text-6xl font-bold font-handwriting mb-6 text-slate-800 dark:text-white"
           >
-            Inspirationen
+            Inspiration
           </h2>
           <p class="text-xl text-slate-500 dark:text-slate-400 max-w-2xl">
             Jede Karte erzählt eine Geschichte. Hier sind ein paar von unserer Community.
