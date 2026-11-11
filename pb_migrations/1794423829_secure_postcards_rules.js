@@ -6,7 +6,8 @@ migrate((app) => {
   collection.listRule = "user = @request.auth.id"
   collection.viewRule = "user = @request.auth.id || (share_token != '' && share_token = @request.query.token)"
   collection.createRule = "@request.auth.id != '' && @request.body.user = @request.auth.id"
-  collection.updateRule = "user = @request.auth.id && (@request.body.user:isset = false || @request.body.user = @request.auth.id)"
+  // Ownership and email delivery fields are fixed after creation, so sent cards can't be re-sent.
+  collection.updateRule = "user = @request.auth.id && @request.body.user:changed = false && @request.body.recipient_email:changed = false && @request.body.scheduled_time:changed = false && @request.body.sent:changed = false"
   collection.deleteRule = "user = @request.auth.id"
 
   // Deleting an account removes its postcards.
