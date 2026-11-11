@@ -92,7 +92,7 @@ export async function createPostcard(data: {
   themeId?: string
   location?: string
 }) {
-  const userId = pb.authStore.model?.id
+  const userId = pb.authStore.record?.id
   if (!userId) {
     throw new Error('User must be logged in to create a postcard.')
   }
@@ -175,10 +175,10 @@ export async function deleteUser(userId: string) {
 
 import { ref, toRaw } from 'vue'
 
-export const currentUser = ref(pb.authStore.model)
+export const currentUser = ref(pb.authStore.record)
 
 pb.authStore.onChange(() => {
-  currentUser.value = pb.authStore.model
+  currentUser.value = pb.authStore.record
 })
 
 export function logoutUser() {
@@ -186,7 +186,7 @@ export function logoutUser() {
 }
 
 export async function getMyPostcards(page = 1, perPage = 20) {
-  const userId = pb.authStore.model?.id
+  const userId = pb.authStore.record?.id
   if (!userId) return { items: [], totalItems: 0 }
 
   return await pb.collection('postcards').getList<PostcardRecord>(page, perPage, {

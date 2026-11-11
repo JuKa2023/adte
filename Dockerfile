@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM --platform=$BUILDPLATFORM node:22-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
@@ -9,12 +9,13 @@ ENV NODE_ENV=production
 RUN npm run build
 
 FROM alpine:3.20
-ARG PB_VERSION=0.28.3
+ARG PB_VERSION=0.40.6
+ARG TARGETARCH
 ENV PB_VERSION=${PB_VERSION}
 
 RUN apk add --no-cache ca-certificates unzip
 
-ADD https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip /tmp/pb.zip
+ADD https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_${TARGETARCH}.zip /tmp/pb.zip
 RUN unzip /tmp/pb.zip -d /pb \
  && chmod +x /pb/pocketbase \
  && rm /tmp/pb.zip

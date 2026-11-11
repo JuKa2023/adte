@@ -53,7 +53,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !pb.authStore.model) {
+  if (to.meta.requiresAuth && !pb.authStore.record) {
     next({ path: '/login', query: { redirect: to.fullPath } })
     return
   }
